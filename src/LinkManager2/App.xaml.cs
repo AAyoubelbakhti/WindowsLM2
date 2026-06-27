@@ -8,7 +8,7 @@ public partial class App : Application
 {
     public MainWindow? Window { get; private set; }
 
-    public const int Build = 11;
+    public const int Build = 12;
 
     public static AppState State { get; private set; } = null!;
 

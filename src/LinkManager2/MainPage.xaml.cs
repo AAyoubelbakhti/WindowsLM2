@@ -17,6 +17,8 @@ public sealed partial class MainPage : Page
 {
     public ObservableCollection<ItemViewModel> Visible { get; } = new();
 
+    private readonly TypeAheadNavigation TypeAhead;
+
     private FilterState _filters = new();
     private readonly Microsoft.UI.Dispatching.DispatcherQueueTimer _searchDebounce;
     private bool _loading;
@@ -24,6 +26,7 @@ public sealed partial class MainPage : Page
     public MainPage()
     {
         InitializeComponent();
+        TypeAhead = new TypeAheadNavigation(ItemsList, o => (o as ItemViewModel)?.Title ?? "");
         _searchDebounce = DispatcherQueue.CreateTimer();
         _searchDebounce.Interval = TimeSpan.FromMilliseconds(160);
         _searchDebounce.Tick += (_, _) =>
@@ -286,6 +289,9 @@ public sealed partial class MainPage : Page
                 OpenItem(Selected.Source); e.Handled = true; break;
             case Windows.System.VirtualKey.Delete when Selected is not null:
                 _ = DeleteWithConfirmAsync(Selected.Source); e.Handled = true; break;
+            default:
+                if (TypeAhead.TrySelect(e.Key)) e.Handled = true;
+                break;
         }
     }
 
