@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentDialog
+    x:Class="LinkManager2.Dialogs.ShareCollectionDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="Crear colección pública"
+    DefaultButton="Primary"
+    PrimaryButtonText="Generar"
+    CloseButtonText="Cerrar"
+    PrimaryButtonClick="OnGenerateClick">
+    <StackPanel Spacing="12" Width="460">
+        <TextBlock x:Name="CountLabel" Opacity="0.75" TextWrapping="Wrap" />
+        <TextBox x:Name="NameBox" Header="Nombre de la colección"
+                 PlaceholderText="Mis enlaces"
+                 AutomationProperties.Name="Nombre de la colección" />
+        <ComboBox x:Name="ExpiresCombo" Header="Caducidad" HorizontalAlignment="Stretch"
+                  AutomationProperties.Name="Caducidad de la colección" />
+        <TextBox x:Name="ResultBox"
+                 Header="URL generada"
+                 IsReadOnly="True"
+                 FontFamily="Consolas"
+                 AutomationProperties.Name="URL pública generada" />
+        <StackPanel Orientation="Horizontal" Spacing="8">
+            <Button x:Name="CopyButton" Content="Copiar URL" IsEnabled="False" Click="OnCopyClick"
+                    AutomationProperties.Name="Copiar URL al portapapeles" />
+            <Button x:Name="OpenButton" Content="Abrir en el navegador" IsEnabled="False" Click="OnOpenClick"
+                    AutomationProperties.Name="Abrir la colección en el navegador" />
+        </StackPanel>
+        <InfoBar x:Name="StatusBar" IsOpen="False" IsClosable="False" />
+    </StackPanel>
+</ContentDialog>

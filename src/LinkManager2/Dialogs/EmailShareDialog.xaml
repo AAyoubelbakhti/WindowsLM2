@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentDialog
+    x:Class="LinkManager2.Dialogs.EmailShareDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="Enviar por email"
+    DefaultButton="Primary"
+    PrimaryButtonText="Enviar"
+    CloseButtonText="Cancelar"
+    PrimaryButtonClick="OnSendClick">
+    <StackPanel Spacing="12" Width="460">
+        <TextBlock x:Name="ItemLabel" Opacity="0.75" TextWrapping="Wrap" />
+        <TextBox x:Name="EmailBox"
+                 Header="Email destinatario"
+                 InputScope="EmailSmtpAddress"
+                 PlaceholderText="destinatario@correo.com"
+                 AutomationProperties.Name="Email del destinatario" />
+        <TextBox x:Name="MessageBox"
+                 Header="Mensaje (opcional, máx. 500)"
+                 AcceptsReturn="True"
+                 TextWrapping="Wrap"
+                 Height="100"
+                 MaxLength="500"
+                 AutomationProperties.Name="Mensaje opcional" />
+        <InfoBar x:Name="StatusBar" IsOpen="False" IsClosable="False" />
+    </StackPanel>
+</ContentDialog>

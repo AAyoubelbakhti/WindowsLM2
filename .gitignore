@@ -1,0 +1,28 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+publish/
+
+# Build
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+ARM/
+ARM64/
+
+# NuGet
+*.nupkg
+.nuget/
+
+# Local config (Supabase keys)
+**/appsettings.Local.json
+
+# OS
+Thumbs.db
+.DS_Store
+
+.claude/

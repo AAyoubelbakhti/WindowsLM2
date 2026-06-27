@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentDialog
+    x:Class="LinkManager2.Dialogs.FiltersDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="Filtros"
+    DefaultButton="Primary"
+    PrimaryButtonText="Aplicar"
+    SecondaryButtonText="Limpiar"
+    CloseButtonText="Cancelar"
+    PrimaryButtonClick="OnApply"
+    SecondaryButtonClick="OnClear">
+    <StackPanel Spacing="12" Width="400">
+        <ComboBox x:Name="TypeCombo" Header="Tipo" HorizontalAlignment="Stretch"
+                  AutomationProperties.Name="Tipo de elemento" />
+        <ComboBox x:Name="CategoryCombo" Header="Categoría" HorizontalAlignment="Stretch"
+                  AutomationProperties.Name="Categoría" />
+        <ComboBox x:Name="TagCombo" Header="Etiqueta" HorizontalAlignment="Stretch"
+                  AutomationProperties.Name="Etiqueta" />
+        <ToggleSwitch x:Name="FavoritesOnly"
+                      Header="Solo favoritos"
+                      OnContent="Sí" OffContent="No"
+                      AutomationProperties.Name="Mostrar solo favoritos" />
+        <ComboBox x:Name="SortCombo" Header="Ordenar por" HorizontalAlignment="Stretch"
+                  AutomationProperties.Name="Orden de la lista" />
+    </StackPanel>
+</ContentDialog>

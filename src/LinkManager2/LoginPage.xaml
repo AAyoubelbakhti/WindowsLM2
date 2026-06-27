@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Page
+    x:Class="LinkManager2.LoginPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:LinkManager2"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled">
+        <Grid Padding="0,32,0,32">
+            <StackPanel Width="380"
+                        HorizontalAlignment="Center"
+                        Spacing="14"
+                        Padding="24">
+
+                <StackPanel Spacing="4">
+                    <TextBlock Text="LinkManager"
+                               FontSize="28"
+                               FontWeight="SemiBold"
+                               AutomationProperties.HeadingLevel="Level1" />
+                    <TextBlock x:Name="SubtitleText"
+                               Text="Inicia sesión para sincronizar tus enlaces."
+                               Opacity="0.7"
+                               TextWrapping="Wrap" />
+                </StackPanel>
+
+                <InfoBar x:Name="ErrorBar"
+                         IsOpen="False"
+                         Severity="Error"
+                         IsClosable="True"
+                         AutomationProperties.LiveSetting="Assertive" />
+
+                <InfoBar x:Name="InfoBarMsg"
+                         IsOpen="False"
+                         Severity="Success"
+                         IsClosable="True"
+                         AutomationProperties.LiveSetting="Polite" />
+
+                <StackPanel Spacing="6">
+                    <TextBlock Text="Modo" Opacity="0.7" FontSize="12" />
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <RadioButton x:Name="SignInMode"
+                                     Content="Tengo cuenta"
+                                     IsChecked="True"
+                                     GroupName="AuthMode"
+                                     Checked="OnModeChanged"
+                                     AutomationProperties.Name="Modo: iniciar sesión con cuenta existente" />
+                        <RadioButton x:Name="SignUpMode"
+                                     Content="Crear cuenta"
+                                     GroupName="AuthMode"
+                                     Checked="OnModeChanged"
+                                     AutomationProperties.Name="Modo: crear cuenta nueva" />
+                    </StackPanel>
+                </StackPanel>
+
+                <TextBox x:Name="EmailBox"
+                         Header="Correo electrónico"
+                         InputScope="EmailSmtpAddress"
+                         PlaceholderText="tu@correo.com"
+                         AutomationProperties.Name="Correo electrónico" />
+
+                <PasswordBox x:Name="PasswordBox"
+                             Header="Contraseña"
+                             AutomationProperties.Name="Contraseña"
+                             AutomationProperties.HelpText="Mínimo 6 caracteres" />
+
+                <Grid ColumnSpacing="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="SubmitButton"
+                            Grid.Column="0"
+                            Content="Iniciar sesión"
+                            Style="{StaticResource AccentButtonStyle}"
+                            HorizontalAlignment="Stretch"
+                            Click="OnSubmit"
+                            AutomationProperties.Name="Continuar con correo y contraseña" />
+                    <ProgressRing x:Name="BusyRing"
+                                  Grid.Column="1"
+                                  Width="20" Height="20"
+                                  IsActive="False"
+                                  Visibility="Collapsed"
+                                  VerticalAlignment="Center"
+                                  AutomationProperties.Name="Procesando" />
+                </Grid>
+
+                <HyperlinkButton x:Name="ForgotButton"
+                                 Content="¿Olvidaste la contraseña?"
+                                 Padding="0,4"
+                                 Click="OnForgotPassword"
+                                 AutomationProperties.Name="Enviar correo para restablecer la contraseña" />
+
+                <Expander x:Name="OtherMethodsExpander"
+                          HorizontalAlignment="Stretch"
+                          HorizontalContentAlignment="Stretch"
+                          Header="Otros métodos de inicio de sesión"
+                          AutomationProperties.Name="Otros métodos de inicio de sesión">
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="Se abrirá el navegador para iniciar sesión y volver a la app."
+                                   TextWrapping="Wrap"
+                                   Opacity="0.7"
+                                   FontSize="12" />
+                        <Button x:Name="GitHubButton"
+                                Content="Continuar con GitHub"
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Center"
+                                Click="OnGitHubSignIn"
+                                AutomationProperties.Name="Iniciar sesión con GitHub" />
+                        <Button x:Name="DiscordButton"
+                                Content="Continuar con Discord"
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Center"
+                                Click="OnDiscordSignIn"
+                                AutomationProperties.Name="Iniciar sesión con Discord" />
+                    </StackPanel>
+                </Expander>
+
+                <StackPanel Spacing="2" Margin="0,8,0,0">
+                    <HyperlinkButton x:Name="SignUpWebButton"
+                                     Content="Abrir creación de cuenta en la web"
+                                     HorizontalAlignment="Center"
+                                     Padding="0,4"
+                                     Click="OnSignUpWeb"
+                                     AutomationProperties.Name="Abrir lm.aelbak.dev para crear una cuenta" />
+                    <TextBlock Text="Si prefieres confirmar el correo en el navegador."
+                               TextWrapping="Wrap"
+                               Opacity="0.55"
+                               FontSize="12"
+                               HorizontalAlignment="Center"
+                               TextAlignment="Center" />
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
+</Page>

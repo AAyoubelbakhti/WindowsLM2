@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "LinkManager2 (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "LinkManager2 (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

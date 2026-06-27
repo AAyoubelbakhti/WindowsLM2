@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentDialog
+    x:Class="LinkManager2.Dialogs.AddEditDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    DefaultButton="Primary"
+    PrimaryButtonText="Guardar"
+    CloseButtonText="Cancelar"
+    PrimaryButtonClick="OnSaveClick">
+    <StackPanel Spacing="12" Width="440">
+        <TextBox x:Name="TitleBox"
+                 Header="Título"
+                 AutomationProperties.Name="Título del elemento" />
+        <TextBox x:Name="ValueBox"
+                 Header="Valor (URL o ruta)"
+                 AutomationProperties.Name="Valor"
+                 AutomationProperties.HelpText="URL o ruta de archivo"
+                 LostFocus="OnValueLostFocus" />
+        <ComboBox x:Name="CategoryCombo"
+                  Header="Categoría"
+                  HorizontalAlignment="Stretch"
+                  AutomationProperties.Name="Categoría" />
+
+        <StackPanel x:Name="QuickCreatePanel" Spacing="8" Visibility="Collapsed">
+            <Grid ColumnSpacing="8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBox x:Name="NewCategoryBox" Grid.Column="0"
+                         PlaceholderText="Nueva categoría"
+                         AutomationProperties.Name="Nueva categoría" />
+                <Button x:Name="CreateCategoryButton" Grid.Column="1"
+                        Content="Crear categoría" Click="OnCreateCategory"
+                        AutomationProperties.Name="Crear categoría" />
+            </Grid>
+
+            <TextBlock Text="Etiquetas" Opacity="0.7"
+                       AutomationProperties.HeadingLevel="Level2" />
+            <ListView x:Name="TagsList" SelectionMode="Multiple" MaxHeight="160"
+                      AutomationProperties.Name="Etiquetas disponibles">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}" />
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <Grid ColumnSpacing="8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBox x:Name="NewTagBox" Grid.Column="0"
+                         PlaceholderText="Nueva etiqueta…"
+                         AutomationProperties.Name="Nueva etiqueta" />
+                <Button x:Name="CreateTagButton" Grid.Column="1"
+                        Content="Crear etiqueta" Click="OnCreateTag"
+                        AutomationProperties.Name="Crear etiqueta" />
+            </Grid>
+        </StackPanel>
+
+        <InfoBar x:Name="ErrorBar"
+                 IsOpen="False"
+                 Severity="Error"
+                 IsClosable="False"
+                 AutomationProperties.LiveSetting="Assertive" />
+    </StackPanel>
+</ContentDialog>

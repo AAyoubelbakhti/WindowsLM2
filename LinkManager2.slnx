@@ -1,0 +1,5 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/LinkManager2/LinkManager2.csproj" />
+  </Folder>
+</Solution>
