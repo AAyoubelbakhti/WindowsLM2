@@ -27,6 +27,8 @@ public sealed class LocalPreferences
         }
     }
 
+    /// <summary>Returns a stable per-device id, creating and persisting one on first use. Read/write
+    /// failures are swallowed and fall back to an in-memory id so device registration never crashes.</summary>
     public static string GetOrCreateDeviceId()
     {
         var dir = System.IO.Path.Combine(
@@ -70,6 +72,6 @@ public sealed class LocalPreferences
             var text = JsonSerializer.Serialize(this, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(Path, text);
         }
-        catch {  }
+        catch (Exception ex) { Diagnostics.Log("preferences save", ex); }
     }
 }

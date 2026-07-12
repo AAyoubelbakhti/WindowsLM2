@@ -113,6 +113,9 @@ public sealed class AppState
 
     public enum AddResult { Added, QueuedOffline }
 
+    /// <summary>Outcome of a mutating item operation: applied online or queued for later flush.</summary>
+    public enum OpResult { Done, QueuedOffline }
+
     public async Task<AddResult> AddItemAsync(string title, string value, string type, string? categoryId,
         IReadOnlyList<string>? tagIds = null, string? description = null)
     {
@@ -129,6 +132,80 @@ public sealed class AppState
             Cache.EnqueuePending("add",
                 JsonSerializer.Serialize(new PendingAdd(title, value, type, categoryId, tagIds?.ToList(), description)));
             return AddResult.QueuedOffline;
+        }
+    }
+
+    /// <summary>Hard-deletes an item; queues the delete offline if the network is unavailable. Idempotent on replay.</summary>
+    public async Task<OpResult> DeleteItemAsync(string id)
+    {
+        try
+        {
+            await Repo.DeleteAsync(id);
+            await ReloadItemsAsync();
+            return OpResult.Done;
+        }
+        catch (Exception ex) when (IsRetryable(ex))
+        {
+            SyncCacheUser();
+            Cache.EnqueuePending("delete", JsonSerializer.Serialize(new PendingDelete(id)));
+            return OpResult.QueuedOffline;
+        }
+    }
+
+    /// <summary>Archives or unarchives an item; queues offline when the network is unavailable. Idempotent on replay.</summary>
+    public async Task<OpResult> ArchiveItemAsync(string id, bool archived)
+    {
+        try
+        {
+            await Repo.ArchiveAsync(id, archived);
+            await ReloadItemsAsync();
+            return OpResult.Done;
+        }
+        catch (Exception ex) when (IsRetryable(ex))
+        {
+            SyncCacheUser();
+            Cache.EnqueuePending("archive", JsonSerializer.Serialize(new PendingArchive(id, archived)));
+            return OpResult.QueuedOffline;
+        }
+    }
+
+    /// <summary>Sets an item's favorite flag; queues offline when the network is unavailable. Idempotent on replay.</summary>
+    public async Task<OpResult> SetFavoriteAsync(string id, bool isFavorite)
+    {
+        try
+        {
+            await Repo.ToggleFavoriteAsync(id, isFavorite);
+            await ReloadItemsAsync();
+            return OpResult.Done;
+        }
+        catch (Exception ex) when (IsRetryable(ex))
+        {
+            SyncCacheUser();
+            Cache.EnqueuePending("favorite", JsonSerializer.Serialize(new PendingFavorite(id, isFavorite)));
+            return OpResult.QueuedOffline;
+        }
+    }
+
+    /// <summary>
+    /// Updates an item's core fields; queues offline when the network is unavailable. Replay is a
+    /// full field overwrite (last-write-wins, matching the project sync policy): a value edited
+    /// elsewhere while offline is overwritten on flush rather than three-way merged.
+    /// </summary>
+    public async Task<OpResult> UpdateItemAsync(string id, string title, string value, string type,
+        string? categoryId, string? description)
+    {
+        try
+        {
+            await Repo.UpdateAsync(id, title, value, type, categoryId, description);
+            await ReloadItemsAsync();
+            return OpResult.Done;
+        }
+        catch (Exception ex) when (IsRetryable(ex))
+        {
+            SyncCacheUser();
+            Cache.EnqueuePending("update",
+                JsonSerializer.Serialize(new PendingUpdate(id, title, value, type, categoryId, description)));
+            return OpResult.QueuedOffline;
         }
     }
 
@@ -149,12 +226,7 @@ public sealed class AppState
             {
                 try
                 {
-                    if (op == "add")
-                    {
-                        var p = JsonSerializer.Deserialize<PendingAdd>(payload)!;
-                        var added = await Repo.AddAsync(p.Title, p.Value, p.Type, p.CategoryId, p.Description);
-                        if (p.TagIds is { Count: > 0 }) await Repo.SetItemTagsAsync(added.Id, p.TagIds);
-                    }
+                    await ReplayPendingAsync(op, payload);
                     Cache.DeletePending(id);
                     flushedCount++;
                 }
@@ -173,21 +245,65 @@ public sealed class AppState
 
             if (droppedCount > 0)
             {
-                Notifications.Show("Enlaces pendientes descartados",
+                Notifications.Show("Cambios pendientes descartados",
                     droppedCount == 1
-                        ? "1 enlace pendiente fue rechazado por el servidor y se descartó."
-                        : $"{droppedCount} enlaces pendientes fueron rechazados por el servidor y se descartaron.");
+                        ? "1 cambio pendiente fue rechazado por el servidor y se descartó."
+                        : $"{droppedCount} cambios pendientes fueron rechazados por el servidor y se descartaron.");
             }
             if (flushedCount > 0 && !brokeOffline)
             {
                 await ReloadItemsAsync();
                 Notifications.Show("Cola sincronizada",
                     flushedCount == 1
-                        ? "Se subió 1 enlace que estaba pendiente."
-                        : $"Se subieron {flushedCount} enlaces que estaban pendientes.");
+                        ? "Se aplicó 1 cambio que estaba pendiente."
+                        : $"Se aplicaron {flushedCount} cambios que estaban pendientes.");
             }
         }
         finally { _flushGate.Release(); }
+    }
+
+    /// <summary>
+    /// Re-applies one queued operation against the server. Unknown op types are logged and treated
+    /// as non-retryable (dropped by the caller) so a corrupt or future entry can't wedge the queue.
+    /// </summary>
+    private async Task ReplayPendingAsync(string op, string payload)
+    {
+        switch (op)
+        {
+            case "add":
+            {
+                var p = JsonSerializer.Deserialize<PendingAdd>(payload)!;
+                var added = await Repo.AddAsync(p.Title, p.Value, p.Type, p.CategoryId, p.Description);
+                if (p.TagIds is { Count: > 0 }) await Repo.SetItemTagsAsync(added.Id, p.TagIds);
+                break;
+            }
+            case "delete":
+            {
+                var p = JsonSerializer.Deserialize<PendingDelete>(payload)!;
+                await Repo.DeleteAsync(p.Id);
+                break;
+            }
+            case "archive":
+            {
+                var p = JsonSerializer.Deserialize<PendingArchive>(payload)!;
+                await Repo.ArchiveAsync(p.Id, p.Archived);
+                break;
+            }
+            case "favorite":
+            {
+                var p = JsonSerializer.Deserialize<PendingFavorite>(payload)!;
+                await Repo.ToggleFavoriteAsync(p.Id, p.IsFavorite);
+                break;
+            }
+            case "update":
+            {
+                var p = JsonSerializer.Deserialize<PendingUpdate>(payload)!;
+                await Repo.UpdateAsync(p.Id, p.Title, p.Value, p.Type, p.CategoryId, p.Description);
+                break;
+            }
+            default:
+                throw new InvalidOperationException($"Unknown pending op '{op}'.");
+        }
     }
 
     private static bool IsRetryable(Exception? ex)
@@ -213,6 +329,10 @@ public sealed class AppState
     };
 
     private sealed record PendingAdd(string Title, string Value, string Type, string? CategoryId, List<string>? TagIds = null, string? Description = null);
+    private sealed record PendingDelete(string Id);
+    private sealed record PendingArchive(string Id, bool Archived);
+    private sealed record PendingFavorite(string Id, bool IsFavorite);
+    private sealed record PendingUpdate(string Id, string Title, string Value, string Type, string? CategoryId, string? Description);
 
     public async Task ReloadTagsAsync()
     {
@@ -265,6 +385,8 @@ public sealed class AppState
         Settings = null;
     }
 
+    /// <summary>Reads Supabase config from a settings file, returning empties on any read/parse
+    /// failure so the caller falls back to other sources (and ultimately a visible bootstrap error).</summary>
     private static (string Url, string Key) ReadFile(string path)
     {
         if (!File.Exists(path)) return ("", "");

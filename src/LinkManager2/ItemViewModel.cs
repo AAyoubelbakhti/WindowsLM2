@@ -1,10 +1,19 @@
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using LinkManager2.Data;
 
 namespace LinkManager2;
 
-public sealed class ItemViewModel
+/// <summary>
+/// Observable row view model over an <see cref="Item"/>. Raises change notifications so
+/// per-row edits (favorite toggled, broken status) can update the UI without reloading the list.
+/// </summary>
+public sealed class ItemViewModel : INotifyPropertyChanged
 {
-    private readonly Item _item;
+    private Item _item;
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
     public Item Source => _item;
 
     public string Id => _item.Id;
@@ -15,7 +24,7 @@ public sealed class ItemViewModel
     public bool IsFavorite => _item.IsFavorite;
     public bool IsBroken => _item.LinkStatus == "broken";
 
-    public string CategoryName { get; }
+    public string CategoryName { get; private set; }
 
     public string DisplayTitle
     {
@@ -55,6 +64,35 @@ public sealed class ItemViewModel
         _item = item;
         CategoryName = categoryName ?? "Sin categoría";
     }
+
+    /// <summary>
+    /// Replaces the underlying item (and optional category name) and notifies every derived
+    /// property so a single row refreshes in place instead of rebuilding the whole list.
+    /// </summary>
+    public void UpdateSource(Item item, string? categoryName = null)
+    {
+        _item = item;
+        if (categoryName is not null) CategoryName = categoryName;
+        RaiseAllChanged();
+    }
+
+    private void RaiseAllChanged()
+    {
+        OnPropertyChanged(nameof(Title));
+        OnPropertyChanged(nameof(Value));
+        OnPropertyChanged(nameof(Type));
+        OnPropertyChanged(nameof(CategoryId));
+        OnPropertyChanged(nameof(IsFavorite));
+        OnPropertyChanged(nameof(IsBroken));
+        OnPropertyChanged(nameof(CategoryName));
+        OnPropertyChanged(nameof(DisplayTitle));
+        OnPropertyChanged(nameof(AccessibleName));
+        OnPropertyChanged(nameof(TypeLabel));
+        OnPropertyChanged(nameof(Details));
+    }
+
+    private void OnPropertyChanged([CallerMemberName] string? name = null) =>
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
     public override string ToString() => AccessibleName;
 }

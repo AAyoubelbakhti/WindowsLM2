@@ -33,6 +33,8 @@ public partial class App : Application
         Bootstrap();
     }
 
+    private const int MaxCrashLogChars = 1024 * 1024;
+
     private static void LogCrash(Exception? ex)
     {
         try
@@ -40,8 +42,9 @@ public partial class App : Application
             var dir = System.IO.Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "LinkManager");
             System.IO.Directory.CreateDirectory(dir);
-            System.IO.File.WriteAllText(System.IO.Path.Combine(dir, "crash.log"),
-                $"{DateTime.Now:O}\n{ex}");
+            var text = $"{DateTime.Now:O}\n{ex}";
+            if (text.Length > MaxCrashLogChars) text = text[..MaxCrashLogChars];
+            System.IO.File.WriteAllText(System.IO.Path.Combine(dir, "crash.log"), text);
         }
         catch {  }
     }

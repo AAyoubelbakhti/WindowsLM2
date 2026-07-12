@@ -8,81 +8,12 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Supabase.Gotrue;
 
 namespace LinkManager2.Data;
 
 internal static class OAuthListener
 {
     private static readonly TimeSpan Timeout = TimeSpan.FromMinutes(5);
-
-    public static async Task<bool> RunAsync(
-        AuthService auth,
-        Constants.Provider provider,
-        CancellationToken ct = default)
-    {
-        var port = GetFreePort();
-        var redirect = $"http://127.0.0.1:{port}/auth-callback";
-
-        using var listener = new HttpListener();
-        listener.Prefixes.Add($"http://127.0.0.1:{port}/");
-        listener.Start();
-
-        OAuthFlow flow;
-        try
-        {
-            flow = await auth.StartOAuthAsync(provider, redirect);
-        }
-        catch
-        {
-            listener.Stop();
-            throw;
-        }
-
-        try
-        {
-            Process.Start(new ProcessStartInfo { FileName = flow.Url, UseShellExecute = true });
-        }
-        catch
-        {
-            listener.Stop();
-            throw;
-        }
-
-        using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(ct);
-        linkedCts.CancelAfter(Timeout);
-
-        HttpListenerContext ctx;
-        try
-        {
-            var ctxTask = listener.GetContextAsync();
-            var doneTask = await Task.WhenAny(ctxTask, Task.Delay(Timeout.Add(TimeSpan.FromSeconds(5)), linkedCts.Token));
-            if (doneTask != ctxTask)
-            {
-                listener.Stop();
-                return false;
-            }
-            ctx = await ctxTask;
-        }
-        catch (OperationCanceledException)
-        {
-            listener.Stop();
-            return false;
-        }
-
-        var code = ctx.Request.QueryString["code"];
-        var error = ctx.Request.QueryString["error_description"] ?? ctx.Request.QueryString["error"];
-
-        await WriteHtmlAsync(ctx, error is null
-            ? "Sesión iniciada. Ya puedes cerrar esta pestaña y volver a LinkManager."
-            : $"Error de autenticación: {error}");
-        listener.Stop();
-
-        if (!string.IsNullOrEmpty(error) || string.IsNullOrEmpty(code)) return false;
-
-        await auth.ExchangeCodeAsync(code, flow.Verifier);
-        return auth.IsAuthenticated;
-    }
 
     public static async Task<bool> RunWebAssistedAsync(
         AuthService auth,

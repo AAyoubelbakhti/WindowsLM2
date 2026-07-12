@@ -17,6 +17,8 @@ public static class MetadataFetcher
     private const string ApiBase = "https://lm.aelbak.dev";
     private static readonly HttpClient _http = new() { Timeout = TimeSpan.FromSeconds(8) };
 
+    /// <summary>Best-effort metadata lookup; returns null on any failure (network, auth, parse) so
+    /// callers treat missing metadata as a non-error and skip enrichment.</summary>
     public static async Task<MetadataResult?> FetchAsync(string url, CancellationToken ct = default)
     {
         var token = SupabaseClientHolder.Client.Auth.CurrentSession?.AccessToken;

@@ -34,7 +34,7 @@ public static class ExplorerPathReader
                 return desktop.Self.Path;
             }
         }
-        catch {  }
+        catch (Exception ex) { Diagnostics.Log("explorer path capture", ex); }
         return null;
     }
 

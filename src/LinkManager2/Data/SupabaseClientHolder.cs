@@ -54,14 +54,18 @@ public static class SupabaseClientHolder
         }
     }
 
+    /// <summary>Best-effort teardown on app exit; each step is guarded so a failing disconnect can't
+    /// block the others or the shutdown path.</summary>
     public static void Shutdown()
     {
         var c = _client;
         if (c is null) return;
-        try { c.Realtime.Disconnect(); } catch {  }
-        try { c.Auth.Shutdown(); } catch {  }
+        try { c.Realtime.Disconnect(); } catch { }
+        try { c.Auth.Shutdown(); } catch { }
     }
 
+    /// <summary>Drops a session that failed to refresh for a non-transient reason. Each step is
+    /// guarded because wiping is a recovery path that must not throw.</summary>
     private static void WipeSession(Client c)
     {
         try { new LocalFileSessionHandler().DestroySession(); } catch { }

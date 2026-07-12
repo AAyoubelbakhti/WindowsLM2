@@ -35,9 +35,11 @@ internal sealed class LocalFileSessionHandler : IGotrueSessionPersistence<Sessio
             File.WriteAllBytes(EncryptedPath, cipher);
             DeleteLegacyPlain();
         }
-        catch {  }
+        catch (Exception ex) { Diagnostics.Log("session save", ex); }
     }
 
+    /// <summary>Best-effort deletion of the persisted session; a failed delete is ignored so sign-out
+    /// and recovery paths never throw.</summary>
     public void DestroySession()
     {
         try { if (File.Exists(EncryptedPath)) File.Delete(EncryptedPath); } catch { }

@@ -52,9 +52,9 @@ public static class BrowserUrlReader
 
             return new Capture(url, CleanWindowTitle(windowTitle));
         }
-        catch
+        catch (Exception ex)
         {
-
+            Diagnostics.Log("browser url capture", ex);
             return null;
         }
     }

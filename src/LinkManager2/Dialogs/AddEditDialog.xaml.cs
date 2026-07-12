@@ -129,7 +129,7 @@ public sealed partial class AddEditDialog : ContentDialog
             if (!string.IsNullOrWhiteSpace(meta?.Title) && string.IsNullOrWhiteSpace(TitleBox.Text))
                 TitleBox.Text = meta!.Title;
         }
-        catch {  }
+        catch (Exception ex) { Diagnostics.Log("autofill title", ex); }
     }
 
     private void ShowError(string msg)

@@ -232,6 +232,8 @@ public sealed partial class MainWindow : Window
         SetForegroundWindow(WindowNative.GetWindowHandle(this));
     }
 
+    /// <summary>Best-effort tray visibility toggle; the tray helper occasionally races teardown, so a
+    /// failure here is swallowed rather than surfaced to the user.</summary>
     private void SetTrayVisible(bool visible)
     {
         try
@@ -243,7 +245,7 @@ public sealed partial class MainWindow : Window
                 DispatcherQueue.TryEnqueue(RenameTrayHelperWindow);
             }
         }
-        catch {  }
+        catch { }
     }
 
     private void RenameTrayHelperWindow()
@@ -278,16 +280,18 @@ public sealed partial class MainWindow : Window
         HotkeyWarning = null;
     }
 
+    /// <summary>Best-effort teardown on exit: every dispose is independently guarded so one failing
+    /// resource can't leave the others leaked or block process exit.</summary>
     private void TearDownAndExit()
     {
         if (_tornDown) return;
         _tornDown = true;
         SaveWindowBounds();
-        try { App.State?.Cache.Dispose(); } catch {  }
-        try { UninstallHotkey(); } catch {  }
-        try { TrayIcon.Dispose(); } catch {  }
-        try { LinkManager2.Data.Notifications.Unregister(); } catch {  }
-        try { SupabaseClientHolder.Shutdown(); } catch {  }
+        try { App.State?.Cache.Dispose(); } catch { }
+        try { UninstallHotkey(); } catch { }
+        try { TrayIcon.Dispose(); } catch { }
+        try { LinkManager2.Data.Notifications.Unregister(); } catch { }
+        try { SupabaseClientHolder.Shutdown(); } catch { }
         Environment.Exit(0);
     }
 

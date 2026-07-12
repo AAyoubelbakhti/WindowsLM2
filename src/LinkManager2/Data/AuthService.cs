@@ -28,19 +28,6 @@ public sealed class AuthService
     public Task SendPasswordResetEmailAsync(string email) =>
         _client.Auth.ResetPasswordForEmail(email);
 
-    public async Task<OAuthFlow> StartOAuthAsync(Constants.Provider provider, string redirectTo)
-    {
-        var state = await _client.Auth.SignIn(provider, new SignInOptions
-        {
-            RedirectTo = redirectTo,
-            FlowType = Constants.OAuthFlowType.PKCE,
-        });
-        return new OAuthFlow(state.Uri.ToString(), state.PKCEVerifier ?? string.Empty);
-    }
-
-    public Task ExchangeCodeAsync(string code, string verifier) =>
-        _client.Auth.ExchangeCodeForSession(verifier, code);
-
     public Task SetSessionFromTokensAsync(string accessToken, string refreshToken) =>
         _client.Auth.SetSession(accessToken, refreshToken);
 
@@ -89,5 +76,3 @@ public sealed class AuthService
         return msg.Length > 0 ? msg : ex.GetType().Name;
     }
 }
-
-public readonly record struct OAuthFlow(string Url, string Verifier);
