@@ -9,7 +9,7 @@ public partial class App : Application
 {
     public MainWindow? Window { get; private set; }
 
-    public const int Build = 13;
+    public const int Build = 14;
 
     public static AppState State { get; private set; } = null!;
 
