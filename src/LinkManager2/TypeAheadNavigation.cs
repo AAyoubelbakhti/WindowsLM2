@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Windows.System;
 
@@ -41,10 +42,30 @@ internal sealed class TypeAheadNavigation
             {
                 _list.SelectedIndex = i;
                 _list.ScrollIntoView(items[i]);
+                FocusItem(i);
                 return true;
             }
         }
         return false;
+    }
+
+    /// <summary>
+    /// Moves keyboard focus onto the matched row's container. In a multi-select ListView
+    /// (SelectionMode Extended) setting SelectedIndex changes selection but not focus, so
+    /// without this the UI Automation focus never moves and a screen reader announces nothing.
+    /// The container may be unrealized until layout catches up after ScrollIntoView, so this
+    /// retries once on the next dispatcher tick.
+    /// </summary>
+    private void FocusItem(int index)
+    {
+        if (_list.ContainerFromIndex(index) is Control container)
+        {
+            container.Focus(FocusState.Keyboard);
+            return;
+        }
+        _list.DispatcherQueue?.TryEnqueue(
+            Microsoft.UI.Dispatching.DispatcherQueuePriority.Low,
+            () => (_list.ContainerFromIndex(index) as Control)?.Focus(FocusState.Keyboard));
     }
 
     /// <summary>

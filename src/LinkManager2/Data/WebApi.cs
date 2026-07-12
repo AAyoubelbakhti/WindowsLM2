@@ -35,9 +35,17 @@ public static class WebApi
 
     public readonly record struct LinkCheckSummary(int Checked, int Ok, int Broken, int Pending);
 
+    /// <summary>
+    /// Rechecks every link. Sends an empty JSON body so the request carries an application/json
+    /// content type: without it the API host rejects the bodyless POST as a cross-site form
+    /// submission (CSRF origin check) and the check silently fails.
+    /// </summary>
     public static async Task<LinkCheckSummary?> CheckAllLinksAsync(string bearer)
     {
-        using var req = new HttpRequestMessage(HttpMethod.Post, $"{Base}/api/items/check-all");
+        using var req = new HttpRequestMessage(HttpMethod.Post, $"{Base}/api/items/check-all")
+        {
+            Content = JsonContent.Create(new { }),
+        };
         req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", bearer);
         var resp = await _http.SendAsync(req);
         if (!resp.IsSuccessStatusCode) return null;
@@ -47,9 +55,14 @@ public static class WebApi
         return new LinkCheckSummary(Get("checked"), Get("ok"), Get("broken"), Get("pending"));
     }
 
+    /// <summary>Rechecks a single link. Empty JSON body required for the same CSRF reason as
+    /// <see cref="CheckAllLinksAsync"/>.</summary>
     public static async Task<string?> CheckLinkAsync(string itemId, string bearer)
     {
-        using var req = new HttpRequestMessage(HttpMethod.Post, $"{Base}/api/items/{itemId}/check");
+        using var req = new HttpRequestMessage(HttpMethod.Post, $"{Base}/api/items/{itemId}/check")
+        {
+            Content = JsonContent.Create(new { }),
+        };
         req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", bearer);
         var resp = await _http.SendAsync(req);
         if (!resp.IsSuccessStatusCode) return null;

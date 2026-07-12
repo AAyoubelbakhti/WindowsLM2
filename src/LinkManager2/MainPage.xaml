@@ -171,11 +171,9 @@
                                 <KeyboardAccelerator Key="Enter" />
                             </MenuFlyoutItem.KeyboardAccelerators>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem Text="Copiar URL" Tag="copy" Click="OnCopyClick">
+                        <MenuFlyoutItem Text="Copiar URL" Tag="copy" Click="OnCopyClick"
+                                        KeyboardAcceleratorTextOverride="Ctrl+C">
                             <MenuFlyoutItem.Icon><SymbolIcon Symbol="Copy" /></MenuFlyoutItem.Icon>
-                            <MenuFlyoutItem.KeyboardAccelerators>
-                                <KeyboardAccelerator Key="C" Modifiers="Control" />
-                            </MenuFlyoutItem.KeyboardAccelerators>
                         </MenuFlyoutItem>
                         <MenuFlyoutItem Text="Compartir…" Tag="share" Click="OnShareClick" />
                         <MenuFlyoutItem Text="Enviar por email…" Tag="email" Click="OnEmailClick" />
