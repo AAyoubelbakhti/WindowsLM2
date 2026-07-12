@@ -114,7 +114,11 @@ public sealed partial class MainPage : Page
             RefreshVisible();
             SetStatus($"Borrado: {item.Title}. Ctrl+Z para deshacer.");
         }
-        catch (Exception ex) { SetStatus($"Error al borrar: {ex.Message}"); }
+        catch (Exception ex)
+        {
+            if (await TryRecoverExpiredSessionAsync(ex)) return;
+            SetStatus($"Error al borrar: {ex.Message}");
+        }
     }
 
     private void OnContextMenuOpening(object sender, object e)

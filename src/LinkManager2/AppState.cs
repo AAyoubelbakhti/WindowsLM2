@@ -148,6 +148,8 @@ public sealed class AppState
         {
             SyncCacheUser();
             Cache.EnqueuePending("delete", JsonSerializer.Serialize(new PendingDelete(id)));
+            _items.RemoveAll(i => i.Id == id);
+            Cache.ReplaceItems(_items, _categories);
             return OpResult.QueuedOffline;
         }
     }
@@ -165,6 +167,11 @@ public sealed class AppState
         {
             SyncCacheUser();
             Cache.EnqueuePending("archive", JsonSerializer.Serialize(new PendingArchive(id, archived)));
+            if (archived)
+            {
+                _items.RemoveAll(i => i.Id == id);
+                Cache.ReplaceItems(_items, _categories);
+            }
             return OpResult.QueuedOffline;
         }
     }
@@ -321,7 +328,6 @@ public sealed class AppState
     private static bool IsRetryableStatus(int code) => code switch
     {
         0 => true,
-        401 => true,
         408 => true,
         429 => true,
         >= 500 and < 600 => true,

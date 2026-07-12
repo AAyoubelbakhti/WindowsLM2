@@ -90,9 +90,15 @@ public sealed partial class MainPage : Page
         if (!ok) return;
 
         var deletedItems = new List<Item>();
+        var queuedCount = 0;
         foreach (var vm in items)
         {
-            try { await App.State.Repo.DeleteAsync(vm.Id); deletedItems.Add(vm.Source); }
+            try
+            {
+                var result = await App.State.DeleteItemAsync(vm.Id);
+                if (result == AppState.OpResult.QueuedOffline) queuedCount++;
+                else deletedItems.Add(vm.Source);
+            }
             catch (Exception ex) { Diagnostics.Log("bulk-delete", ex); }
         }
         if (deletedItems.Count > 0)
@@ -107,9 +113,13 @@ public sealed partial class MainPage : Page
                         await App.State.Repo.RestoreAsync(it);
                 });
         }
-        try { await App.State.ReloadItemsAsync(); RefreshVisible(); }
-        catch (Exception ex) { Diagnostics.Log("bulk-delete reload", ex); }
-        SetStatus($"Borrados {deletedItems.Count} de {items.Count}. Ctrl+Z para deshacer.");
+        RefreshVisible();
+        if (queuedCount > 0)
+            SetStatus(deletedItems.Count > 0
+                ? $"Borrados {deletedItems.Count}, {queuedCount} en cola sin conexión, de {items.Count}."
+                : $"Sin conexión, {queuedCount} borrados encolados de {items.Count}.");
+        else
+            SetStatus($"Borrados {deletedItems.Count} de {items.Count}. Ctrl+Z para deshacer.");
     }
 
     private static bool IsDown(Windows.System.VirtualKey key) =>
