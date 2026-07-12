@@ -14,6 +14,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <TitleBar x:Name="AppTitleBar"
@@ -27,6 +28,15 @@
 
         <Frame x:Name="RootFrameControl" Grid.Row="1" />
 
+        <TextBlock x:Name="WindowStatusText"
+                   Grid.Row="2"
+                   Margin="16,0,16,6"
+                   FontSize="12"
+                   Opacity="0.9"
+                   TextWrapping="Wrap"
+                   Visibility="Collapsed"
+                   AutomationProperties.LiveSetting="Polite" />
+
         <tb:TaskbarIcon x:Name="TrayIcon"
                         IconSource="ms-appx:///Assets/AppIcon.ico"
                         ToolTipText="LinkManager (Ctrl+Shift+L para abrir)"
@@ -36,6 +46,9 @@
             <tb:TaskbarIcon.ContextFlyout>
                 <MenuFlyout>
                     <MenuFlyoutItem Text="Mostrar LinkManager" Command="{x:Bind ShowFromTrayCommand}" />
+                    <MenuFlyoutItem Text="Añadir enlace…" Command="{x:Bind AddLinkCommand}" />
+                    <MenuFlyoutItem Text="Guardar portapapeles" Command="{x:Bind SaveClipboardCommand}" />
+                    <MenuFlyoutItem Text="Buscar" Command="{x:Bind SearchCommand}" />
                     <MenuFlyoutSeparator />
                     <MenuFlyoutItem Text="Salir" Command="{x:Bind ExitCommand}" />
                 </MenuFlyout>

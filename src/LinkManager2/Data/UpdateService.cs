@@ -14,6 +14,9 @@ public static class UpdateService
 
     private static UpdateManager Manager() => new(new SimpleWebSource(FeedUrl));
 
+    private static UpdateManager? _pendingManager;
+    private static UpdateInfo? _pendingInfo;
+
     public static async Task<(UpdateStatus Status, string? Version)> CheckAndDownloadAsync()
     {
         try
@@ -25,7 +28,12 @@ public static class UpdateService
             if (info is null) return (UpdateStatus.UpToDate, null);
 
             await mgr.DownloadUpdatesAsync(info);
-            return (UpdateStatus.Downloaded, info.TargetFullRelease.Version.ToString());
+            _pendingManager = mgr;
+            _pendingInfo = info;
+            var version = info.TargetFullRelease.Version.ToString();
+            Notifications.Show("Actualización descargada",
+                $"LinkManager {version} está listo. Reinicia para aplicarlo.");
+            return (UpdateStatus.Downloaded, version);
         }
         catch (Exception ex)
         {
@@ -34,15 +42,18 @@ public static class UpdateService
         }
     }
 
-    public static void ApplyAndRestart()
+    public static async Task<bool> ApplyAndRestartAsync()
     {
         try
         {
-            var mgr = Manager();
-            var info = mgr.CheckForUpdates();
-            if (info is not null) mgr.ApplyUpdatesAndRestart(info);
+            var mgr = _pendingManager ?? Manager();
+            var info = _pendingInfo ?? await mgr.CheckForUpdatesAsync();
+            if (info is null) return false;
+            if (_pendingInfo is null) await mgr.DownloadUpdatesAsync(info);
+            mgr.ApplyUpdatesAndRestart(info);
+            return true;
         }
-        catch (Exception ex) { Diagnostics.Log("update apply", ex); }
+        catch (Exception ex) { Diagnostics.Log("update apply", ex); return false; }
     }
 
     public static bool IsInstalled

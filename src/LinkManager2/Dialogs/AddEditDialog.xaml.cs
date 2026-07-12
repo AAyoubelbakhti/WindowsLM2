@@ -13,6 +13,7 @@ public sealed partial class AddEditDialog : ContentDialog
 {
     public string ItemTitle => TitleBox.Text.Trim();
     public string ItemValue => ValueBox.Text.Trim();
+    public string ItemDescription => DescriptionBox.Text.Trim();
     public string? ItemCategoryId => (CategoryCombo.SelectedItem as CategoryOption)?.Id;
 
     public IReadOnlyList<string> SelectedTagIds =>
@@ -31,6 +32,7 @@ public sealed partial class AddEditDialog : ContentDialog
 
         TitleBox.Text = initial?.Title ?? prefillTitle ?? string.Empty;
         ValueBox.Text = initial?.Value ?? prefillValue ?? string.Empty;
+        DescriptionBox.Text = initial?.Description ?? string.Empty;
 
         CategoryCombo.Items.Add(new CategoryOption(null, "Sin categoría"));
         foreach (var c in categories) CategoryCombo.Items.Add(new CategoryOption(c.Id, c.Name));

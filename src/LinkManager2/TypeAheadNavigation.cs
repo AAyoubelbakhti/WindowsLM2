@@ -1,5 +1,7 @@
 using System;
+using System.Globalization;
 using System.Linq;
+using System.Text;
 using Microsoft.UI.Xaml.Controls;
 using Windows.System;
 
@@ -35,7 +37,7 @@ internal sealed class TypeAheadNavigation
         {
             var i = (start + offset) % items.Count;
             var title = _keyOf(items[i]);
-            if (!string.IsNullOrEmpty(title) && char.ToUpperInvariant(title[0]) == c)
+            if (!string.IsNullOrEmpty(title) && NormalizeFirst(title) == c)
             {
                 _list.SelectedIndex = i;
                 _list.ScrollIntoView(items[i]);
@@ -43,6 +45,20 @@ internal sealed class TypeAheadNavigation
             }
         }
         return false;
+    }
+
+    /// <summary>
+    /// Uppercases the first character of a title and strips diacritics (FormD decomposition
+    /// minus non-spacing marks) so accented initials and Ñ match their base letter key.
+    /// </summary>
+    private static char NormalizeFirst(string title)
+    {
+        var upper = char.ToUpperInvariant(title[0]);
+        if (upper < 0x80) return upper;
+        foreach (var ch in upper.ToString().Normalize(NormalizationForm.FormD))
+            if (CharUnicodeInfo.GetUnicodeCategory(ch) != UnicodeCategory.NonSpacingMark)
+                return char.ToUpperInvariant(ch);
+        return upper;
     }
 
     private static char ToChar(VirtualKey key)

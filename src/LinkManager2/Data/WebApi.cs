@@ -32,4 +32,29 @@ public static class WebApi
         var resp = await _http.SendAsync(req);
         return (int)resp.StatusCode;
     }
+
+    public readonly record struct LinkCheckSummary(int Checked, int Ok, int Broken, int Pending);
+
+    public static async Task<LinkCheckSummary?> CheckAllLinksAsync(string bearer)
+    {
+        using var req = new HttpRequestMessage(HttpMethod.Post, $"{Base}/api/items/check-all");
+        req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", bearer);
+        var resp = await _http.SendAsync(req);
+        if (!resp.IsSuccessStatusCode) return null;
+        using var doc = System.Text.Json.JsonDocument.Parse(await resp.Content.ReadAsStringAsync());
+        var root = doc.RootElement;
+        int Get(string k) => root.TryGetProperty(k, out var v) && v.ValueKind == System.Text.Json.JsonValueKind.Number ? v.GetInt32() : 0;
+        return new LinkCheckSummary(Get("checked"), Get("ok"), Get("broken"), Get("pending"));
+    }
+
+    public static async Task<string?> CheckLinkAsync(string itemId, string bearer)
+    {
+        using var req = new HttpRequestMessage(HttpMethod.Post, $"{Base}/api/items/{itemId}/check");
+        req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", bearer);
+        var resp = await _http.SendAsync(req);
+        if (!resp.IsSuccessStatusCode) return null;
+        using var doc = System.Text.Json.JsonDocument.Parse(await resp.Content.ReadAsStringAsync());
+        return doc.RootElement.TryGetProperty("status", out var v) && v.ValueKind == System.Text.Json.JsonValueKind.String
+            ? v.GetString() : null;
+    }
 }

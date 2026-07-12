@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using LinkManager2.Data;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
@@ -26,11 +27,27 @@ internal static class ItemActions
         Process.Start(new ProcessStartInfo { FileName = item.Value, UseShellExecute = true });
     }
 
+    /// <summary>
+    /// Copies text to the clipboard, retrying on the transient COMException WinUI raises
+    /// when the clipboard is briefly locked by another process; the content still lands.
+    /// </summary>
     public static void Copy(string text)
     {
         var dp = new DataPackage();
         dp.SetText(text);
-        Clipboard.SetContent(dp);
+        for (var attempt = 0; ; attempt++)
+        {
+            try
+            {
+                Clipboard.SetContent(dp);
+                Clipboard.Flush();
+                return;
+            }
+            catch (Exception) when (attempt < 4)
+            {
+                Thread.Sleep(30);
+            }
+        }
     }
 
     public static void Share(Microsoft.UI.Xaml.Window window, Item item)

@@ -23,6 +23,7 @@ public sealed partial class CommandLayerDialog : ContentDialog
             VirtualKey.L => 'l',
             VirtualKey.R => 'r',
             VirtualKey.A => 'a',
+            VirtualKey.P => 'p',
             VirtualKey.F => 'f',
             VirtualKey.H => 'h',
             _ => '\0',

@@ -2,9 +2,16 @@ using Microsoft.Data.Sqlite;
 
 namespace LinkManager2.Data;
 
+/// <summary>
+/// Local SQLite mirror of items and an offline pending-ops queue, segregated per user.
+/// Every row carries the owning user id so a second account on the same machine never
+/// sees the first account's cache and never inherits its queued writes.
+/// </summary>
 public sealed class LocalCache : IDisposable
 {
     private readonly SqliteConnection _conn;
+
+    private string _userId = string.Empty;
 
     public LocalCache()
     {
@@ -19,12 +26,15 @@ public sealed class LocalCache : IDisposable
         EnsureSchema();
     }
 
+    public void SetUser(string? userId) => _userId = userId ?? string.Empty;
+
     private void EnsureSchema()
     {
         using var cmd = _conn.CreateCommand();
         cmd.CommandText = """
             CREATE TABLE IF NOT EXISTS items_cache (
                 id TEXT PRIMARY KEY,
+                user_id TEXT NOT NULL DEFAULT '',
                 title TEXT NOT NULL,
                 value TEXT NOT NULL,
                 type TEXT NOT NULL,
@@ -34,12 +44,33 @@ public sealed class LocalCache : IDisposable
             );
             CREATE TABLE IF NOT EXISTS pending_ops (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id TEXT NOT NULL DEFAULT '',
                 op TEXT NOT NULL,
                 payload TEXT NOT NULL,
                 created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
             );
         """;
         cmd.ExecuteNonQuery();
+        MigrateAddUserIdColumn("items_cache");
+        MigrateAddUserIdColumn("pending_ops");
+    }
+
+    private void MigrateAddUserIdColumn(string table)
+    {
+        if (ColumnExists(table, "user_id")) return;
+        using var cmd = _conn.CreateCommand();
+        cmd.CommandText = $"ALTER TABLE {table} ADD COLUMN user_id TEXT NOT NULL DEFAULT ''";
+        cmd.ExecuteNonQuery();
+    }
+
+    private bool ColumnExists(string table, string column)
+    {
+        using var cmd = _conn.CreateCommand();
+        cmd.CommandText = $"PRAGMA table_info({table})";
+        using var r = cmd.ExecuteReader();
+        while (r.Read())
+            if (string.Equals(r.GetString(1), column, StringComparison.OrdinalIgnoreCase)) return true;
+        return false;
     }
 
     public void ReplaceItems(IEnumerable<Item> items, IEnumerable<Category> categories)
@@ -49,7 +80,8 @@ public sealed class LocalCache : IDisposable
         using (var del = _conn.CreateCommand())
         {
             del.Transaction = tx;
-            del.CommandText = "DELETE FROM items_cache";
+            del.CommandText = "DELETE FROM items_cache WHERE user_id = $uid";
+            del.Parameters.AddWithValue("$uid", _userId);
             del.ExecuteNonQuery();
         }
         foreach (var i in items)
@@ -58,10 +90,11 @@ public sealed class LocalCache : IDisposable
             ins.Transaction = tx;
             ins.CommandText = """
                 INSERT OR REPLACE INTO items_cache
-                  (id, title, value, type, category_id, category_name, updated_at)
-                VALUES ($id, $title, $value, $type, $cat_id, $cat_name, $updated)
+                  (id, user_id, title, value, type, category_id, category_name, updated_at)
+                VALUES ($id, $uid, $title, $value, $type, $cat_id, $cat_name, $updated)
             """;
             ins.Parameters.AddWithValue("$id", i.Id);
+            ins.Parameters.AddWithValue("$uid", _userId);
             ins.Parameters.AddWithValue("$title", i.Title);
             ins.Parameters.AddWithValue("$value", i.Value);
             ins.Parameters.AddWithValue("$type", i.Type);
@@ -77,7 +110,8 @@ public sealed class LocalCache : IDisposable
     {
         var result = new List<CachedItem>();
         using var cmd = _conn.CreateCommand();
-        cmd.CommandText = "SELECT id, title, value, type, category_id, category_name FROM items_cache ORDER BY title COLLATE NOCASE";
+        cmd.CommandText = "SELECT id, title, value, type, category_id, category_name FROM items_cache WHERE user_id = $uid ORDER BY title COLLATE NOCASE";
+        cmd.Parameters.AddWithValue("$uid", _userId);
         using var r = cmd.ExecuteReader();
         while (r.Read())
         {
@@ -95,7 +129,8 @@ public sealed class LocalCache : IDisposable
     public void EnqueuePending(string op, string payloadJson)
     {
         using var cmd = _conn.CreateCommand();
-        cmd.CommandText = "INSERT INTO pending_ops (op, payload) VALUES ($op, $p)";
+        cmd.CommandText = "INSERT INTO pending_ops (user_id, op, payload) VALUES ($uid, $op, $p)";
+        cmd.Parameters.AddWithValue("$uid", _userId);
         cmd.Parameters.AddWithValue("$op", op);
         cmd.Parameters.AddWithValue("$p", payloadJson);
         cmd.ExecuteNonQuery();
@@ -105,7 +140,8 @@ public sealed class LocalCache : IDisposable
     {
         var list = new List<(long, string, string)>();
         using var cmd = _conn.CreateCommand();
-        cmd.CommandText = "SELECT id, op, payload FROM pending_ops ORDER BY id";
+        cmd.CommandText = "SELECT id, op, payload FROM pending_ops WHERE user_id = $uid ORDER BY id";
+        cmd.Parameters.AddWithValue("$uid", _userId);
         using var r = cmd.ExecuteReader();
         while (r.Read()) list.Add((r.GetInt64(0), r.GetString(1), r.GetString(2)));
         return list;
@@ -116,6 +152,14 @@ public sealed class LocalCache : IDisposable
         using var cmd = _conn.CreateCommand();
         cmd.CommandText = "DELETE FROM pending_ops WHERE id = $id";
         cmd.Parameters.AddWithValue("$id", id);
+        cmd.ExecuteNonQuery();
+    }
+
+    public void ClearUser()
+    {
+        using var cmd = _conn.CreateCommand();
+        cmd.CommandText = "DELETE FROM items_cache WHERE user_id = $uid; DELETE FROM pending_ops WHERE user_id = $uid;";
+        cmd.Parameters.AddWithValue("$uid", _userId);
         cmd.ExecuteNonQuery();
     }
 

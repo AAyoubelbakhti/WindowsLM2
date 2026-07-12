@@ -97,10 +97,12 @@ internal static class OAuthListener
         listener.Start();
 
         var state = Convert.ToHexString(System.Security.Cryptography.RandomNumberGenerator.GetBytes(16));
+        var (verifier, challenge) = Pkce.Create();
         var bridge = "https://lm.aelbak.dev/auth/app-login"
             + $"?provider={Uri.EscapeDataString(provider)}"
             + $"&redirect={Uri.EscapeDataString(redirect)}"
-            + $"&state={Uri.EscapeDataString(state)}";
+            + $"&state={Uri.EscapeDataString(state)}"
+            + $"&code_challenge={Uri.EscapeDataString(challenge)}&code_challenge_method=S256";
 
         try
         {
@@ -159,7 +161,7 @@ internal static class OAuthListener
 
         if (!ok) return false;
 
-        var (access, refresh) = await ExchangeAppCodeAsync(appCode!, ct);
+        var (access, refresh) = await ExchangeAppCodeAsync(appCode!, verifier, ct);
         if (string.IsNullOrEmpty(access) || string.IsNullOrEmpty(refresh)) return false;
         await auth.SetSessionFromTokensAsync(access!, refresh!);
         return auth.IsAuthenticated;
@@ -167,13 +169,13 @@ internal static class OAuthListener
 
     private static readonly HttpClient _http = new() { Timeout = TimeSpan.FromSeconds(15) };
 
-    private static async Task<(string? Access, string? Refresh)> ExchangeAppCodeAsync(string code, CancellationToken ct)
+    private static async Task<(string? Access, string? Refresh)> ExchangeAppCodeAsync(string code, string codeVerifier, CancellationToken ct)
     {
         try
         {
             using var req = new HttpRequestMessage(HttpMethod.Post, "https://lm.aelbak.dev/api/app-session")
             {
-                Content = JsonContent.Create(new { code }),
+                Content = JsonContent.Create(new { code, code_verifier = codeVerifier }),
             };
             var resp = await _http.SendAsync(req, ct);
             if (!resp.IsSuccessStatusCode) return (null, null);

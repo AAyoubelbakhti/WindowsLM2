@@ -13,16 +13,42 @@ public sealed class ItemViewModel
     public string Type => _item.Type;
     public string? CategoryId => _item.CategoryId;
     public bool IsFavorite => _item.IsFavorite;
+    public bool IsBroken => _item.LinkStatus == "broken";
 
     public string CategoryName { get; }
 
-    public string DisplayTitle => _item.IsFavorite ? $"★ {_item.Title}" : _item.Title;
+    public string DisplayTitle
+    {
+        get
+        {
+            var prefix = _item.IsFavorite ? "★ " : string.Empty;
+            if (IsBroken) prefix += "⚠ ";
+            return prefix + _item.Title;
+        }
+    }
 
-    public string AccessibleName => _item.IsFavorite ? $"Favorito, {_item.Title}" : _item.Title;
+    public string AccessibleName
+    {
+        get
+        {
+            var parts = new System.Collections.Generic.List<string>();
+            if (_item.IsFavorite) parts.Add("Favorito");
+            if (IsBroken) parts.Add("Enlace roto");
+            parts.Add(_item.Title);
+            return string.Join(", ", parts);
+        }
+    }
 
     public string TypeLabel => _item.Type == ItemTypes.Url ? "Enlace" : "Ruta";
 
-    public string Details => $"{TypeLabel} · {CategoryName} · {Value}";
+    public string Details
+    {
+        get
+        {
+            var status = IsBroken ? " · Roto" : string.Empty;
+            return $"{TypeLabel} · {CategoryName} · {Value}{status}";
+        }
+    }
 
     public ItemViewModel(Item item, string? categoryName)
     {

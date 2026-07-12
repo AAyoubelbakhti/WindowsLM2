@@ -7,6 +7,13 @@ public sealed class LocalPreferences
     public bool MicaBackdrop { get; set; } = true;
     public bool MinimizeToTrayOnClose { get; set; } = true;
     public bool GlobalHotkeyEnabled { get; set; } = true;
+    public bool NotificationsEnabled { get; set; } = true;
+    public uint HotkeyModifiers { get; set; } = 0x0002 | 0x0004;
+    public uint HotkeyVirtualKey { get; set; } = 0x4C;
+    public int? WindowX { get; set; }
+    public int? WindowY { get; set; }
+    public int? WindowWidth { get; set; }
+    public int? WindowHeight { get; set; }
 
     private static string Path
     {

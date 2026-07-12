@@ -6,6 +6,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
+    <Page.KeyboardAccelerators>
+        <KeyboardAccelerator Key="Escape" Invoked="OnEscapeBack" />
+    </Page.KeyboardAccelerators>
     <ScrollViewer Padding="24,12,24,24">
         <StackPanel Spacing="16" MaxWidth="640" HorizontalAlignment="Stretch">
 
@@ -14,7 +17,8 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="Ajustes" FontSize="24" FontWeight="SemiBold"
+                <TextBlock x:Name="HeadingText" Text="Ajustes" FontSize="24" FontWeight="SemiBold"
+                           IsTabStop="True"
                            AutomationProperties.HeadingLevel="Level1" />
                 <Button Grid.Column="1" Content="Volver" Click="OnBack"
                         AutomationProperties.Name="Volver a la lista" />
@@ -69,13 +73,24 @@
                                   AutomationProperties.Name="Minimizar a la bandeja al cerrar"
                                   AutomationProperties.HelpText="Si está activado, cerrar la ventana solo la oculta. Para salir usa el menú de la bandeja → Salir." />
                     <ToggleSwitch x:Name="HotkeyToggle"
-                                  Header="Atajo global Ctrl+Shift+L para abrir la ventana"
+                                  Header="Atajo global para abrir la ventana"
                                   OnContent="Activado" OffContent="Desactivado"
                                   AutomationProperties.Name="Atajo global de teclado" />
+                    <ToggleButton x:Name="HotkeyCaptureButton"
+                                  Click="OnHotkeyCaptureClick"
+                                  KeyDown="OnHotkeyCaptureKeyDown"
+                                  HorizontalAlignment="Left"
+                                  AutomationProperties.Name="Cambiar la combinación del atajo global"
+                                  AutomationProperties.HelpText="Actívalo y pulsa la nueva combinación con Ctrl, Mayús o Alt más una tecla." />
                     <ToggleSwitch x:Name="StartupToggle"
                                   Header="Abrir LinkManager al iniciar Windows"
                                   OnContent="Activado" OffContent="Desactivado"
                                   AutomationProperties.Name="Abrir al iniciar Windows" />
+                    <ToggleSwitch x:Name="NotificationsToggle"
+                                  Header="Mostrar notificaciones del sistema"
+                                  OnContent="Activado" OffContent="Desactivado"
+                                  AutomationProperties.Name="Mostrar notificaciones del sistema"
+                                  AutomationProperties.HelpText="Avisa al descargar actualizaciones, al sincronizar la cola sin conexión y al guardar enlaces desde la bandeja." />
                 </StackPanel>
             </Expander>
 

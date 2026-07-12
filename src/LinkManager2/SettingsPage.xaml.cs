@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using LinkManager2.Data;
+using LinkManager2.Dialogs;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -23,6 +24,9 @@ public sealed partial class SettingsPage : Page
 
     private readonly Dictionary<string, CheckBox> _checks = new();
 
+    private uint _hotkeyModifiers;
+    private uint _hotkeyVirtualKey;
+
     public SettingsPage()
     {
         InitializeComponent();
@@ -33,8 +37,65 @@ public sealed partial class SettingsPage : Page
             _checks[key] = cb;
             ActionsPanel.Children.Add(cb);
         }
-        Loaded += async (_, _) => await LoadAsync();
+        Loaded += async (_, _) =>
+        {
+            HeadingText.Focus(FocusState.Programmatic);
+            await LoadAsync();
+        };
     }
+
+    private void OnEscapeBack(Microsoft.UI.Xaml.Input.KeyboardAccelerator sender,
+        Microsoft.UI.Xaml.Input.KeyboardAcceleratorInvokedEventArgs args)
+    {
+        args.Handled = true;
+        OnBack(this, new RoutedEventArgs());
+    }
+
+    private void UpdateHotkeyButtonLabel()
+    {
+        HotkeyCaptureButton.Content = HotkeyCaptureButton.IsChecked == true
+            ? "Pulsa la combinación…"
+            : $"Cambiar atajo (actual: {GlobalHotkey.Describe(_hotkeyModifiers, _hotkeyVirtualKey)})";
+    }
+
+    private void OnHotkeyCaptureClick(object sender, RoutedEventArgs e) => UpdateHotkeyButtonLabel();
+
+    private void OnHotkeyCaptureKeyDown(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
+    {
+        if (HotkeyCaptureButton.IsChecked != true) return;
+
+        var key = e.Key;
+        if (key is Windows.System.VirtualKey.Control or Windows.System.VirtualKey.Shift
+            or Windows.System.VirtualKey.Menu or Windows.System.VirtualKey.LeftWindows
+            or Windows.System.VirtualKey.RightWindows)
+            return;
+
+        var isLetterOrDigit = (key >= Windows.System.VirtualKey.Number0 && key <= Windows.System.VirtualKey.Z);
+        if (!isLetterOrDigit) return;
+
+        uint modifiers = 0;
+        if (IsDown(Windows.System.VirtualKey.Control)) modifiers |= 0x0002;
+        if (IsDown(Windows.System.VirtualKey.Shift)) modifiers |= 0x0004;
+        if (IsDown(Windows.System.VirtualKey.Menu)) modifiers |= 0x0001;
+        if (modifiers == 0)
+        {
+            Status(InfoBarSeverity.Warning, "Usa al menos Ctrl, Mayús o Alt junto a la tecla.");
+            return;
+        }
+
+        _hotkeyModifiers = modifiers;
+        _hotkeyVirtualKey = (uint)key;
+        HotkeyCaptureButton.IsChecked = false;
+        UpdateHotkeyButtonLabel();
+        e.Handled = true;
+        Status(InfoBarSeverity.Informational,
+            $"Atajo: {GlobalHotkey.Describe(_hotkeyModifiers, _hotkeyVirtualKey)}. Guarda para aplicarlo.");
+    }
+
+    private static bool IsDown(Windows.System.VirtualKey key) =>
+        Microsoft.UI.Input.InputKeyboardSource
+            .GetKeyStateForCurrentThread(key)
+            .HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down);
 
     private async Task LoadAsync()
     {
@@ -55,6 +116,10 @@ public sealed partial class SettingsPage : Page
             MicaToggle.IsOn = prefs.MicaBackdrop;
             TrayToggle.IsOn = prefs.MinimizeToTrayOnClose;
             HotkeyToggle.IsOn = prefs.GlobalHotkeyEnabled;
+            NotificationsToggle.IsOn = prefs.NotificationsEnabled;
+            _hotkeyModifiers = prefs.HotkeyModifiers;
+            _hotkeyVirtualKey = prefs.HotkeyVirtualKey;
+            UpdateHotkeyButtonLabel();
             StartupToggle.IsOn = StartupManager.IsEnabled;
 
             StatusBar.IsOpen = false;
@@ -88,6 +153,9 @@ public sealed partial class SettingsPage : Page
             prefs.MicaBackdrop = MicaToggle.IsOn;
             prefs.MinimizeToTrayOnClose = TrayToggle.IsOn;
             prefs.GlobalHotkeyEnabled = HotkeyToggle.IsOn;
+            prefs.NotificationsEnabled = NotificationsToggle.IsOn;
+            prefs.HotkeyModifiers = _hotkeyModifiers;
+            prefs.HotkeyVirtualKey = _hotkeyVirtualKey;
             prefs.Save();
 
             StartupManager.SetEnabled(StartupToggle.IsOn);
@@ -112,7 +180,7 @@ public sealed partial class SettingsPage : Page
             CloseButtonText = "Cancelar",
             DefaultButton = ContentDialogButton.Close,
         };
-        if (await confirm.ShowAsync() != ContentDialogResult.Primary) return;
+        if (await confirm.ShowGuardedAsync() != ContentDialogResult.Primary) return;
 
         Status(InfoBarSeverity.Informational, "Eliminando tu cuenta…");
         try
@@ -162,7 +230,12 @@ public sealed partial class SettingsPage : Page
                         CloseButtonText = "Más tarde",
                         DefaultButton = ContentDialogButton.Primary,
                     };
-                    if (await dlg.ShowAsync() == ContentDialogResult.Primary) UpdateService.ApplyAndRestart();
+                    if (await dlg.ShowGuardedAsync() == ContentDialogResult.Primary)
+                    {
+                        SetUpdateBar(InfoBarSeverity.Informational, "Aplicando actualización…");
+                        if (!await UpdateService.ApplyAndRestartAsync())
+                            SetUpdateBar(InfoBarSeverity.Error, "No se pudo aplicar la actualización. Inténtalo de nuevo.");
+                    }
                     break;
                 default:
                     SetUpdateBar(InfoBarSeverity.Error, "No se pudo comprobar. Revisa la conexión.");

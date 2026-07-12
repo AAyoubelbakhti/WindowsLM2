@@ -11,9 +11,19 @@ internal static class DialogHelper
 
     public static async Task<ContentDialogResult> ShowGuardedAsync(this ContentDialog dialog)
     {
-        if (_open) return ContentDialogResult.None;
+        var (_, result) = await dialog.TryShowGuardedAsync();
+        return result;
+    }
+
+    /// <summary>
+    /// Like ShowGuardedAsync but reports whether the dialog was actually shown, so callers
+    /// can tell "another dialog was open" apart from "the user dismissed it".
+    /// </summary>
+    public static async Task<(bool Shown, ContentDialogResult Result)> TryShowGuardedAsync(this ContentDialog dialog)
+    {
+        if (_open) return (false, ContentDialogResult.None);
         _open = true;
-        try { return await dialog.ShowAsync(); }
+        try { return (true, await dialog.ShowAsync()); }
         finally { _open = false; }
     }
 

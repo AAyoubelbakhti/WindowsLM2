@@ -31,7 +31,7 @@ public static class StartupManager
             if (enabled)
             {
                 var exe = Process.GetCurrentProcess().MainModule?.FileName;
-                if (!string.IsNullOrEmpty(exe)) key.SetValue(ValueName, $"\"{exe}\"");
+                if (!string.IsNullOrEmpty(exe)) key.SetValue(ValueName, $"\"{exe}\" {Startup.TrayArg}");
             }
             else
             {

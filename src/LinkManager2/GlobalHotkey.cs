@@ -10,8 +10,9 @@ internal sealed class GlobalHotkey : IDisposable
     private const int WM_HOTKEY = 0x0312;
     private const uint MOD_CONTROL = 0x0002;
     private const uint MOD_SHIFT = 0x0004;
+    private const uint MOD_ALT = 0x0001;
+    private const uint MOD_WIN = 0x0008;
     private const uint MOD_NOREPEAT = 0x4000;
-    private const uint VK_L = 0x4C;
     private const int HotkeyId = 0x4C4D;
 
     public event EventHandler? Pressed;
@@ -22,13 +23,24 @@ internal sealed class GlobalHotkey : IDisposable
     private readonly Window _window;
     private readonly SUBCLASSPROC _subclass;
 
-    public GlobalHotkey(Window window)
+    public GlobalHotkey(Window window, uint modifiers, uint virtualKey)
     {
         _window = window;
         _hwnd = WindowNative.GetWindowHandle(window);
         _subclass = SubclassProc;
         SetWindowSubclass(_hwnd, _subclass, HotkeyId, IntPtr.Zero);
-        IsRegistered = RegisterHotKey(_hwnd, HotkeyId, MOD_CONTROL | MOD_SHIFT | MOD_NOREPEAT, VK_L);
+        IsRegistered = RegisterHotKey(_hwnd, HotkeyId, modifiers | MOD_NOREPEAT, virtualKey);
+    }
+
+    public static string Describe(uint modifiers, uint virtualKey)
+    {
+        var parts = new System.Collections.Generic.List<string>();
+        if ((modifiers & MOD_CONTROL) != 0) parts.Add("Ctrl");
+        if ((modifiers & MOD_SHIFT) != 0) parts.Add("Mayús");
+        if ((modifiers & MOD_ALT) != 0) parts.Add("Alt");
+        if ((modifiers & MOD_WIN) != 0) parts.Add("Win");
+        parts.Add(((char)virtualKey).ToString());
+        return string.Join("+", parts);
     }
 
     public void Dispose()

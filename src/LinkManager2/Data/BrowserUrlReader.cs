@@ -15,6 +15,14 @@ public static class BrowserUrlReader
         "barra de búsqueda",
     };
 
+    private static readonly string[] AddressBarAutomationIds =
+    {
+        "urlbar-input",
+        "view_1022",
+        "omnibox",
+        "addressEditBox",
+    };
+
     public sealed record Capture(string Url, string? Title);
 
     public static Capture? TryCapture(IntPtr hwnd = default)
@@ -29,12 +37,15 @@ public static class BrowserUrlReader
 
             var windowTitle = root.Current.Name;
 
-            var bar = FindAddressBar(root);
-            if (bar is null) return null;
+            var found = FindAddressBar(root);
+            if (found is null) return null;
+            var (bar, trusted) = found.Value;
 
             if (!bar.TryGetCurrentPattern(ValuePattern.Pattern, out var p)) return null;
             var raw = ((ValuePattern)p).Current.Value;
             if (string.IsNullOrWhiteSpace(raw)) return null;
+
+            if (!trusted && !LooksLikeUrl(raw)) return null;
 
             var url = NormalizeBrowserBarValue(raw);
             if (string.IsNullOrEmpty(url)) return null;
@@ -48,9 +59,8 @@ public static class BrowserUrlReader
         }
     }
 
-    private static AutomationElement? FindAddressBar(AutomationElement root)
+    private static (AutomationElement Bar, bool Trusted)? FindAddressBar(AutomationElement root)
     {
-
         var edits = root.FindAll(TreeScope.Descendants,
             new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Edit));
 
@@ -58,17 +68,34 @@ public static class BrowserUrlReader
         var bestTop = int.MaxValue;
         foreach (AutomationElement edit in edits)
         {
+            var automationId = edit.Current.AutomationId ?? string.Empty;
+            foreach (var id in AddressBarAutomationIds)
+            {
+                if (automationId.Equals(id, StringComparison.OrdinalIgnoreCase))
+                    return (edit, true);
+            }
+
             var name = edit.Current.Name ?? string.Empty;
             foreach (var frag in AddressBarFragments)
             {
                 if (name.Contains(frag, StringComparison.OrdinalIgnoreCase))
-                    return edit;
+                    return (edit, true);
             }
 
             var top = (int)edit.Current.BoundingRectangle.Top;
             if (top < bestTop) { bestTop = top; best = edit; }
         }
-        return best;
+        return best is null ? null : (best, false);
+    }
+
+    private static bool LooksLikeUrl(string value)
+    {
+        var v = value.Trim();
+        if (v.Length == 0 || v.Contains(' ')) return false;
+        if (Uri.TryCreate(v, UriKind.Absolute, out var abs)
+            && (abs.Scheme == Uri.UriSchemeHttp || abs.Scheme == Uri.UriSchemeHttps))
+            return true;
+        return v.Contains('.');
     }
 
     private static string NormalizeBrowserBarValue(string value)

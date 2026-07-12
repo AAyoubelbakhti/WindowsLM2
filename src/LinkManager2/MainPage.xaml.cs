@@ -21,7 +21,12 @@ public sealed partial class MainPage : Page
 
     private FilterState _filters = new();
     private readonly Microsoft.UI.Dispatching.DispatcherQueueTimer _searchDebounce;
+    private readonly Microsoft.UI.Dispatching.DispatcherQueueTimer _realtimeDebounce;
     private bool _loading;
+    private int _lastSelectionCount;
+    private UndoAction? _lastUndo;
+
+    private sealed record UndoAction(string Description, Func<Task> RevertAsync);
 
     public MainPage()
     {
@@ -34,13 +39,33 @@ public sealed partial class MainPage : Page
             _searchDebounce.Stop();
             _filters.Search = SearchBox.Text;
             RefreshVisible();
+            AnnounceResultCount();
+        };
+        _realtimeDebounce = DispatcherQueue.CreateTimer();
+        _realtimeDebounce.Interval = TimeSpan.FromMilliseconds(1200);
+        _realtimeDebounce.Tick += async (_, _) =>
+        {
+            _realtimeDebounce.Stop();
+            try
+            {
+                await App.State.FlushPendingAsync();
+                await App.State.ReloadAllAsync();
+                RefreshVisible();
+            }
+            catch (Exception ex) { Diagnostics.Log("realtime-reconcile", ex); }
         };
         Loaded += OnLoaded;
     }
 
     private async void OnLoaded(object sender, RoutedEventArgs e)
     {
-        if (!App.SupabaseReady || !App.State.Auth.IsAuthenticated)
+        if (!App.SupabaseReady)
+        {
+            ((App)Application.Current).Window!.NavigateTo(typeof(LoginPage));
+            return;
+        }
+
+        if (!App.State.Auth.IsAuthenticated && !await EnsureAuthenticatedFromLocalAsync())
         {
             ((App)Application.Current).Window!.NavigateTo(typeof(LoginPage));
             return;
@@ -63,29 +88,65 @@ public sealed partial class MainPage : Page
 
             _ = RealtimeSync.StartAsync(() =>
             {
-                DispatcherQueue.TryEnqueue(async () =>
+                DispatcherQueue.TryEnqueue(() =>
                 {
-
-                    try
-                    {
-                        await App.State.FlushPendingAsync();
-                        await App.State.ReloadAllAsync();
-                        RefreshVisible();
-                    }
-                    catch (Exception ex) { Diagnostics.Log("realtime-reconcile", ex); }
+                    _realtimeDebounce.Stop();
+                    _realtimeDebounce.Start();
                 });
                 return System.Threading.Tasks.Task.CompletedTask;
             });
 
-            _ = CheckAppConfigAsync();
-            _ = CheckForUpdatesAsync();
+            _ = RunStartupChecksAsync();
         }
         catch (Exception ex)
         {
             _loading = false;
+            if (await TryRecoverExpiredSessionAsync(ex)) return;
             UpdateEmptyState();
             SetStatus($"Sin conexión: {ex.Message}. Mostrando caché.");
         }
+    }
+
+    /// <summary>
+    /// Direct-startup path: waits for the Supabase client to load and refresh the persisted
+    /// session (no extra network beyond the client's own refresh) and reports whether the
+    /// session is now usable. Returns false so the caller can fall back to LoginPage.
+    /// </summary>
+    private static async Task<bool> EnsureAuthenticatedFromLocalAsync()
+    {
+        try { await App.State.WaitReadyAsync(); }
+        catch (Exception ex) { Diagnostics.Log("wait-ready on direct start", ex); }
+        return App.State.Auth.IsAuthenticated;
+    }
+
+    private async Task<bool> TryRecoverExpiredSessionAsync(Exception ex)
+    {
+        if (!AuthService.IsAuthExpired(ex)) return false;
+
+        SetStatus("Sesión caducada. Reconectando…");
+        if (await App.State.Auth.TryRefreshSessionAsync())
+        {
+            try
+            {
+                await App.State.ReloadAllAsync();
+                RefreshVisible();
+                SetStatus($"{App.State.Items.Count} elementos · {App.State.Auth.UserEmail}");
+                return true;
+            }
+            catch (Exception retryEx) { Diagnostics.Log("reload after refresh", retryEx); }
+        }
+
+        SetStatus("Tu sesión ha caducado. Vuelve a iniciar sesión.");
+        RealtimeSync.Stop();
+        App.State.Clear();
+        ((App)Application.Current).Window!.NavigateTo(typeof(LoginPage));
+        return true;
+    }
+
+    private async Task RunStartupChecksAsync()
+    {
+        if (await CheckAppConfigAsync()) return;
+        await CheckForUpdatesAsync();
     }
 
     private async Task CheckForUpdatesAsync()
@@ -103,25 +164,34 @@ public sealed partial class MainPage : Page
             DefaultButton = ContentDialogButton.Primary,
         };
         if (await dlg.ShowGuardedAsync() == ContentDialogResult.Primary)
-            UpdateService.ApplyAndRestart();
+        {
+            SetStatus("Aplicando actualización…");
+            if (!await UpdateService.ApplyAndRestartAsync())
+                SetStatus("No se pudo aplicar la actualización. Inténtalo desde Ajustes.");
+        }
     }
 
-    private async Task CheckAppConfigAsync()
+    private async Task<bool> CheckAppConfigAsync()
     {
         var gate = await VersionGate.CheckAsync(App.Build);
-        if (!gate.UpdateRequired) return;
+        if (!gate.UpdateRequired) return false;
 
+        var message = gate.Message ?? "Hay una versión nueva. Actualiza la app para continuar.";
         var dlg = new ContentDialog
         {
             XamlRoot = XamlRoot,
             Title = "Actualización necesaria",
-            Content = gate.Message ?? "Hay una versión nueva. Actualiza la app para continuar.",
+            Content = message,
             PrimaryButtonText = "Cerrar sesión",
         };
-        await dlg.ShowAsync();
+        var (shown, _) = await dlg.TryShowGuardedAsync();
+        if (!shown) SetStatus($"Actualización necesaria: {message} Se cerrará la sesión.");
+        RealtimeSync.Stop();
+        App.State.ClearLocalCacheForCurrentUser();
         try { await App.State.Auth.SignOutAsync(); }
         catch (Exception ex) { Diagnostics.Log("version-gate sign-out", ex); }
         ((App)Application.Current).Window!.NavigateTo(typeof(LoginPage));
+        return true;
     }
 
     private void OnSearchChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
@@ -160,6 +230,36 @@ public sealed partial class MainPage : Page
         args.Handled = true;
     }
 
+    /// <summary>
+    /// Reverts the last archive or delete. Leaves the accelerator unhandled while a text
+    /// input has focus so the native text-undo of the editing control keeps working.
+    /// </summary>
+    private async void OnUndoInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+    {
+        if (FocusManager.GetFocusedElement(XamlRoot) is TextBox or PasswordBox or RichEditBox)
+        {
+            args.Handled = false;
+            return;
+        }
+        args.Handled = true;
+
+        var undo = _lastUndo;
+        if (undo is null) { SetStatus("Nada que deshacer."); return; }
+        _lastUndo = null;
+        SetStatus("Deshaciendo…");
+        try
+        {
+            await undo.RevertAsync();
+            await App.State.ReloadItemsAsync();
+            RefreshVisible();
+            SetStatus($"Deshecho: {undo.Description}");
+        }
+        catch (Exception ex)
+        {
+            SetStatus($"No se pudo deshacer: {ex.Message}");
+        }
+    }
+
     private async void OnFiltersClick(object sender, RoutedEventArgs e)
     {
         var dlg = new FiltersDialog(_filters, App.State.Categories, App.State.Tags)
@@ -172,7 +272,14 @@ public sealed partial class MainPage : Page
             _filters = dlg.Result;
             _filters.Search = SearchBox.Text;
             RefreshVisible();
+            AnnounceResultCount();
         }
+    }
+
+    private void AnnounceResultCount()
+    {
+        var n = Visible.Count;
+        SetStatus(n == 1 ? "1 resultado" : $"{n} resultados");
     }
 
     private void RefreshVisible()
@@ -222,7 +329,10 @@ public sealed partial class MainPage : Page
         if (!string.IsNullOrWhiteSpace(_filters.Search))
         {
             var s = _filters.Search.Trim();
-            q = q.Where(i => i.Title.Contains(s, StringComparison.OrdinalIgnoreCase));
+            q = q.Where(i =>
+                i.Title.Contains(s, StringComparison.OrdinalIgnoreCase)
+                || i.Value.Contains(s, StringComparison.OrdinalIgnoreCase)
+                || (i.Description is not null && i.Description.Contains(s, StringComparison.OrdinalIgnoreCase)));
         }
         if (_filters.Type != FilterType.All)
         {
@@ -232,6 +342,7 @@ public sealed partial class MainPage : Page
         if (_filters.CategoryId is not null) q = q.Where(i => i.CategoryId == _filters.CategoryId);
         if (_filters.TagId is not null) q = q.Where(i => App.State.ItemHasTag(i.Id, _filters.TagId));
         if (_filters.FavoritesOnly) q = q.Where(i => i.IsFavorite);
+        if (_filters.BrokenOnly) q = q.Where(i => i.LinkStatus == "broken");
 
         return _filters.Sort switch
         {
@@ -250,7 +361,7 @@ public sealed partial class MainPage : Page
         var count = _filters.ActiveCount;
         FiltersButton.Content = count > 0 ? $"Filtros ({count})" : "Filtros";
 
-        if (count == 0 && _filters.Sort == SortKey.AlphaAsc) { FiltersStatus.Text = string.Empty; return; }
+        if (count == 0 && _filters.Sort == SortKey.AlphaAsc) { SetFiltersStatusText(string.Empty); return; }
 
         var parts = new List<string>();
         if (_filters.Type != FilterType.All)
@@ -260,6 +371,7 @@ public sealed partial class MainPage : Page
         if (_filters.TagId is not null)
             parts.Add($"Etiqueta: {App.State.Tags.FirstOrDefault(t => t.Id == _filters.TagId)?.Name ?? "?"}");
         if (_filters.FavoritesOnly) parts.Add("Solo favoritos");
+        if (_filters.BrokenOnly) parts.Add("Solo rotos");
         if (_filters.Sort != SortKey.AlphaAsc)
             parts.Add(_filters.Sort switch
             {
@@ -270,19 +382,144 @@ public sealed partial class MainPage : Page
                 SortKey.CategoryAsc => "Orden: por categoría",
                 _ => "",
             });
-        FiltersStatus.Text = "Activos: " + string.Join(" · ", parts);
+        SetFiltersStatusText("Activos: " + string.Join(" · ", parts));
+    }
+
+    /// <summary>Updates the filters live region and raises LiveRegionChanged only when the text actually changes.</summary>
+    private void SetFiltersStatusText(string text)
+    {
+        if (FiltersStatus.Text == text) return;
+        FiltersStatus.Text = text;
+        if (text.Length == 0) return;
+        Microsoft.UI.Xaml.Automation.Peers.FrameworkElementAutomationPeer
+            .CreatePeerForElement(FiltersStatus)
+            ?.RaiseAutomationEvent(Microsoft.UI.Xaml.Automation.Peers.AutomationEvents.LiveRegionChanged);
     }
 
     private ItemViewModel? Selected => ItemsList.SelectedItem as ItemViewModel;
+
+    private List<ItemViewModel> SelectedItems =>
+        ItemsList.SelectedItems.OfType<ItemViewModel>().ToList();
 
     private void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         DetailsText.Text = Selected?.Details ?? string.Empty;
         FavoriteMenuItem.Text = Selected?.IsFavorite == true ? "Quitar de favoritos" : "Marcar como favorito";
+        UpdateBulkBar();
     }
+
+    /// <summary>
+    /// Shows or hides the bulk-actions bar and announces via the status live region when
+    /// multi-selection starts or ends, so screen reader users know the bar is reachable.
+    /// </summary>
+    private void UpdateBulkBar()
+    {
+        var count = ItemsList.SelectedItems.Count;
+        if (count > 1)
+        {
+            BulkBar.Visibility = Visibility.Visible;
+            BulkCountText.Text = $"{count} seleccionados";
+            if (_lastSelectionCount <= 1)
+                SetStatus($"{count} elementos seleccionados. Barra de acciones disponible.");
+        }
+        else
+        {
+            BulkBar.Visibility = Visibility.Collapsed;
+            if (_lastSelectionCount > 1)
+                SetStatus("Barra de acciones oculta.");
+        }
+        _lastSelectionCount = count;
+    }
+
+    private void OnBulkOpenClick(object sender, RoutedEventArgs e)
+    {
+        var items = SelectedItems;
+        var opened = 0;
+        foreach (var vm in items)
+        {
+            try { ItemActions.Open(vm.Source); BumpUsage(vm.Source); opened++; }
+            catch (Exception ex) { Diagnostics.Log("bulk-open", ex); }
+        }
+        SetStatus($"Abiertos {opened} de {items.Count}.");
+    }
+
+    private void OnBulkCopyClick(object sender, RoutedEventArgs e)
+    {
+        var items = SelectedItems;
+        if (items.Count == 0) return;
+        try
+        {
+            ItemActions.Copy(string.Join(Environment.NewLine, items.Select(i => i.Value)));
+            SetStatus($"Copiadas {items.Count} URL.");
+        }
+        catch (Exception ex) { SetStatus($"Error al copiar: {ex.Message}"); }
+    }
+
+    private async void OnBulkCollectionClick(object sender, RoutedEventArgs e)
+    {
+        var ids = SelectedItems.Select(v => v.Id).ToList();
+        if (ids.Count == 0) return;
+        var dlg = new ShareCollectionDialog(App.State.Repo, ids) { XamlRoot = XamlRoot };
+        await dlg.ShowGuardedAsync();
+    }
+
+    private async void OnBulkDeleteClick(object sender, RoutedEventArgs e)
+    {
+        var items = SelectedItems;
+        if (items.Count == 0) return;
+        var ok = await DialogHelper.ConfirmAsync(XamlRoot,
+            "Confirmar borrado múltiple",
+            $"¿Borrar {items.Count} elementos? Podrás deshacerlo con Ctrl+Z.",
+            "Borrar", "Cancelar");
+        if (!ok) return;
+
+        var deletedItems = new List<Item>();
+        foreach (var vm in items)
+        {
+            try { await App.State.Repo.DeleteAsync(vm.Id); deletedItems.Add(vm.Source); }
+            catch (Exception ex) { Diagnostics.Log("bulk-delete", ex); }
+        }
+        if (deletedItems.Count > 0)
+        {
+            _lastUndo = new UndoAction(
+                deletedItems.Count == 1
+                    ? $"borrar \"{deletedItems[0].Title}\""
+                    : $"borrar {deletedItems.Count} elementos",
+                async () =>
+                {
+                    foreach (var it in deletedItems)
+                        await App.State.Repo.RestoreAsync(it);
+                });
+        }
+        try { await App.State.ReloadItemsAsync(); RefreshVisible(); }
+        catch (Exception ex) { Diagnostics.Log("bulk-delete reload", ex); }
+        SetStatus($"Borrados {deletedItems.Count} de {items.Count}. Ctrl+Z para deshacer.");
+    }
+
+    private static bool IsDown(Windows.System.VirtualKey key) =>
+        Microsoft.UI.Input.InputKeyboardSource
+            .GetKeyStateForCurrentThread(key)
+            .HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down);
 
     private void OnListKeyDown(object sender, KeyRoutedEventArgs e)
     {
+        var ctrl = IsDown(Windows.System.VirtualKey.Control);
+        var alt = IsDown(Windows.System.VirtualKey.Menu);
+
+        if (ctrl && !alt)
+        {
+            switch (e.Key)
+            {
+                case Windows.System.VirtualKey.C when Selected is not null:
+                    OnCopyClick(sender, e); e.Handled = true; return;
+                case Windows.System.VirtualKey.E when Selected is not null:
+                    _ = AddOrEditAsync(Selected.Source); e.Handled = true; return;
+            }
+            return;
+        }
+
+        if (ctrl || alt) return;
+
         switch (e.Key)
         {
             case Windows.System.VirtualKey.Enter when Selected is not null:
@@ -323,11 +560,25 @@ public sealed partial class MainPage : Page
         if (!ok) { SetStatus("Valor inválido."); return; }
         var value = type == ItemTypes.Url ? Validation.NormalizeUrl(dlg.ItemValue) : dlg.ItemValue;
 
+        if (initial is null)
+        {
+            var existing = App.State.Items.FirstOrDefault(i =>
+                string.Equals(i.Value, value, StringComparison.OrdinalIgnoreCase));
+            if (existing is not null)
+            {
+                var keep = await DialogHelper.ConfirmAsync(XamlRoot,
+                    "Enlace duplicado",
+                    $"Ya tienes este enlace guardado como \"{existing.Title}\". ¿Guardarlo de todos modos?",
+                    "Guardar igualmente", "Cancelar");
+                if (!keep) { SetStatus("Cancelado: ya tenías ese enlace."); return; }
+            }
+        }
+
         try
         {
             if (initial is null)
             {
-                var result = await App.State.AddItemAsync(dlg.ItemTitle, value, type, dlg.ItemCategoryId, dlg.SelectedTagIds);
+                var result = await App.State.AddItemAsync(dlg.ItemTitle, value, type, dlg.ItemCategoryId, dlg.SelectedTagIds, dlg.ItemDescription);
                 SetStatus(result == AppState.AddResult.QueuedOffline
                     ? $"Sin conexión, encolado: {dlg.ItemTitle}."
                     : $"Añadido: {dlg.ItemTitle}");
@@ -338,9 +589,10 @@ public sealed partial class MainPage : Page
                         App.State.Items, i => i.Value == value && i.Title == dlg.ItemTitle);
                     if (added is not null)
                     {
+                        var userProvidedNotes = !string.IsNullOrWhiteSpace(dlg.ItemDescription);
                         _ = System.Threading.Tasks.Task.Run(async () =>
                         {
-                            await App.State.Repo.EnrichMetadataAsync(added);
+                            await App.State.Repo.EnrichMetadataAsync(added, userProvidedNotes);
                             DispatcherQueue.TryEnqueue(async () =>
                             {
                                 try { await App.State.ReloadItemsAsync(); RefreshVisible(); }
@@ -352,7 +604,7 @@ public sealed partial class MainPage : Page
             }
             else
             {
-                await App.State.Repo.UpdateAsync(initial.Id, dlg.ItemTitle, value, type, dlg.ItemCategoryId);
+                await App.State.Repo.UpdateAsync(initial.Id, dlg.ItemTitle, value, type, dlg.ItemCategoryId, dlg.ItemDescription);
                 await App.State.ReloadItemsAsync();
                 SetStatus($"Actualizado: {dlg.ItemTitle}");
             }
@@ -379,9 +631,11 @@ public sealed partial class MainPage : Page
         try
         {
             await App.State.Repo.DeleteAsync(item.Id);
+            _lastUndo = new UndoAction($"borrar \"{item.Title}\"",
+                () => App.State.Repo.RestoreAsync(item));
             await App.State.ReloadItemsAsync();
             RefreshVisible();
-            SetStatus($"Borrado: {item.Title}");
+            SetStatus($"Borrado: {item.Title}. Ctrl+Z para deshacer.");
         }
         catch (Exception ex) { SetStatus($"Error al borrar: {ex.Message}"); }
     }
@@ -405,9 +659,11 @@ public sealed partial class MainPage : Page
         try
         {
             await App.State.Repo.ArchiveAsync(item.Id, true);
+            _lastUndo = new UndoAction($"archivar \"{item.Title}\"",
+                () => App.State.Repo.ArchiveAsync(item.Id, false));
             await App.State.ReloadItemsAsync();
             RefreshVisible();
-            SetStatus($"Archivado: {item.Title}");
+            SetStatus($"Archivado: {item.Title}. Ctrl+Z para deshacer.");
         }
         catch (Exception ex) { SetStatus($"Error al archivar: {ex.Message}"); }
     }
@@ -419,15 +675,25 @@ public sealed partial class MainPage : Page
 
     private void OpenItem(Item item)
     {
-        try { ItemActions.Open(item); SetStatus($"Abierto: {item.Title}"); }
+        try { ItemActions.Open(item); SetStatus($"Abierto: {item.Title}"); BumpUsage(item); }
         catch (Exception ex) { SetStatus($"No se pudo abrir: {ex.Message}"); }
+    }
+
+    private void BumpUsage(Item item)
+    {
+        item.UsageCount++;
+        _ = System.Threading.Tasks.Task.Run(async () =>
+        {
+            try { await App.State.Repo.BumpUsageAsync(item.Id); }
+            catch (Exception ex) { Diagnostics.Log("bump-usage", ex); }
+        });
     }
 
     private void OnCopyClick(object sender, RoutedEventArgs e)
     {
         if (Selected is { } vm)
         {
-            try { ItemActions.Copy(vm.Value); SetStatus($"Copiado: {vm.Title}"); }
+            try { ItemActions.Copy(vm.Value); SetStatus($"Copiado: {vm.Title}"); BumpUsage(vm.Source); }
             catch (Exception ex) { SetStatus($"Error al copiar: {ex.Message}"); }
         }
     }
@@ -521,6 +787,24 @@ public sealed partial class MainPage : Page
         await dlg.ShowGuardedAsync();
     }
 
+    private async void OnArchivedClick(object sender, RoutedEventArgs e)
+    {
+        var dlg = new ArchivedDialog(App.State.Repo) { XamlRoot = XamlRoot };
+        await dlg.ShowGuardedAsync();
+        if (dlg.Changed)
+        {
+            try { await App.State.ReloadItemsAsync(); RefreshVisible(); }
+            catch (Exception ex) { SetStatus($"Error recargando: {ex.Message}"); }
+        }
+    }
+
+    private async void OnManageSharedClick(object sender, RoutedEventArgs e)
+    {
+        var titles = App.State.Items.ToDictionary(i => i.Id, i => i.Title);
+        var dlg = new SharedDialog(App.State.Repo, titles) { XamlRoot = XamlRoot };
+        await dlg.ShowGuardedAsync();
+    }
+
     private async void OnManageCategoriesClick(object sender, RoutedEventArgs e)
     {
         var dlg = new ManageListDialog(
@@ -568,7 +852,7 @@ public sealed partial class MainPage : Page
         try
         {
             var result = await ImportExportService.ImportFileAsync(App.State, file.Path);
-            await App.State.ReloadItemsAsync();
+            await App.State.ReloadAllAsync();
             RefreshVisible();
             SetStatus($"Importación: {result.Inserted} nuevos, {result.Skipped} omitidos.");
         }
@@ -589,6 +873,47 @@ public sealed partial class MainPage : Page
             SetStatus($"Exportado a {file.Path}");
         }
         catch (Exception ex) { SetStatus($"Error exportando: {ex.Message}"); }
+    }
+
+    private async void OnCheckLinksClick(object sender, RoutedEventArgs e)
+    {
+        var token = App.State.Auth.CurrentSession?.AccessToken;
+        if (string.IsNullOrEmpty(token)) { SetStatus("Sesión no válida para comprobar enlaces."); return; }
+        SetStatus("Comprobando enlaces…");
+        try
+        {
+            var summary = await WebApi.CheckAllLinksAsync(token);
+            if (summary is null) { SetStatus("No se pudieron comprobar los enlaces."); return; }
+            await App.State.ReloadItemsAsync();
+            RefreshVisible();
+            var s = summary.Value;
+            SetStatus(s.Pending > 0
+                ? $"Comprobados {s.Checked}: {s.Broken} rotos. Quedan {s.Pending}, vuelve a comprobar."
+                : $"Comprobados {s.Checked}: {s.Broken} rotos, {s.Ok} correctos.");
+        }
+        catch (Exception ex) { SetStatus($"Error comprobando enlaces: {ex.Message}"); }
+    }
+
+    private async void OnCheckLinkClick(object sender, RoutedEventArgs e)
+    {
+        if (Selected is not { } vm) return;
+        var token = App.State.Auth.CurrentSession?.AccessToken;
+        if (string.IsNullOrEmpty(token)) { SetStatus("Sesión no válida para comprobar enlaces."); return; }
+        SetStatus($"Comprobando: {vm.Title}…");
+        try
+        {
+            var status = await WebApi.CheckLinkAsync(vm.Id, token);
+            if (status is null) { SetStatus("No se pudo comprobar el enlace."); return; }
+            await App.State.ReloadItemsAsync();
+            RefreshVisible();
+            SetStatus(status switch
+            {
+                "broken" => $"Roto: {vm.Title}",
+                "ok" => $"Correcto: {vm.Title}",
+                _ => $"Sin determinar: {vm.Title}",
+            });
+        }
+        catch (Exception ex) { SetStatus($"Error comprobando enlace: {ex.Message}"); }
     }
 
     private async void OnReloadClick(object sender, RoutedEventArgs e)
@@ -618,6 +943,9 @@ public sealed partial class MainPage : Page
 
     private async void OnSignOutClick(object sender, RoutedEventArgs e)
     {
+        _lastUndo = null;
+        RealtimeSync.Stop();
+        App.State.ClearLocalCacheForCurrentUser();
         try { await App.State.Auth.SignOutAsync(); }
         catch (Exception ex) { Diagnostics.Log("sign-out", ex); }
         App.State.Clear();

@@ -16,6 +16,7 @@
         <TextBlock Text="L — Capturar enlace del navegador" />
         <TextBlock Text="R — Capturar ruta del Explorador" />
         <TextBlock Text="A — Abrir enlace del portapapeles" />
+        <TextBlock Text="P — Guardar enlace del portapapeles" />
         <TextBlock Text="H — Ayuda" />
     </StackPanel>
 </ContentDialog>

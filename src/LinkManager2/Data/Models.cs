@@ -46,6 +46,15 @@ public class Item : BaseModel
     [Column("is_favorite")]
     public bool IsFavorite { get; set; }
 
+    [Column("link_status")]
+    public string? LinkStatus { get; set; }
+
+    [Column("link_http_code")]
+    public int? LinkHttpCode { get; set; }
+
+    [Column("link_checked_at")]
+    public DateTime? LinkCheckedAt { get; set; }
+
     [Column("archived_at")]
     public DateTime? ArchivedAt { get; set; }
 
@@ -154,6 +163,12 @@ public class ShareCollection : BaseModel
 
     [Column("expires_at")]
     public DateTime? ExpiresAt { get; set; }
+
+    [Column("view_count")]
+    public int ViewCount { get; set; }
+
+    [Column("created_at", ignoreOnInsert: true, ignoreOnUpdate: true)]
+    public DateTime CreatedAt { get; set; }
 }
 
 [Table("share_collection_items")]

@@ -36,6 +36,8 @@ public sealed class AppState
         Cache = new LocalCache();
     }
 
+    private void SyncCacheUser() => Cache.SetUser(Auth.CurrentUser?.Id);
+
     public static (string Url, string Key) LoadConfig()
     {
         var defaults = ReadFile(Path.Combine(AppContext.BaseDirectory, "appsettings.json"));
@@ -66,6 +68,7 @@ public sealed class AppState
         _tags = (await tagsTask).ToList();
         _itemTags = BuildItemTagMap(await itemTagsTask);
         Settings = await settingsTask;
+        SyncCacheUser();
         Cache.ReplaceItems(_items, _categories);
 
         _ = RegisterDeviceOnceAsync();
@@ -104,74 +107,112 @@ public sealed class AppState
     public async Task ReloadItemsAsync()
     {
         _items = (await Repo.ListAsync()).ToList();
+        SyncCacheUser();
         Cache.ReplaceItems(_items, _categories);
     }
 
     public enum AddResult { Added, QueuedOffline }
 
     public async Task<AddResult> AddItemAsync(string title, string value, string type, string? categoryId,
-        IReadOnlyList<string>? tagIds = null)
+        IReadOnlyList<string>? tagIds = null, string? description = null)
     {
         try
         {
-            var item = await Repo.AddAsync(title, value, type, categoryId);
+            var item = await Repo.AddAsync(title, value, type, categoryId, description);
             if (tagIds is { Count: > 0 }) await Repo.SetItemTagsAsync(item.Id, tagIds);
             await ReloadItemsAsync();
             return AddResult.Added;
         }
-        catch (Exception ex) when (IsTransient(ex))
+        catch (Exception ex) when (IsRetryable(ex))
         {
+            SyncCacheUser();
             Cache.EnqueuePending("add",
-                JsonSerializer.Serialize(new PendingAdd(title, value, type, categoryId, tagIds?.ToList())));
+                JsonSerializer.Serialize(new PendingAdd(title, value, type, categoryId, tagIds?.ToList(), description)));
             return AddResult.QueuedOffline;
         }
     }
 
+    private readonly SemaphoreSlim _flushGate = new(1, 1);
+
     public async Task FlushPendingAsync()
     {
-        var pending = Cache.ReadPending();
-        if (pending.Count == 0) return;
-        var flushedAny = false;
-        var brokeOffline = false;
-        foreach (var (id, op, payload) in pending)
+        if (!await _flushGate.WaitAsync(0)) return;
+        try
         {
-            try
+            SyncCacheUser();
+            var pending = Cache.ReadPending();
+            if (pending.Count == 0) return;
+            var flushedCount = 0;
+            var droppedCount = 0;
+            var brokeOffline = false;
+            foreach (var (id, op, payload) in pending)
             {
-                if (op == "add")
+                try
                 {
-                    var p = JsonSerializer.Deserialize<PendingAdd>(payload)!;
-                    var added = await Repo.AddAsync(p.Title, p.Value, p.Type, p.CategoryId);
-                    if (p.TagIds is { Count: > 0 }) await Repo.SetItemTagsAsync(added.Id, p.TagIds);
+                    if (op == "add")
+                    {
+                        var p = JsonSerializer.Deserialize<PendingAdd>(payload)!;
+                        var added = await Repo.AddAsync(p.Title, p.Value, p.Type, p.CategoryId, p.Description);
+                        if (p.TagIds is { Count: > 0 }) await Repo.SetItemTagsAsync(added.Id, p.TagIds);
+                    }
+                    Cache.DeletePending(id);
+                    flushedCount++;
                 }
-                Cache.DeletePending(id);
-                flushedAny = true;
+                catch (Exception ex) when (IsRetryable(ex))
+                {
+                    brokeOffline = true;
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    Diagnostics.Log($"flush-pending drop op {id}", ex);
+                    Cache.DeletePending(id);
+                    droppedCount++;
+                }
             }
-            catch (Exception ex) when (IsTransient(ex))
+
+            if (droppedCount > 0)
             {
-                brokeOffline = true;
-                break;
+                Notifications.Show("Enlaces pendientes descartados",
+                    droppedCount == 1
+                        ? "1 enlace pendiente fue rechazado por el servidor y se descartó."
+                        : $"{droppedCount} enlaces pendientes fueron rechazados por el servidor y se descartaron.");
             }
-            catch
+            if (flushedCount > 0 && !brokeOffline)
             {
-                Cache.DeletePending(id);
+                await ReloadItemsAsync();
+                Notifications.Show("Cola sincronizada",
+                    flushedCount == 1
+                        ? "Se subió 1 enlace que estaba pendiente."
+                        : $"Se subieron {flushedCount} enlaces que estaban pendientes.");
             }
         }
-
-        if (flushedAny && !brokeOffline)
-            await ReloadItemsAsync();
+        finally { _flushGate.Release(); }
     }
 
-    private static bool IsTransient(Exception? ex)
+    private static bool IsRetryable(Exception? ex)
     {
         for (var cur = ex; cur is not null; cur = cur.InnerException)
         {
             if (cur is HttpRequestException or TaskCanceledException or SocketException or IOException)
                 return true;
+            if (cur is Supabase.Postgrest.Exceptions.PostgrestException pex && IsRetryableStatus(pex.StatusCode))
+                return true;
         }
         return false;
     }
 
-    private sealed record PendingAdd(string Title, string Value, string Type, string? CategoryId, List<string>? TagIds = null);
+    private static bool IsRetryableStatus(int code) => code switch
+    {
+        0 => true,
+        401 => true,
+        408 => true,
+        429 => true,
+        >= 500 and < 600 => true,
+        _ => false,
+    };
+
+    private sealed record PendingAdd(string Title, string Value, string Type, string? CategoryId, List<string>? TagIds = null, string? Description = null);
 
     public async Task ReloadTagsAsync()
     {
@@ -190,6 +231,7 @@ public sealed class AppState
 
     public void LoadCachedItems()
     {
+        SyncCacheUser();
         var cached = Cache.LoadItems();
         if (cached.Count == 0) return;
         _items = cached.Select(c => new Item
@@ -205,6 +247,13 @@ public sealed class AppState
             .GroupBy(c => c.CategoryId!)
             .Select(g => new Category { Id = g.Key, Name = g.First().CategoryName! })
             .ToList();
+    }
+
+    public void ClearLocalCacheForCurrentUser()
+    {
+        SyncCacheUser();
+        try { Cache.ClearUser(); }
+        catch (Exception ex) { Diagnostics.Log("cache clear on sign-out", ex); }
     }
 
     public void Clear()

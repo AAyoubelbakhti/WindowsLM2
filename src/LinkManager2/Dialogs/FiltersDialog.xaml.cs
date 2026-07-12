@@ -27,6 +27,7 @@ public sealed partial class FiltersDialog : ContentDialog
         SelectId(TagCombo, current.TagId);
 
         FavoritesOnly.IsOn = current.FavoritesOnly;
+        BrokenOnly.IsOn = current.BrokenOnly;
 
         SortCombo.Items.Add(new Choice<SortKey>(SortKey.AlphaAsc, "Alfabéticamente (A–Z)"));
         SortCombo.Items.Add(new Choice<SortKey>(SortKey.AlphaDesc, "Alfabéticamente (Z–A)"));
@@ -50,6 +51,7 @@ public sealed partial class FiltersDialog : ContentDialog
         Result.CategoryId = ((IdChoice)CategoryCombo.SelectedItem!).Id;
         Result.TagId = ((IdChoice)TagCombo.SelectedItem!).Id;
         Result.FavoritesOnly = FavoritesOnly.IsOn;
+        Result.BrokenOnly = BrokenOnly.IsOn;
         Result.Sort = ((Choice<SortKey>)SortCombo.SelectedItem!).Value;
     }
 

@@ -24,6 +24,10 @@
                       Header="Solo favoritos"
                       OnContent="Sí" OffContent="No"
                       AutomationProperties.Name="Mostrar solo favoritos" />
+        <ToggleSwitch x:Name="BrokenOnly"
+                      Header="Solo enlaces rotos"
+                      OnContent="Sí" OffContent="No"
+                      AutomationProperties.Name="Mostrar solo enlaces rotos" />
         <ComboBox x:Name="SortCombo" Header="Ordenar por" HorizontalAlignment="Stretch"
                   AutomationProperties.Name="Orden de la lista" />
     </StackPanel>

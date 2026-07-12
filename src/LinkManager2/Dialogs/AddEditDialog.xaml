@@ -23,6 +23,13 @@
                   Header="Categoría"
                   HorizontalAlignment="Stretch"
                   AutomationProperties.Name="Categoría" />
+        <TextBox x:Name="DescriptionBox"
+                 Header="Notas"
+                 AcceptsReturn="True"
+                 TextWrapping="Wrap"
+                 MaxHeight="120"
+                 AutomationProperties.Name="Notas"
+                 AutomationProperties.HelpText="Descripción o notas propias. Se pueden buscar." />
 
         <StackPanel x:Name="QuickCreatePanel" Spacing="8" Visibility="Collapsed">
             <Grid ColumnSpacing="8">

@@ -44,6 +44,34 @@ public sealed class AuthService
     public Task SetSessionFromTokensAsync(string accessToken, string refreshToken) =>
         _client.Auth.SetSession(accessToken, refreshToken);
 
+    public async Task<bool> TryRefreshSessionAsync()
+    {
+        try
+        {
+            await _client.Auth.RefreshSession();
+            return CurrentSession is not null;
+        }
+        catch (Exception ex)
+        {
+            Diagnostics.Log("refresh-session", ex);
+            return false;
+        }
+    }
+
+    public static bool IsAuthExpired(Exception? ex)
+    {
+        for (var cur = ex; cur is not null; cur = cur.InnerException)
+        {
+            if (cur is Supabase.Postgrest.Exceptions.PostgrestException pex && pex.StatusCode == 401)
+                return true;
+            var msg = cur.Message ?? string.Empty;
+            if (msg.Contains("JWT expired", StringComparison.OrdinalIgnoreCase)
+                || msg.Contains("invalid_grant", StringComparison.OrdinalIgnoreCase))
+                return true;
+        }
+        return false;
+    }
+
     public static string DescribeError(Exception ex)
     {
         if (ex is OperationCanceledException) return "Operación cancelada.";

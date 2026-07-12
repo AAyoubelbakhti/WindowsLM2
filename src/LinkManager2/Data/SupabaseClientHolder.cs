@@ -23,7 +23,7 @@ public static class SupabaseClientHolder
         _client = new Client(url, anonKey, new SupabaseOptions
         {
 
-            AutoConnectRealtime = true,
+            AutoConnectRealtime = false,
             AutoRefreshToken = true,
         });
         _client.Auth.SetPersistence(new LocalFileSessionHandler());

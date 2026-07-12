@@ -11,12 +11,14 @@
     <Grid Padding="16,12,16,8" RowSpacing="10">
         <Grid.KeyboardAccelerators>
             <KeyboardAccelerator Key="F" Modifiers="Control" Invoked="OnFocusSearch" />
+            <KeyboardAccelerator Key="Z" Modifiers="Control" Invoked="OnUndoInvoked" />
         </Grid.KeyboardAccelerators>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
@@ -62,6 +64,18 @@
                               AutomationProperties.Name="Crear una colección pública con los enlaces visibles">
                     <AppBarButton.Icon><FontIcon Glyph="&#xE71D;" /></AppBarButton.Icon>
                 </AppBarButton>
+                <AppBarButton Label="Compartidos…" Click="OnManageSharedClick"
+                              AutomationProperties.Name="Ver y revocar enlaces y colecciones compartidos">
+                    <AppBarButton.Icon><FontIcon Glyph="&#xE72D;" /></AppBarButton.Icon>
+                </AppBarButton>
+                <AppBarButton Label="Archivados…" Click="OnArchivedClick"
+                              AutomationProperties.Name="Ver elementos archivados y restaurarlos">
+                    <AppBarButton.Icon><FontIcon Glyph="&#xE7B8;" /></AppBarButton.Icon>
+                </AppBarButton>
+                <AppBarButton Label="Comprobar enlaces rotos" Click="OnCheckLinksClick"
+                              AutomationProperties.Name="Comprobar todos los enlaces en busca de rotos">
+                    <AppBarButton.Icon><FontIcon Glyph="&#xE945;" /></AppBarButton.Icon>
+                </AppBarButton>
                 <AppBarButton Label="Recargar" Click="OnReloadClick"
                               AutomationProperties.Name="Recargar lista desde Supabase (F5)">
                     <AppBarButton.Icon><SymbolIcon Symbol="Refresh" /></AppBarButton.Icon>
@@ -94,10 +108,10 @@
             <AutoSuggestBox x:Name="SearchBox"
                             Grid.Column="0"
                             QueryIcon="Find"
-                            PlaceholderText="Buscar por título…"
+                            PlaceholderText="Buscar por título, URL o descripción…"
                             TextChanged="OnSearchChanged"
                             SuggestionChosen="OnSuggestionChosen"
-                            AutomationProperties.Name="Buscar por título" />
+                            AutomationProperties.Name="Buscar por título, URL o descripción" />
             <Button x:Name="FiltersButton"
                     Grid.Column="1"
                     Content="Filtros"
@@ -114,7 +128,6 @@
                    Opacity="0.85"
                    FontSize="12"
                    TextWrapping="Wrap"
-                   AutomationProperties.Name="Estado de filtros activos"
                    AutomationProperties.LiveSetting="Polite" />
 
         <Border Grid.Row="3"
@@ -124,13 +137,13 @@
                 CornerRadius="8">
             <Grid>
             <ListView x:Name="ItemsList"
-                      SelectionMode="Single"
+                      SelectionMode="Extended"
                       ItemsSource="{x:Bind Visible}"
                       DoubleTapped="OnItemDoubleTapped"
                       KeyDown="OnListKeyDown"
                       RightTapped="OnListRightTapped"
                       SelectionChanged="OnSelectionChanged"
-                      AutomationProperties.Name="Lista de enlaces guardados">
+                      AutomationProperties.Name="Lista de enlaces guardados. Usa Ctrl o Mayús para seleccionar varios.">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -175,6 +188,7 @@
                         <MenuFlyoutItem Text="Etiquetas…" Tag="tags" Click="OnEditTagsClick" />
                         <MenuFlyoutItem Text="Historial…" Tag="history" Click="OnHistoryClick" />
                         <MenuFlyoutItem Text="Crear enlace público…" Tag="publink" Click="OnShareLinkClick" />
+                        <MenuFlyoutItem Text="Comprobar si está roto" Tag="check" Click="OnCheckLinkClick" />
                         <MenuFlyoutSeparator />
                         <MenuFlyoutItem x:Name="FavoriteMenuItem" Text="Marcar como favorito" Click="OnFavoriteClick" />
                         <MenuFlyoutSeparator />
@@ -206,19 +220,36 @@
             </Grid>
         </Border>
 
-        <TextBlock Grid.Row="4"
+        <StackPanel Grid.Row="4"
+                    x:Name="BulkBar"
+                    Orientation="Horizontal"
+                    Spacing="8"
+                    Visibility="Collapsed">
+            <TextBlock x:Name="BulkCountText"
+                       VerticalAlignment="Center"
+                       FontSize="12" />
+            <Button Content="Abrir" Click="OnBulkOpenClick"
+                    AutomationProperties.Name="Abrir los seleccionados" />
+            <Button Content="Copiar" Click="OnBulkCopyClick"
+                    AutomationProperties.Name="Copiar las URL de los seleccionados" />
+            <Button Content="Crear colección…" Click="OnBulkCollectionClick"
+                    AutomationProperties.Name="Crear colección con los seleccionados" />
+            <Button Content="Borrar…" Click="OnBulkDeleteClick"
+                    AutomationProperties.Name="Borrar los seleccionados" />
+        </StackPanel>
+
+        <TextBlock Grid.Row="5"
                    x:Name="DetailsText"
                    Opacity="0.85"
                    FontSize="12"
                    TextWrapping="Wrap"
                    AutomationProperties.Name="Detalles del elemento seleccionado" />
 
-        <TextBlock Grid.Row="5"
+        <TextBlock Grid.Row="6"
                    x:Name="StatusText"
                    Text="Listo."
                    Opacity="0.9"
                    FontSize="12"
-                   AutomationProperties.Name="Barra de estado"
                    AutomationProperties.LiveSetting="Polite" />
     </Grid>
 </Page>
