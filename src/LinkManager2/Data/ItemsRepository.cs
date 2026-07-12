@@ -399,6 +399,7 @@ public sealed class ItemsRepository
             UserId = userId,
             Name = name,
             Platform = "windows",
+            AppVersion = App.Version,
             LastSeenAt = DateTime.UtcNow,
         };
         await _client.From<Device>().Upsert(device, cancellationToken: ct);

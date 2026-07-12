@@ -98,8 +98,43 @@ public sealed partial class MainPage : Page
 
     private async Task RunStartupChecksAsync()
     {
-        if (await CheckAppConfigAsync()) return;
+        var gate = await VersionGate.CheckAsync(App.Build);
+        if (gate.UpdateRequired)
+        {
+            await ForceUpdateAsync(gate.Message);
+            return;
+        }
         await CheckForUpdatesAsync();
+    }
+
+    private async Task ForceUpdateAsync(string? gateMessage)
+    {
+        SetStatus("Actualización obligatoria. Descargando…");
+        var (status, _) = await UpdateService.CheckAndDownloadAsync();
+        if (status == UpdateStatus.Downloaded)
+        {
+            SetStatus("Aplicando actualización…");
+            await UpdateService.ApplyAndRestartAsync();
+            return;
+        }
+
+        var message = gateMessage ?? "Hay una versión nueva obligatoria.";
+        var dlg = new ContentDialog
+        {
+            XamlRoot = XamlRoot,
+            Title = "Actualización necesaria",
+            Content = $"{message}\n\nNo se pudo descargar la actualización automáticamente. Comprueba tu conexión y reinicia la app, o actualiza desde Ajustes.",
+            PrimaryButtonText = "Reintentar",
+            CloseButtonText = "Cerrar",
+            DefaultButton = ContentDialogButton.Primary,
+        };
+        var (shown, result) = await dlg.TryShowGuardedAsync();
+        if (shown && result == ContentDialogResult.Primary)
+        {
+            await ForceUpdateAsync(gateMessage);
+            return;
+        }
+        SetStatus("Actualización pendiente. La app se actualizará al recuperar conexión.");
     }
 
     private async Task CheckForUpdatesAsync()
@@ -122,29 +157,6 @@ public sealed partial class MainPage : Page
             if (!await UpdateService.ApplyAndRestartAsync())
                 SetStatus("No se pudo aplicar la actualización. Inténtalo desde Ajustes.");
         }
-    }
-
-    private async Task<bool> CheckAppConfigAsync()
-    {
-        var gate = await VersionGate.CheckAsync(App.Build);
-        if (!gate.UpdateRequired) return false;
-
-        var message = gate.Message ?? "Hay una versión nueva. Actualiza la app para continuar.";
-        var dlg = new ContentDialog
-        {
-            XamlRoot = XamlRoot,
-            Title = "Actualización necesaria",
-            Content = message,
-            PrimaryButtonText = "Cerrar sesión",
-        };
-        var (shown, _) = await dlg.TryShowGuardedAsync();
-        if (!shown) SetStatus($"Actualización necesaria: {message} Se cerrará la sesión.");
-        RealtimeSync.Stop();
-        App.State.ClearLocalCacheForCurrentUser();
-        try { await App.State.Auth.SignOutAsync(); }
-        catch (Exception ex) { Diagnostics.Log("version-gate sign-out", ex); }
-        ((App)Application.Current).Window!.NavigateTo(typeof(LoginPage));
-        return true;
     }
 
     private async Task FlushPendingAsync()

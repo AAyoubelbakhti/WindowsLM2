@@ -213,6 +213,9 @@ public class Device : BaseModel
     [Column("platform")]
     public string Platform { get; set; } = "windows";
 
+    [Column("app_version")]
+    public string? AppVersion { get; set; }
+
     [Column("last_seen_at")]
     public DateTime? LastSeenAt { get; set; }
 
