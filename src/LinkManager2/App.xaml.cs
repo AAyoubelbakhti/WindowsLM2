@@ -9,10 +9,10 @@ public partial class App : Application
 {
     public MainWindow? Window { get; private set; }
 
-    public const int Build = 18;
+    public const int Build = 20;
 
     /// <summary>Semantic app version reported to the backend (devices.app_version); keep in sync with Build and Velopack packVersion.</summary>
-    public const string Version = "1.5.5";
+    public const string Version = "1.6.0";
 
     public static AppState State { get; private set; } = null!;
 

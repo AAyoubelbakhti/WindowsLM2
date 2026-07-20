@@ -21,7 +21,7 @@
         <TextBox x:Name="ResultBox"
                  Header="URL generada"
                  IsReadOnly="True"
-                 FontFamily="Consolas"
+                 FontFamily="{StaticResource AppMonoFont}"
                  AutomationProperties.Name="URL pública generada" />
         <StackPanel Orientation="Horizontal" Spacing="8">
             <Button x:Name="CopyButton" Content="Copiar URL" IsEnabled="False" Click="OnCopyClick"

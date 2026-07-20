@@ -26,6 +26,7 @@ public sealed partial class SettingsPage : Page
 
     private uint _hotkeyModifiers;
     private uint _hotkeyVirtualKey;
+    private bool _loaded;
 
     public SettingsPage()
     {
@@ -121,10 +122,34 @@ public sealed partial class SettingsPage : Page
             _hotkeyVirtualKey = prefs.HotkeyVirtualKey;
             UpdateHotkeyButtonLabel();
             StartupToggle.IsOn = StartupManager.IsEnabled;
+            SelectThemeRadio(prefs.Theme);
 
             StatusBar.IsOpen = false;
+            _loaded = true;
         }
         catch (Exception ex) { Status(InfoBarSeverity.Error, $"Error cargando: {ex.Message}"); }
+    }
+
+    private void SelectThemeRadio(string theme)
+    {
+        foreach (var item in ThemeRadios.Items)
+            if (item is RadioButton rb && (string)rb.Tag == theme)
+            {
+                ThemeRadios.SelectedItem = rb;
+                return;
+            }
+        if (ThemeRadios.Items.Count > 0) ThemeRadios.SelectedIndex = 0;
+    }
+
+    private void OnThemeChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (!_loaded) return;
+        if (ThemeRadios.SelectedItem is not RadioButton rb || rb.Tag is not string theme) return;
+
+        var prefs = LocalPreferences.Load();
+        prefs.Theme = theme;
+        prefs.Save();
+        ((App)Application.Current).Window?.ApplyTheme();
     }
 
     private async void OnSave(object sender, RoutedEventArgs e)

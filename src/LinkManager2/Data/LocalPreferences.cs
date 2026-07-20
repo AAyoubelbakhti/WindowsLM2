@@ -8,6 +8,9 @@ public sealed class LocalPreferences
     public bool MinimizeToTrayOnClose { get; set; } = true;
     public bool GlobalHotkeyEnabled { get; set; } = true;
     public bool NotificationsEnabled { get; set; } = true;
+
+    /// <summary>Preferred UI theme: "system" (follow Windows), "light", or "dark".</summary>
+    public string Theme { get; set; } = "system";
     public uint HotkeyModifiers { get; set; } = 0x0002 | 0x0004;
     public uint HotkeyVirtualKey { get; set; } = 0x4C;
     public int? WindowX { get; set; }

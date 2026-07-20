@@ -47,6 +47,7 @@ public sealed partial class MainWindow : Window
         SetTitleBar(AppTitleBar);
         AppWindow.SetIcon("Assets/AppIcon.ico");
         ApplyBackdrop();
+        ApplyTheme();
         RestoreWindowBounds();
 
         Closed += OnClosed;
@@ -174,10 +175,19 @@ public sealed partial class MainWindow : Window
 
     public void ApplyBackdrop() => SystemBackdrop = _prefs.MicaBackdrop ? new MicaBackdrop() : null;
 
+    /// <summary>Applies the saved theme preference to the root element. "system" clears the override so Windows decides.</summary>
+    public void ApplyTheme() => RootGrid.RequestedTheme = _prefs.Theme switch
+    {
+        "light" => ElementTheme.Light,
+        "dark" => ElementTheme.Dark,
+        _ => ElementTheme.Default,
+    };
+
     public void ReloadPreferences()
     {
         _prefs = LocalPreferences.Load();
         ApplyBackdrop();
+        ApplyTheme();
         if (_prefs.GlobalHotkeyEnabled)
         {
             UninstallHotkey();

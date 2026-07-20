@@ -10,7 +10,7 @@
         <KeyboardAccelerator Key="Escape" Invoked="OnEscapeBack" />
     </Page.KeyboardAccelerators>
     <ScrollViewer Padding="24,12,24,24">
-        <StackPanel Spacing="16" MaxWidth="640" HorizontalAlignment="Stretch">
+        <StackPanel Spacing="18" MaxWidth="640" HorizontalAlignment="Stretch">
 
             <Grid ColumnSpacing="12">
                 <Grid.ColumnDefinitions>
@@ -24,25 +24,50 @@
                         AutomationProperties.Name="Volver a la lista" />
             </Grid>
 
-            <Expander Header="Cuenta" IsExpanded="True" HorizontalAlignment="Stretch">
+            <TextBlock Text="Cuenta" FontSize="18" FontWeight="SemiBold"
+                       AutomationProperties.HeadingLevel="Level2" />
+            <Expander Header="Perfil" IsExpanded="True" HorizontalAlignment="Stretch">
                 <StackPanel Spacing="10" Padding="0,8">
                     <TextBox x:Name="DisplayNameBox"
                              Header="Nombre público"
                              MaxLength="60"
                              AutomationProperties.Name="Nombre público"
                              AutomationProperties.HelpText="Aparece en la web. No se muestra tu email." />
+                    <HyperlinkButton Content="Gestionar cuenta y contraseña en aelbak.dev"
+                                     NavigateUri="https://aelbak.dev/cuenta"
+                                     AutomationProperties.Name="Gestionar cuenta y contraseña en aelbak.dev" />
                 </StackPanel>
             </Expander>
 
-            <Expander Header="Historial" IsExpanded="True" HorizontalAlignment="Stretch">
+            <TextBlock Text="Apariencia" FontSize="18" FontWeight="SemiBold"
+                       AutomationProperties.HeadingLevel="Level2" />
+            <Expander Header="Tema" IsExpanded="True" HorizontalAlignment="Stretch">
+                <RadioButtons x:Name="ThemeRadios"
+                              Header="Tema de la aplicación"
+                              SelectionChanged="OnThemeChanged"
+                              AutomationProperties.Name="Tema de la aplicación">
+                    <RadioButton Content="Seguir a Windows" Tag="system"
+                                 AutomationProperties.Name="Seguir el tema de Windows" />
+                    <RadioButton Content="Claro" Tag="light"
+                                 AutomationProperties.Name="Tema claro" />
+                    <RadioButton Content="Oscuro" Tag="dark"
+                                 AutomationProperties.Name="Tema oscuro" />
+                </RadioButtons>
+            </Expander>
+
+            <TextBlock Text="Enlaces" FontSize="18" FontWeight="SemiBold"
+                       AutomationProperties.HeadingLevel="Level2" />
+            <Expander Header="Acciones visibles en el menú contextual" IsExpanded="True" HorizontalAlignment="Stretch">
+                <StackPanel x:Name="ActionsPanel" Spacing="6" Padding="0,8" />
+            </Expander>
+            <Expander Header="Historial" IsExpanded="False" HorizontalAlignment="Stretch">
                 <ToggleSwitch x:Name="HistoryToggle"
                               Header="Habilitar historial por elemento"
                               OnContent="Activado" OffContent="Desactivado"
                               AutomationProperties.Name="Activar historial"
                               AutomationProperties.HelpText="Registra cada creación, modificación o borrado." />
             </Expander>
-
-            <Expander Header="Privacidad al compartir" IsExpanded="True" HorizontalAlignment="Stretch">
+            <Expander Header="Privacidad al compartir" IsExpanded="False" HorizontalAlignment="Stretch">
                 <StackPanel Spacing="10" Padding="0,8">
                     <TextBlock Text="Desactivado por defecto. Si lo activas, quien abra tus enlaces públicos verá la categoría y/o las etiquetas que les asignaste."
                                TextWrapping="Wrap" Opacity="0.7" />
@@ -57,11 +82,9 @@
                 </StackPanel>
             </Expander>
 
-            <Expander Header="Acciones visibles en el menú contextual" IsExpanded="True" HorizontalAlignment="Stretch">
-                <StackPanel x:Name="ActionsPanel" Spacing="6" Padding="0,8" />
-            </Expander>
-
-            <Expander Header="Aplicación (solo este equipo)" IsExpanded="True" HorizontalAlignment="Stretch">
+            <TextBlock Text="Este equipo" FontSize="18" FontWeight="SemiBold"
+                       AutomationProperties.HeadingLevel="Level2" />
+            <Expander Header="Ventana y sistema" IsExpanded="True" HorizontalAlignment="Stretch">
                 <StackPanel Spacing="10" Padding="0,8">
                     <ToggleSwitch x:Name="MicaToggle"
                                   Header="Fondo translúcido Mica"
@@ -93,8 +116,7 @@
                                   AutomationProperties.HelpText="Avisa al descargar actualizaciones, al sincronizar la cola sin conexión y al guardar enlaces desde la bandeja." />
                 </StackPanel>
             </Expander>
-
-            <Expander Header="Actualizaciones" IsExpanded="True" HorizontalAlignment="Stretch">
+            <Expander Header="Actualizaciones" IsExpanded="False" HorizontalAlignment="Stretch">
                 <StackPanel Spacing="10" Padding="0,8">
                     <TextBlock Text="LinkManager se actualiza solo en segundo plano. También puedes comprobarlo ahora."
                                TextWrapping="Wrap" Opacity="0.8" />
@@ -120,10 +142,11 @@
                         AutomationProperties.Name="Guardar todos los ajustes" />
             </Grid>
 
+            <TextBlock Text="Avanzado" FontSize="18" FontWeight="SemiBold"
+                       AutomationProperties.HeadingLevel="Level2" />
             <HyperlinkButton Content="Política de privacidad"
                              NavigateUri="https://lm.aelbak.dev/privacidad"
                              AutomationProperties.Name="Abrir la política de privacidad" />
-
             <Expander Header="Zona de peligro" IsExpanded="False" HorizontalAlignment="Stretch">
                 <StackPanel Spacing="10" Padding="0,8">
                     <TextBlock Text="Eliminar tu cuenta borra de forma permanente tu cuenta y todos tus datos (enlaces, categorías, etiquetas, ajustes y enlaces compartidos). No se puede deshacer."

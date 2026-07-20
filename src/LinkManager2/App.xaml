@@ -11,26 +11,28 @@
                 <ResourceDictionary>
                     <ResourceDictionary.ThemeDictionaries>
                         <ResourceDictionary x:Key="Light">
-                            <Color x:Key="SystemAccentColor">#2A4DD0</Color>
-                            <Color x:Key="SystemAccentColorLight1">#4661DB</Color>
-                            <Color x:Key="SystemAccentColorLight2">#6E84E8</Color>
-                            <Color x:Key="SystemAccentColorLight3">#9CACF1</Color>
-                            <Color x:Key="SystemAccentColorDark1">#1F3CB0</Color>
-                            <Color x:Key="SystemAccentColorDark2">#162E8C</Color>
-                            <Color x:Key="SystemAccentColorDark3">#0D1F66</Color>
+                            <Color x:Key="SystemAccentColor">#C2410C</Color>
+                            <Color x:Key="SystemAccentColorLight1">#CD6338</Color>
+                            <Color x:Key="SystemAccentColorLight2">#D88563</Color>
+                            <Color x:Key="SystemAccentColorLight3">#E3A88F</Color>
+                            <Color x:Key="SystemAccentColorDark1">#A3370A</Color>
+                            <Color x:Key="SystemAccentColorDark2">#882E08</Color>
+                            <Color x:Key="SystemAccentColorDark3">#6D2407</Color>
                         </ResourceDictionary>
                         <ResourceDictionary x:Key="Dark">
-                            <Color x:Key="SystemAccentColor">#B9C3FF</Color>
-                            <Color x:Key="SystemAccentColorLight1">#CDD3FF</Color>
-                            <Color x:Key="SystemAccentColorLight2">#E0E3FF</Color>
-                            <Color x:Key="SystemAccentColorLight3">#EFF0FF</Color>
-                            <Color x:Key="SystemAccentColorDark1">#9CACF1</Color>
-                            <Color x:Key="SystemAccentColorDark2">#6E84E8</Color>
-                            <Color x:Key="SystemAccentColorDark3">#4661DB</Color>
+                            <Color x:Key="SystemAccentColor">#FB923C</Color>
+                            <Color x:Key="SystemAccentColorLight1">#FCA65F</Color>
+                            <Color x:Key="SystemAccentColorLight2">#FCB982</Color>
+                            <Color x:Key="SystemAccentColorLight3">#FDCDA5</Color>
+                            <Color x:Key="SystemAccentColorDark1">#D37B32</Color>
+                            <Color x:Key="SystemAccentColorDark2">#B0662A</Color>
+                            <Color x:Key="SystemAccentColorDark3">#8D5222</Color>
                         </ResourceDictionary>
                     </ResourceDictionary.ThemeDictionaries>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
+
+            <FontFamily x:Key="AppMonoFont">ms-appx:///Assets/Fonts/JetBrainsMono-Regular.ttf#JetBrains Mono</FontFamily>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
