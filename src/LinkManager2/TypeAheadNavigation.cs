@@ -71,9 +71,13 @@ internal sealed class TypeAheadNavigation
     /// <summary>
     /// Uppercases the first character of a title and strips diacritics (FormD decomposition
     /// minus non-spacing marks) so accented initials and Ñ match their base letter key.
+    /// Titles that begin with a surrogate pair (emoji or astral-plane symbol) have no base
+    /// letter to match, so their first char is returned as-is without normalizing — passing a
+    /// lone surrogate to string.Normalize throws ArgumentException and crashed the app.
     /// </summary>
     private static char NormalizeFirst(string title)
     {
+        if (char.IsSurrogate(title[0])) return title[0];
         var upper = char.ToUpperInvariant(title[0]);
         if (upper < 0x80) return upper;
         foreach (var ch in upper.ToString().Normalize(NormalizationForm.FormD))
