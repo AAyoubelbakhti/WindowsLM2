@@ -15,32 +15,48 @@ public static class Notifications
 
     public static void Register()
     {
-        if (_registered) return;
+        if (_registered)
+            return;
         try
         {
             AppNotificationManager.Default.Register();
             _registered = true;
         }
-        catch (Exception ex) { Diagnostics.Log("notifications register", ex); }
+        catch (Exception ex)
+        {
+            Diagnostics.Log("notifications register", ex);
+        }
     }
 
     public static void Unregister()
     {
-        if (!_registered) return;
-        try { AppNotificationManager.Default.Unregister(); }
-        catch (Exception ex) { Diagnostics.Log("notifications unregister", ex); }
+        if (!_registered)
+            return;
+        try
+        {
+            AppNotificationManager.Default.Unregister();
+        }
+        catch (Exception ex)
+        {
+            Diagnostics.Log("notifications unregister", ex);
+        }
         _registered = false;
     }
 
     public static void Show(string title, string? body = null)
     {
-        if (!_registered || !LocalPreferences.Load().NotificationsEnabled) return;
+        if (!_registered || !LocalPreferences.Load().NotificationsEnabled)
+            return;
         try
         {
             var builder = new AppNotificationBuilder().AddText(title);
-            if (!string.IsNullOrWhiteSpace(body)) builder.AddText(body);
+            if (!string.IsNullOrWhiteSpace(body))
+                builder.AddText(body);
             AppNotificationManager.Default.Show(builder.BuildNotification());
         }
-        catch (Exception ex) { Diagnostics.Log("notifications show", ex); }
+        catch (Exception ex)
+        {
+            Diagnostics.Log("notifications show", ex);
+        }
     }
 }

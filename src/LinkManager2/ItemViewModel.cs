@@ -31,7 +31,8 @@ public sealed class ItemViewModel : INotifyPropertyChanged
         get
         {
             var prefix = _item.IsFavorite ? "★ " : string.Empty;
-            if (IsBroken) prefix += "⚠ ";
+            if (IsBroken)
+                prefix += "⚠ ";
             return prefix + _item.Title;
         }
     }
@@ -41,8 +42,10 @@ public sealed class ItemViewModel : INotifyPropertyChanged
         get
         {
             var parts = new System.Collections.Generic.List<string>();
-            if (_item.IsFavorite) parts.Add("Favorito");
-            if (IsBroken) parts.Add("Enlace roto");
+            if (_item.IsFavorite)
+                parts.Add("Favorito");
+            if (IsBroken)
+                parts.Add("Enlace roto");
             parts.Add(_item.Title);
             return string.Join(", ", parts);
         }
@@ -72,7 +75,8 @@ public sealed class ItemViewModel : INotifyPropertyChanged
     public void UpdateSource(Item item, string? categoryName = null)
     {
         _item = item;
-        if (categoryName is not null) CategoryName = categoryName;
+        if (categoryName is not null)
+            CategoryName = categoryName;
         RaiseAllChanged();
     }
 

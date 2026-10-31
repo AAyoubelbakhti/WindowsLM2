@@ -11,7 +11,6 @@ public readonly record struct ImportResult(int Inserted, int Skipped);
 
 public static class ImportExportService
 {
-
     public static async Task<ImportResult> ImportFileAsync(AppState state, string path)
     {
         var parsed = path.EndsWith(".json", StringComparison.OrdinalIgnoreCase)
@@ -32,10 +31,12 @@ public static class ImportExportService
             var root = doc.RootElement;
             if (root.ValueKind != JsonValueKind.Object)
                 throw new FormatException("Formato JSON no reconocido.");
-            isExporterFormat = root.TryGetProperty("items", out _) || root.TryGetProperty("categories", out _);
+            isExporterFormat =
+                root.TryGetProperty("items", out _) || root.TryGetProperty("categories", out _);
         }
 
-        if (isExporterFormat) return LegacyImporter.ParseLinkManagerJson(text);
+        if (isExporterFormat)
+            return LegacyImporter.ParseLinkManagerJson(text);
 
         var legacy = LegacyImporter.ParseJson(text);
         if (legacy.Items.Count == 0 && legacy.Categories.Count == 0)
@@ -43,37 +44,64 @@ public static class ImportExportService
         return legacy;
     }
 
-    private static async Task<ImportResult> BulkInsertAsync(AppState state, LegacyImporter.ParsedData parsed)
+    private static async Task<ImportResult> BulkInsertAsync(
+        AppState state,
+        LegacyImporter.ParsedData parsed
+    )
     {
-        var existingTitles = new HashSet<string>(state.Items.Select(i => i.Title), StringComparer.OrdinalIgnoreCase);
-        var existingCats = state.Categories.ToDictionary(c => c.Name, c => c.Id, StringComparer.OrdinalIgnoreCase);
+        var existingTitles = new HashSet<string>(
+            state.Items.Select(i => i.Title),
+            StringComparer.OrdinalIgnoreCase
+        );
+        var existingCats = state.Categories.ToDictionary(
+            c => c.Name,
+            c => c.Id,
+            StringComparer.OrdinalIgnoreCase
+        );
 
         var wantedCats = new HashSet<string>(parsed.Categories, StringComparer.OrdinalIgnoreCase);
         foreach (var p in parsed.Items)
-            if (!string.IsNullOrWhiteSpace(p.Category)) wantedCats.Add(p.Category!);
+            if (!string.IsNullOrWhiteSpace(p.Category))
+                wantedCats.Add(p.Category!);
         foreach (var name in wantedCats)
         {
-            if (existingCats.ContainsKey(name)) continue;
+            if (existingCats.ContainsKey(name))
+                continue;
             try
             {
                 var created = await state.Repo.AddCategoryAsync(name);
                 existingCats[created.Name] = created.Id;
             }
-            catch (Exception ex) { Diagnostics.Log($"import create category '{name}'", ex); }
+            catch (Exception ex)
+            {
+                Diagnostics.Log($"import create category '{name}'", ex);
+            }
         }
 
-        var inserted = 0; var skipped = 0;
+        var inserted = 0;
+        var skipped = 0;
         foreach (var p in parsed.Items)
         {
-            if (existingTitles.Contains(p.Title)) { skipped++; continue; }
-            var catId = p.Category is not null && existingCats.TryGetValue(p.Category, out var id) ? id : null;
+            if (existingTitles.Contains(p.Title))
+            {
+                skipped++;
+                continue;
+            }
+            var catId =
+                p.Category is not null && existingCats.TryGetValue(p.Category, out var id)
+                    ? id
+                    : null;
             try
             {
                 await state.Repo.AddAsync(p.Title, p.Value, p.Type, catId);
                 inserted++;
                 existingTitles.Add(p.Title);
             }
-            catch (Exception ex) { Diagnostics.Log($"import insert '{p.Title}'", ex); skipped++; }
+            catch (Exception ex)
+            {
+                Diagnostics.Log($"import insert '{p.Title}'", ex);
+                skipped++;
+            }
         }
         return new ImportResult(inserted, skipped);
     }

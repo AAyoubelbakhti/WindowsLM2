@@ -27,8 +27,15 @@ public sealed partial class MainPage : Page
         var warning = ((App)Application.Current).Window?.HotkeyWarning;
 
         _loading = true;
-        try { App.State.LoadCachedItems(); RefreshVisible(); }
-        catch (Exception ex) { SetStatus($"Caché ilegible: {ex.Message}"); }
+        try
+        {
+            App.State.LoadCachedItems();
+            RefreshVisible();
+        }
+        catch (Exception ex)
+        {
+            SetStatus($"Caché ilegible: {ex.Message}");
+        }
         SetStatus("Cargando…");
 
         try
@@ -54,7 +61,8 @@ public sealed partial class MainPage : Page
         catch (Exception ex)
         {
             _loading = false;
-            if (await TryRecoverExpiredSessionAsync(ex)) return;
+            if (await TryRecoverExpiredSessionAsync(ex))
+                return;
             UpdateEmptyState();
             SetStatus($"Sin conexión: {ex.Message}. Mostrando caché.");
         }
@@ -67,14 +75,21 @@ public sealed partial class MainPage : Page
     /// </summary>
     private static async Task<bool> EnsureAuthenticatedFromLocalAsync()
     {
-        try { await App.State.WaitReadyAsync(); }
-        catch (Exception ex) { Diagnostics.Log("wait-ready on direct start", ex); }
+        try
+        {
+            await App.State.WaitReadyAsync();
+        }
+        catch (Exception ex)
+        {
+            Diagnostics.Log("wait-ready on direct start", ex);
+        }
         return App.State.Auth.IsAuthenticated;
     }
 
     private async Task<bool> TryRecoverExpiredSessionAsync(Exception ex)
     {
-        if (!AuthService.IsAuthExpired(ex)) return false;
+        if (!AuthService.IsAuthExpired(ex))
+            return false;
 
         SetStatus("Sesión caducada. Reconectando…");
         if (await App.State.Auth.TryRefreshSessionAsync())
@@ -86,7 +101,10 @@ public sealed partial class MainPage : Page
                 SetStatus($"{App.State.Items.Count} elementos · {App.State.Auth.UserEmail}");
                 return true;
             }
-            catch (Exception retryEx) { Diagnostics.Log("reload after refresh", retryEx); }
+            catch (Exception retryEx)
+            {
+                Diagnostics.Log("reload after refresh", retryEx);
+            }
         }
 
         SetStatus("Tu sesión ha caducado. Vuelve a iniciar sesión.");
@@ -123,7 +141,8 @@ public sealed partial class MainPage : Page
         {
             XamlRoot = XamlRoot,
             Title = "Actualización necesaria",
-            Content = $"{message}\n\nNo se pudo descargar la actualización automáticamente. Comprueba tu conexión y reinicia la app, o actualiza desde Ajustes.",
+            Content =
+                $"{message}\n\nNo se pudo descargar la actualización automáticamente. Comprueba tu conexión y reinicia la app, o actualiza desde Ajustes.",
             PrimaryButtonText = "Reintentar",
             CloseButtonText = "Cerrar",
             DefaultButton = ContentDialogButton.Primary,
@@ -140,7 +159,8 @@ public sealed partial class MainPage : Page
     private async Task CheckForUpdatesAsync()
     {
         var (status, version) = await UpdateService.CheckAndDownloadAsync();
-        if (status != UpdateStatus.Downloaded) return;
+        if (status != UpdateStatus.Downloaded)
+            return;
 
         var dlg = new ContentDialog
         {
@@ -161,7 +181,14 @@ public sealed partial class MainPage : Page
 
     private async Task FlushPendingAsync()
     {
-        try { await App.State.FlushPendingAsync(); RefreshVisible(); }
-        catch (Exception ex) { Diagnostics.Log("flush-pending", ex); }
+        try
+        {
+            await App.State.FlushPendingAsync();
+            RefreshVisible();
+        }
+        catch (Exception ex)
+        {
+            Diagnostics.Log("flush-pending", ex);
+        }
     }
 }

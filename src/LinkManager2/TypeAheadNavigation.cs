@@ -28,10 +28,12 @@ internal sealed class TypeAheadNavigation
     public bool TrySelect(VirtualKey key)
     {
         var c = ToChar(key);
-        if (c == '\0') return false;
+        if (c == '\0')
+            return false;
 
         var items = _list.Items;
-        if (items.Count == 0) return false;
+        if (items.Count == 0)
+            return false;
 
         var start = _list.SelectedIndex < 0 ? 0 : _list.SelectedIndex;
         for (var offset = 1; offset <= items.Count; offset++)
@@ -65,7 +67,8 @@ internal sealed class TypeAheadNavigation
         }
         _list.DispatcherQueue?.TryEnqueue(
             Microsoft.UI.Dispatching.DispatcherQueuePriority.Low,
-            () => (_list.ContainerFromIndex(index) as Control)?.Focus(FocusState.Keyboard));
+            () => (_list.ContainerFromIndex(index) as Control)?.Focus(FocusState.Keyboard)
+        );
     }
 
     /// <summary>
@@ -77,9 +80,11 @@ internal sealed class TypeAheadNavigation
     /// </summary>
     private static char NormalizeFirst(string title)
     {
-        if (char.IsSurrogate(title[0])) return title[0];
+        if (char.IsSurrogate(title[0]))
+            return title[0];
         var upper = char.ToUpperInvariant(title[0]);
-        if (upper < 0x80) return upper;
+        if (upper < 0x80)
+            return upper;
         foreach (var ch in upper.ToString().Normalize(NormalizationForm.FormD))
             if (CharUnicodeInfo.GetUnicodeCategory(ch) != UnicodeCategory.NonSpacingMark)
                 return char.ToUpperInvariant(ch);

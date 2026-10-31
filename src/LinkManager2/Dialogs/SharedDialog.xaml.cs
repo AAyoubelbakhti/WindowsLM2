@@ -52,53 +52,72 @@ public sealed partial class SharedDialog : ContentDialog
             foreach (var l in links)
             {
                 var name = _itemTitles.TryGetValue(l.ItemId, out var t) ? t : "(enlace)";
-                _entries.Add(new ShareEntry(
-                    IsCollection: false,
-                    Token: l.Token,
-                    Title: $"Enlace: {name}",
-                    Subtitle: $"{l.ViewCount} vistas · {ExpiryLabel(l.ExpiresAt)}",
-                    Url: $"{WebBase}/s/{l.Token}"));
+                _entries.Add(
+                    new ShareEntry(
+                        IsCollection: false,
+                        Token: l.Token,
+                        Title: $"Enlace: {name}",
+                        Subtitle: $"{l.ViewCount} vistas · {ExpiryLabel(l.ExpiresAt)}",
+                        Url: $"{WebBase}/s/{l.Token}"
+                    )
+                );
             }
             foreach (var c in collections)
             {
-                _entries.Add(new ShareEntry(
-                    IsCollection: true,
-                    Token: c.Token,
-                    Title: $"Colección: {c.Name}",
-                    Subtitle: $"{c.ViewCount} vistas · {ExpiryLabel(c.ExpiresAt)}",
-                    Url: $"{WebBase}/c/{c.Token}"));
+                _entries.Add(
+                    new ShareEntry(
+                        IsCollection: true,
+                        Token: c.Token,
+                        Title: $"Colección: {c.Name}",
+                        Subtitle: $"{c.ViewCount} vistas · {ExpiryLabel(c.ExpiresAt)}",
+                        Url: $"{WebBase}/c/{c.Token}"
+                    )
+                );
             }
             ItemsList.SelectedItem = null;
-            Status(InfoBarSeverity.Informational,
-                _entries.Count == 1 ? "1 compartido." : $"{_entries.Count} compartidos.");
+            Status(
+                InfoBarSeverity.Informational,
+                _entries.Count == 1 ? "1 compartido." : $"{_entries.Count} compartidos."
+            );
         }
-        catch (Exception ex) { Status(InfoBarSeverity.Error, ex.Message); }
+        catch (Exception ex)
+        {
+            Status(InfoBarSeverity.Error, ex.Message);
+        }
     }
 
     private void OnCopyClick(object sender, RoutedEventArgs e)
     {
-        if (Selected is not { } entry) return;
+        if (Selected is not { } entry)
+            return;
         ItemActions.Copy(entry.Url);
         Status(InfoBarSeverity.Success, "Enlace copiado al portapapeles.");
     }
 
     private async void OnRevokeConfirmClick(object sender, RoutedEventArgs e)
     {
-        if (Selected is not { } entry) return;
+        if (Selected is not { } entry)
+            return;
         RevokeFlyout.Hide();
         try
         {
-            if (entry.IsCollection) await _repo.RevokeShareCollectionAsync(entry.Token);
-            else await _repo.RevokeShareLinkAsync(entry.Token);
+            if (entry.IsCollection)
+                await _repo.RevokeShareCollectionAsync(entry.Token);
+            else
+                await _repo.RevokeShareLinkAsync(entry.Token);
             Status(InfoBarSeverity.Success, "Revocado.");
             await ReloadAsync();
         }
-        catch (Exception ex) { Status(InfoBarSeverity.Error, ex.Message); }
+        catch (Exception ex)
+        {
+            Status(InfoBarSeverity.Error, ex.Message);
+        }
     }
 
     private static string ExpiryLabel(DateTime? expiresAt)
     {
-        if (expiresAt is null) return "sin caducidad";
+        if (expiresAt is null)
+            return "sin caducidad";
         return expiresAt.Value <= DateTime.UtcNow
             ? "caducado"
             : $"caduca {expiresAt.Value.ToLocalTime():d}";
@@ -111,7 +130,13 @@ public sealed partial class SharedDialog : ContentDialog
         StatusBar.IsOpen = true;
     }
 
-    private sealed record ShareEntry(bool IsCollection, string Token, string Title, string Subtitle, string Url)
+    private sealed record ShareEntry(
+        bool IsCollection,
+        string Token,
+        string Title,
+        string Subtitle,
+        string Url
+    )
     {
         public string AccessibleName => $"{Title}. {Subtitle}";
     }

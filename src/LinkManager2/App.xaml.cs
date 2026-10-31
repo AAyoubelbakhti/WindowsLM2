@@ -43,13 +43,16 @@ public partial class App : Application
         try
         {
             var dir = System.IO.Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "LinkManager");
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "LinkManager"
+            );
             System.IO.Directory.CreateDirectory(dir);
             var text = $"{DateTime.Now:O}\n{ex}";
-            if (text.Length > MaxCrashLogChars) text = text[..MaxCrashLogChars];
+            if (text.Length > MaxCrashLogChars)
+                text = text[..MaxCrashLogChars];
             System.IO.File.WriteAllText(System.IO.Path.Combine(dir, "crash.log"), text);
         }
-        catch {  }
+        catch { }
     }
 
     protected override void OnLaunched(LaunchActivatedEventArgs args)
@@ -72,19 +75,22 @@ public partial class App : Application
             Window.Activate();
         }
 
-        if (request.Action != StartupAction.None) Window.RouteStartupAction(request.Action);
+        if (request.Action != StartupAction.None)
+            Window.RouteStartupAction(request.Action);
     }
 
     /// <summary>Handles activation redirected from a secondary instance: surfaces the window and routes the CLI arg.</summary>
     public static void OnActivatedFromOtherInstance(object? sender, AppActivationArguments e)
     {
         var app = _current;
-        if (app is null) return;
+        if (app is null)
+            return;
         var request = Startup.Parse(ExtractArgs(e));
         app.Window?.DispatcherQueue.TryEnqueue(() =>
         {
             app.Window.ShowFromTray();
-            if (request.Action != StartupAction.None) app.Window.RouteStartupAction(request.Action);
+            if (request.Action != StartupAction.None)
+                app.Window.RouteStartupAction(request.Action);
         });
     }
 
@@ -95,14 +101,21 @@ public partial class App : Application
             if (e.Data is Windows.ApplicationModel.Activation.ILaunchActivatedEventArgs launch)
                 return SplitArgs(launch.Arguments);
         }
-        catch (Exception ex) { Diagnostics.Log("extract activation args", ex); }
+        catch (Exception ex)
+        {
+            Diagnostics.Log("extract activation args", ex);
+        }
         return null;
     }
 
     private static string[] SplitArgs(string? commandLine)
     {
-        if (string.IsNullOrWhiteSpace(commandLine)) return Array.Empty<string>();
-        return commandLine.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        if (string.IsNullOrWhiteSpace(commandLine))
+            return Array.Empty<string>();
+        return commandLine.Split(
+            ' ',
+            StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries
+        );
     }
 
     private static void Bootstrap()
@@ -111,13 +124,12 @@ public partial class App : Application
         if (string.IsNullOrWhiteSpace(url) || string.IsNullOrWhiteSpace(key))
         {
             BootstrapError =
-                "Falta configuración de Supabase. Define LM_SUPABASE_URL y LM_SUPABASE_ANON_KEY " +
-                "o coloca appsettings.Local.json junto al ejecutable.";
+                "Falta configuración de Supabase. Define LM_SUPABASE_URL y LM_SUPABASE_ANON_KEY "
+                + "o coloca appsettings.Local.json junto al ejecutable.";
             return;
         }
         try
         {
-
             SupabaseClientHolder.Init(url, key);
             State = AppState.Create();
             SupabaseReady = true;

@@ -44,10 +44,14 @@ public sealed class AppState
         var local = ReadFile(Path.Combine(AppContext.BaseDirectory, "appsettings.Local.json"));
         var url = FirstNonEmpty(
             Environment.GetEnvironmentVariable("LM_SUPABASE_URL"),
-            local.Url, defaults.Url);
+            local.Url,
+            defaults.Url
+        );
         var key = FirstNonEmpty(
             Environment.GetEnvironmentVariable("LM_SUPABASE_ANON_KEY"),
-            local.Key, defaults.Key);
+            local.Key,
+            defaults.Key
+        );
         return (url, key);
     }
 
@@ -78,12 +82,14 @@ public sealed class AppState
 
     private async Task RegisterDeviceOnceAsync()
     {
-        if (_deviceRegistered) return;
+        if (_deviceRegistered)
+            return;
         _deviceRegistered = true;
         try
         {
             var name = Environment.MachineName;
-            if (string.IsNullOrWhiteSpace(name)) name = "Windows";
+            if (string.IsNullOrWhiteSpace(name))
+                name = "Windows";
             await Repo.RegisterDeviceAsync(LocalPreferences.GetOrCreateDeviceId(), name);
         }
         catch
@@ -111,26 +117,45 @@ public sealed class AppState
         Cache.ReplaceItems(_items, _categories);
     }
 
-    public enum AddResult { Added, QueuedOffline }
+    public enum AddResult
+    {
+        Added,
+        QueuedOffline,
+    }
 
     /// <summary>Outcome of a mutating item operation: applied online or queued for later flush.</summary>
-    public enum OpResult { Done, QueuedOffline }
+    public enum OpResult
+    {
+        Done,
+        QueuedOffline,
+    }
 
-    public async Task<AddResult> AddItemAsync(string title, string value, string type, string? categoryId,
-        IReadOnlyList<string>? tagIds = null, string? description = null)
+    public async Task<AddResult> AddItemAsync(
+        string title,
+        string value,
+        string type,
+        string? categoryId,
+        IReadOnlyList<string>? tagIds = null,
+        string? description = null
+    )
     {
         try
         {
             var item = await Repo.AddAsync(title, value, type, categoryId, description);
-            if (tagIds is { Count: > 0 }) await Repo.SetItemTagsAsync(item.Id, tagIds);
+            if (tagIds is { Count: > 0 })
+                await Repo.SetItemTagsAsync(item.Id, tagIds);
             await ReloadItemsAsync();
             return AddResult.Added;
         }
         catch (Exception ex) when (IsRetryable(ex))
         {
             SyncCacheUser();
-            Cache.EnqueuePending("add",
-                JsonSerializer.Serialize(new PendingAdd(title, value, type, categoryId, tagIds?.ToList(), description)));
+            Cache.EnqueuePending(
+                "add",
+                JsonSerializer.Serialize(
+                    new PendingAdd(title, value, type, categoryId, tagIds?.ToList(), description)
+                )
+            );
             return AddResult.QueuedOffline;
         }
     }
@@ -166,7 +191,10 @@ public sealed class AppState
         catch (Exception ex) when (IsRetryable(ex))
         {
             SyncCacheUser();
-            Cache.EnqueuePending("archive", JsonSerializer.Serialize(new PendingArchive(id, archived)));
+            Cache.EnqueuePending(
+                "archive",
+                JsonSerializer.Serialize(new PendingArchive(id, archived))
+            );
             if (archived)
             {
                 _items.RemoveAll(i => i.Id == id);
@@ -188,7 +216,10 @@ public sealed class AppState
         catch (Exception ex) when (IsRetryable(ex))
         {
             SyncCacheUser();
-            Cache.EnqueuePending("favorite", JsonSerializer.Serialize(new PendingFavorite(id, isFavorite)));
+            Cache.EnqueuePending(
+                "favorite",
+                JsonSerializer.Serialize(new PendingFavorite(id, isFavorite))
+            );
             return OpResult.QueuedOffline;
         }
     }
@@ -198,8 +229,14 @@ public sealed class AppState
     /// full field overwrite (last-write-wins, matching the project sync policy): a value edited
     /// elsewhere while offline is overwritten on flush rather than three-way merged.
     /// </summary>
-    public async Task<OpResult> UpdateItemAsync(string id, string title, string value, string type,
-        string? categoryId, string? description)
+    public async Task<OpResult> UpdateItemAsync(
+        string id,
+        string title,
+        string value,
+        string type,
+        string? categoryId,
+        string? description
+    )
     {
         try
         {
@@ -210,8 +247,12 @@ public sealed class AppState
         catch (Exception ex) when (IsRetryable(ex))
         {
             SyncCacheUser();
-            Cache.EnqueuePending("update",
-                JsonSerializer.Serialize(new PendingUpdate(id, title, value, type, categoryId, description)));
+            Cache.EnqueuePending(
+                "update",
+                JsonSerializer.Serialize(
+                    new PendingUpdate(id, title, value, type, categoryId, description)
+                )
+            );
             return OpResult.QueuedOffline;
         }
     }
@@ -220,12 +261,14 @@ public sealed class AppState
 
     public async Task FlushPendingAsync()
     {
-        if (!await _flushGate.WaitAsync(0)) return;
+        if (!await _flushGate.WaitAsync(0))
+            return;
         try
         {
             SyncCacheUser();
             var pending = Cache.ReadPending();
-            if (pending.Count == 0) return;
+            if (pending.Count == 0)
+                return;
             var flushedCount = 0;
             var droppedCount = 0;
             var brokeOffline = false;
@@ -252,21 +295,28 @@ public sealed class AppState
 
             if (droppedCount > 0)
             {
-                Notifications.Show("Cambios pendientes descartados",
+                Notifications.Show(
+                    "Cambios pendientes descartados",
                     droppedCount == 1
                         ? "1 cambio pendiente fue rechazado por el servidor y se descartó."
-                        : $"{droppedCount} cambios pendientes fueron rechazados por el servidor y se descartaron.");
+                        : $"{droppedCount} cambios pendientes fueron rechazados por el servidor y se descartaron."
+                );
             }
             if (flushedCount > 0 && !brokeOffline)
             {
                 await ReloadItemsAsync();
-                Notifications.Show("Cola sincronizada",
+                Notifications.Show(
+                    "Cola sincronizada",
                     flushedCount == 1
                         ? "Se aplicó 1 cambio que estaba pendiente."
-                        : $"Se aplicaron {flushedCount} cambios que estaban pendientes.");
+                        : $"Se aplicaron {flushedCount} cambios que estaban pendientes."
+                );
             }
         }
-        finally { _flushGate.Release(); }
+        finally
+        {
+            _flushGate.Release();
+        }
     }
 
     /// <summary>
@@ -280,8 +330,15 @@ public sealed class AppState
             case "add":
             {
                 var p = JsonSerializer.Deserialize<PendingAdd>(payload)!;
-                var added = await Repo.AddAsync(p.Title, p.Value, p.Type, p.CategoryId, p.Description);
-                if (p.TagIds is { Count: > 0 }) await Repo.SetItemTagsAsync(added.Id, p.TagIds);
+                var added = await Repo.AddAsync(
+                    p.Title,
+                    p.Value,
+                    p.Type,
+                    p.CategoryId,
+                    p.Description
+                );
+                if (p.TagIds is { Count: > 0 })
+                    await Repo.SetItemTagsAsync(added.Id, p.TagIds);
                 break;
             }
             case "delete":
@@ -317,32 +374,59 @@ public sealed class AppState
     {
         for (var cur = ex; cur is not null; cur = cur.InnerException)
         {
-            if (cur is HttpRequestException or TaskCanceledException or SocketException or IOException)
+            if (
+                cur
+                is HttpRequestException
+                    or TaskCanceledException
+                    or SocketException
+                    or IOException
+            )
                 return true;
-            if (cur is Supabase.Postgrest.Exceptions.PostgrestException pex && IsRetryableStatus(pex.StatusCode))
+            if (
+                cur is Supabase.Postgrest.Exceptions.PostgrestException pex
+                && IsRetryableStatus(pex.StatusCode)
+            )
                 return true;
         }
         return false;
     }
 
-    private static bool IsRetryableStatus(int code) => code switch
-    {
-        0 => true,
-        408 => true,
-        429 => true,
-        >= 500 and < 600 => true,
-        _ => false,
-    };
+    private static bool IsRetryableStatus(int code) =>
+        code switch
+        {
+            0 => true,
+            408 => true,
+            429 => true,
+            >= 500 and < 600 => true,
+            _ => false,
+        };
 
-    private sealed record PendingAdd(string Title, string Value, string Type, string? CategoryId, List<string>? TagIds = null, string? Description = null);
+    private sealed record PendingAdd(
+        string Title,
+        string Value,
+        string Type,
+        string? CategoryId,
+        List<string>? TagIds = null,
+        string? Description = null
+    );
+
     private sealed record PendingDelete(string Id);
+
     private sealed record PendingArchive(string Id, bool Archived);
+
     private sealed record PendingFavorite(string Id, bool IsFavorite);
-    private sealed record PendingUpdate(string Id, string Title, string Value, string Type, string? CategoryId, string? Description);
+
+    private sealed record PendingUpdate(
+        string Id,
+        string Title,
+        string Value,
+        string Type,
+        string? CategoryId,
+        string? Description
+    );
 
     public async Task ReloadTagsAsync()
     {
-
         var tagsTask = Repo.ListTagsAsync();
         var itemTagsTask = Repo.ListAllItemTagsAsync();
         await Task.WhenAll(tagsTask, itemTagsTask);
@@ -359,15 +443,18 @@ public sealed class AppState
     {
         SyncCacheUser();
         var cached = Cache.LoadItems();
-        if (cached.Count == 0) return;
-        _items = cached.Select(c => new Item
-        {
-            Id = c.Id,
-            Title = c.Title,
-            Value = c.Value,
-            Type = c.Type,
-            CategoryId = c.CategoryId,
-        }).ToList();
+        if (cached.Count == 0)
+            return;
+        _items = cached
+            .Select(c => new Item
+            {
+                Id = c.Id,
+                Title = c.Title,
+                Value = c.Value,
+                Type = c.Type,
+                CategoryId = c.CategoryId,
+            })
+            .ToList();
         _categories = cached
             .Where(c => c.CategoryId is not null && c.CategoryName is not null)
             .GroupBy(c => c.CategoryId!)
@@ -378,8 +465,14 @@ public sealed class AppState
     public void ClearLocalCacheForCurrentUser()
     {
         SyncCacheUser();
-        try { Cache.ClearUser(); }
-        catch (Exception ex) { Diagnostics.Log("cache clear on sign-out", ex); }
+        try
+        {
+            Cache.ClearUser();
+        }
+        catch (Exception ex)
+        {
+            Diagnostics.Log("cache clear on sign-out", ex);
+        }
     }
 
     public void Clear()
@@ -395,22 +488,28 @@ public sealed class AppState
     /// failure so the caller falls back to other sources (and ultimately a visible bootstrap error).</summary>
     private static (string Url, string Key) ReadFile(string path)
     {
-        if (!File.Exists(path)) return ("", "");
+        if (!File.Exists(path))
+            return ("", "");
         try
         {
             using var doc = JsonDocument.Parse(File.ReadAllText(path));
-            if (!doc.RootElement.TryGetProperty("Supabase", out var sb)) return ("", "");
+            if (!doc.RootElement.TryGetProperty("Supabase", out var sb))
+                return ("", "");
             var u = sb.TryGetProperty("Url", out var x) ? x.GetString() ?? "" : "";
             var k = sb.TryGetProperty("AnonKey", out var y) ? y.GetString() ?? "" : "";
             return (u, k);
         }
-        catch { return ("", ""); }
+        catch
+        {
+            return ("", "");
+        }
     }
 
     private static string FirstNonEmpty(params string?[] values)
     {
         foreach (var v in values)
-            if (!string.IsNullOrWhiteSpace(v)) return v;
+            if (!string.IsNullOrWhiteSpace(v))
+                return v;
         return string.Empty;
     }
 }

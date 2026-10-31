@@ -35,7 +35,11 @@ public sealed partial class MainWindow : Window
     public MainWindow()
     {
         ShowFromTrayCommand = new RelayCommand(ShowFromTray);
-        ExitCommand = new RelayCommand(() => { _exitRequested = true; TearDownAndExit(); });
+        ExitCommand = new RelayCommand(() =>
+        {
+            _exitRequested = true;
+            TearDownAndExit();
+        });
         _commandLayer = new CommandLayerController(this);
         AddLinkCommand = new RelayCommand(() => _commandLayer.AddLink());
         SaveClipboardCommand = new RelayCommand(() => _commandLayer.SaveClipboard());
@@ -62,8 +66,10 @@ public sealed partial class MainWindow : Window
     /// </summary>
     private void RestoreWindowBounds()
     {
-        if (_prefs.WindowWidth is not int w || _prefs.WindowHeight is not int h) return;
-        if (w < 320 || h < 240) return;
+        if (_prefs.WindowWidth is not int w || _prefs.WindowHeight is not int h)
+            return;
+        if (w < 320 || h < 240)
+            return;
 
         if (_prefs.WindowX is int x && _prefs.WindowY is int y)
         {
@@ -71,14 +77,19 @@ public sealed partial class MainWindow : Window
             try
             {
                 var area = Microsoft.UI.Windowing.DisplayArea.GetFromRect(
-                    rect, Microsoft.UI.Windowing.DisplayAreaFallback.None);
+                    rect,
+                    Microsoft.UI.Windowing.DisplayAreaFallback.None
+                );
                 if (area is not null)
                 {
                     AppWindow.MoveAndResize(rect);
                     return;
                 }
             }
-            catch (Exception ex) { Diagnostics.Log("restore window bounds", ex); }
+            catch (Exception ex)
+            {
+                Diagnostics.Log("restore window bounds", ex);
+            }
         }
         CenterWithSize(w, h);
     }
@@ -88,32 +99,58 @@ public sealed partial class MainWindow : Window
         try
         {
             var area = Microsoft.UI.Windowing.DisplayArea.GetFromWindowId(
-                AppWindow.Id, Microsoft.UI.Windowing.DisplayAreaFallback.Nearest);
+                AppWindow.Id,
+                Microsoft.UI.Windowing.DisplayAreaFallback.Nearest
+            );
             var wa = area.WorkArea;
             w = Math.Min(w, wa.Width);
             h = Math.Min(h, wa.Height);
-            AppWindow.MoveAndResize(new Windows.Graphics.RectInt32(
-                wa.X + (wa.Width - w) / 2, wa.Y + (wa.Height - h) / 2, w, h));
+            AppWindow.MoveAndResize(
+                new Windows.Graphics.RectInt32(
+                    wa.X + (wa.Width - w) / 2,
+                    wa.Y + (wa.Height - h) / 2,
+                    w,
+                    h
+                )
+            );
         }
-        catch (Exception ex) { Diagnostics.Log("center window", ex); }
+        catch (Exception ex)
+        {
+            Diagnostics.Log("center window", ex);
+        }
     }
 
     /// <summary>Tracks the last visible, non-minimized, non-maximized bounds for persistence.</summary>
-    private void OnAppWindowChanged(Microsoft.UI.Windowing.AppWindow sender,
-        Microsoft.UI.Windowing.AppWindowChangedEventArgs args)
+    private void OnAppWindowChanged(
+        Microsoft.UI.Windowing.AppWindow sender,
+        Microsoft.UI.Windowing.AppWindowChangedEventArgs args
+    )
     {
-        if (!args.DidPositionChange && !args.DidSizeChange) return;
-        if (!sender.IsVisible) return;
-        if (sender.Presenter is not Microsoft.UI.Windowing.OverlappedPresenter
-            { State: Microsoft.UI.Windowing.OverlappedPresenterState.Restored }) return;
+        if (!args.DidPositionChange && !args.DidSizeChange)
+            return;
+        if (!sender.IsVisible)
+            return;
+        if (
+            sender.Presenter
+            is not Microsoft.UI.Windowing.OverlappedPresenter
+            {
+                State: Microsoft.UI.Windowing.OverlappedPresenterState.Restored
+            }
+        )
+            return;
         _lastNormalBounds = new Windows.Graphics.RectInt32(
-            sender.Position.X, sender.Position.Y, sender.Size.Width, sender.Size.Height);
+            sender.Position.X,
+            sender.Position.Y,
+            sender.Size.Width,
+            sender.Size.Height
+        );
     }
 
     /// <summary>Persists the tracked bounds reloading preferences from disk first, so newer settings saved elsewhere are not clobbered.</summary>
     private void SaveWindowBounds()
     {
-        if (_lastNormalBounds is not { } b) return;
+        if (_lastNormalBounds is not { } b)
+            return;
         try
         {
             var prefs = LocalPreferences.Load();
@@ -123,7 +160,10 @@ public sealed partial class MainWindow : Window
             prefs.WindowHeight = b.Height;
             prefs.Save();
         }
-        catch (Exception ex) { Diagnostics.Log("save window bounds", ex); }
+        catch (Exception ex)
+        {
+            Diagnostics.Log("save window bounds", ex);
+        }
     }
 
     /// <summary>
@@ -137,18 +177,27 @@ public sealed partial class MainWindow : Window
         if (hasLocalSession)
         {
             InstallSystemHooks();
-            RootFrameControl.Navigate(typeof(MainPage), null, new SuppressNavigationTransitionInfo());
+            RootFrameControl.Navigate(
+                typeof(MainPage),
+                null,
+                new SuppressNavigationTransitionInfo()
+            );
         }
         else
         {
-            RootFrameControl.Navigate(typeof(LoginPage), null, new SuppressNavigationTransitionInfo());
+            RootFrameControl.Navigate(
+                typeof(LoginPage),
+                null,
+                new SuppressNavigationTransitionInfo()
+            );
         }
     }
 
     /// <summary>Creates the window without activating it and hides it into the tray for the --tray autostart path.</summary>
     public void StartHiddenInTray()
     {
-        if (!_hooksInstalled) InstallSystemHooks();
+        if (!_hooksInstalled)
+            InstallSystemHooks();
         SetTrayVisible(true);
         AppWindow.Hide();
     }
@@ -160,9 +209,15 @@ public sealed partial class MainWindow : Window
         {
             switch (action)
             {
-                case Data.StartupAction.Add: AddLinkCommand.Execute(null); break;
-                case Data.StartupAction.Search: SearchCommand.Execute(null); break;
-                case Data.StartupAction.SaveClipboard: SaveClipboardCommand.Execute(null); break;
+                case Data.StartupAction.Add:
+                    AddLinkCommand.Execute(null);
+                    break;
+                case Data.StartupAction.Search:
+                    SearchCommand.Execute(null);
+                    break;
+                case Data.StartupAction.SaveClipboard:
+                    SaveClipboardCommand.Execute(null);
+                    break;
             }
         });
     }
@@ -176,12 +231,13 @@ public sealed partial class MainWindow : Window
     public void ApplyBackdrop() => SystemBackdrop = _prefs.MicaBackdrop ? new MicaBackdrop() : null;
 
     /// <summary>Applies the saved theme preference to the root element. "system" clears the override so Windows decides.</summary>
-    public void ApplyTheme() => RootGrid.RequestedTheme = _prefs.Theme switch
-    {
-        "light" => ElementTheme.Light,
-        "dark" => ElementTheme.Dark,
-        _ => ElementTheme.Default,
-    };
+    public void ApplyTheme() =>
+        RootGrid.RequestedTheme = _prefs.Theme switch
+        {
+            "light" => ElementTheme.Light,
+            "dark" => ElementTheme.Dark,
+            _ => ElementTheme.Default,
+        };
 
     public void ReloadPreferences()
     {
@@ -197,14 +253,17 @@ public sealed partial class MainWindow : Window
         {
             UninstallHotkey();
         }
-        if (_hooksInstalled) SetTrayVisible(_prefs.MinimizeToTrayOnClose);
+        if (_hooksInstalled)
+            SetTrayVisible(_prefs.MinimizeToTrayOnClose);
     }
 
     public void InstallSystemHooks()
     {
         _hooksInstalled = true;
-        if (_prefs.MinimizeToTrayOnClose) SetTrayVisible(true);
-        if (_prefs.GlobalHotkeyEnabled) InstallHotkey();
+        if (_prefs.MinimizeToTrayOnClose)
+            SetTrayVisible(true);
+        if (_prefs.GlobalHotkeyEnabled)
+            InstallHotkey();
     }
 
     public void UninstallSystemHooks()
@@ -224,16 +283,23 @@ public sealed partial class MainWindow : Window
 
         WindowStatusText.Text = text;
         WindowStatusText.Visibility = Visibility.Visible;
-        Microsoft.UI.Xaml.Automation.Peers.FrameworkElementAutomationPeer
-            .CreatePeerForElement(WindowStatusText)
-            ?.RaiseAutomationEvent(Microsoft.UI.Xaml.Automation.Peers.AutomationEvents.LiveRegionChanged);
+        Microsoft
+            .UI.Xaml.Automation.Peers.FrameworkElementAutomationPeer.CreatePeerForElement(
+                WindowStatusText
+            )
+            ?.RaiseAutomationEvent(
+                Microsoft.UI.Xaml.Automation.Peers.AutomationEvents.LiveRegionChanged
+            );
     }
 
     public void ShowFromTray()
     {
-
-        if (AppWindow.Presenter is Microsoft.UI.Windowing.OverlappedPresenter
-            { State: Microsoft.UI.Windowing.OverlappedPresenterState.Minimized } p)
+        if (
+            AppWindow.Presenter is Microsoft.UI.Windowing.OverlappedPresenter
+            {
+                State: Microsoft.UI.Windowing.OverlappedPresenterState.Minimized
+            } p
+        )
         {
             p.Restore();
         }
@@ -260,21 +326,28 @@ public sealed partial class MainWindow : Window
 
     private void RenameTrayHelperWindow()
     {
-        EnumThreadWindows(GetCurrentThreadId(), (hWnd, _) =>
-        {
-            var sb = new StringBuilder(64);
-            if (GetWindowText(hWnd, sb, sb.Capacity) > 0
-                && sb.ToString().StartsWith("H.NotifyIcon", StringComparison.Ordinal))
+        EnumThreadWindows(
+            GetCurrentThreadId(),
+            (hWnd, _) =>
             {
-                SetWindowText(hWnd, "LinkManager");
-            }
-            return true;
-        }, IntPtr.Zero);
+                var sb = new StringBuilder(64);
+                if (
+                    GetWindowText(hWnd, sb, sb.Capacity) > 0
+                    && sb.ToString().StartsWith("H.NotifyIcon", StringComparison.Ordinal)
+                )
+                {
+                    SetWindowText(hWnd, "LinkManager");
+                }
+                return true;
+            },
+            IntPtr.Zero
+        );
     }
 
     private void InstallHotkey()
     {
-        if (_hotkey is not null) return;
+        if (_hotkey is not null)
+            return;
         _hotkey = new GlobalHotkey(this, _prefs.HotkeyModifiers, _prefs.HotkeyVirtualKey);
         _hotkey.Pressed += (_, _) => _commandLayer.Show();
         var combo = GlobalHotkey.Describe(_prefs.HotkeyModifiers, _prefs.HotkeyVirtualKey);
@@ -294,22 +367,46 @@ public sealed partial class MainWindow : Window
     /// resource can't leave the others leaked or block process exit.</summary>
     private void TearDownAndExit()
     {
-        if (_tornDown) return;
+        if (_tornDown)
+            return;
         _tornDown = true;
         SaveWindowBounds();
-        try { App.State?.Cache.Dispose(); } catch { }
-        try { UninstallHotkey(); } catch { }
-        try { TrayIcon.Dispose(); } catch { }
-        try { LinkManager2.Data.Notifications.Unregister(); } catch { }
-        try { SupabaseClientHolder.Shutdown(); } catch { }
+        try
+        {
+            App.State?.Cache.Dispose();
+        }
+        catch { }
+        try
+        {
+            UninstallHotkey();
+        }
+        catch { }
+        try
+        {
+            TrayIcon.Dispose();
+        }
+        catch { }
+        try
+        {
+            LinkManager2.Data.Notifications.Unregister();
+        }
+        catch { }
+        try
+        {
+            SupabaseClientHolder.Shutdown();
+        }
+        catch { }
         Environment.Exit(0);
     }
 
-    private void OnAppWindowClosing(Microsoft.UI.Windowing.AppWindow sender,
-        Microsoft.UI.Windowing.AppWindowClosingEventArgs args)
+    private void OnAppWindowClosing(
+        Microsoft.UI.Windowing.AppWindow sender,
+        Microsoft.UI.Windowing.AppWindowClosingEventArgs args
+    )
     {
         SaveWindowBounds();
-        if (_exitRequested || !_hooksInstalled || !_prefs.MinimizeToTrayOnClose) return;
+        if (_exitRequested || !_hooksInstalled || !_prefs.MinimizeToTrayOnClose)
+            return;
         args.Cancel = true;
         AppWindow.Hide();
     }
@@ -325,7 +422,11 @@ public sealed partial class MainWindow : Window
     private delegate bool EnumThreadDelegate(IntPtr hWnd, IntPtr lParam);
 
     [DllImport("user32.dll")]
-    private static extern bool EnumThreadWindows(uint dwThreadId, EnumThreadDelegate lpfn, IntPtr lParam);
+    private static extern bool EnumThreadWindows(
+        uint dwThreadId,
+        EnumThreadDelegate lpfn,
+        IntPtr lParam
+    );
 
     [DllImport("kernel32.dll")]
     private static extern uint GetCurrentThreadId();

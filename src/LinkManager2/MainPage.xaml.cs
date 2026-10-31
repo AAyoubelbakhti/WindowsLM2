@@ -51,7 +51,10 @@ public sealed partial class MainPage : Page
                 await App.State.ReloadAllAsync();
                 RefreshVisible();
             }
-            catch (Exception ex) { Diagnostics.Log("realtime-reconcile", ex); }
+            catch (Exception ex)
+            {
+                Diagnostics.Log("realtime-reconcile", ex);
+            }
         };
         Loaded += OnLoaded;
     }
@@ -63,14 +66,18 @@ public sealed partial class MainPage : Page
         var byId = App.State.Categories.ToDictionary(c => c.Id, c => c.Name);
         foreach (var item in ApplyFilters(App.State.Items))
         {
-            var catName = item.CategoryId is not null && byId.TryGetValue(item.CategoryId, out var n) ? n : null;
+            var catName =
+                item.CategoryId is not null && byId.TryGetValue(item.CategoryId, out var n)
+                    ? n
+                    : null;
             Visible.Add(new ItemViewModel(item, catName));
         }
 
         if (selectedId is not null)
         {
             var match = Visible.FirstOrDefault(v => v.Id == selectedId);
-            if (match is not null) ItemsList.SelectedItem = match;
+            if (match is not null)
+                ItemsList.SelectedItem = match;
         }
         UpdateFiltersStatus();
         UpdateEmptyState();
@@ -80,7 +87,8 @@ public sealed partial class MainPage : Page
     {
         var empty = Visible.Count == 0 && !_loading;
         EmptyState.Visibility = empty ? Visibility.Visible : Visibility.Collapsed;
-        if (!empty) return;
+        if (!empty)
+            return;
         var filtering = _filters.ActiveCount > 0 || !string.IsNullOrWhiteSpace(_filters.Search);
         EmptyStateText.Text = filtering
             ? "Ningún resultado para la búsqueda o los filtros actuales."
@@ -89,8 +97,15 @@ public sealed partial class MainPage : Page
 
     public async Task RefreshAfterExternalChangeAsync()
     {
-        try { await App.State.ReloadItemsAsync(); RefreshVisible(); }
-        catch (Exception ex) { SetStatus($"Error recargando: {ex.Message}"); }
+        try
+        {
+            await App.State.ReloadItemsAsync();
+            RefreshVisible();
+        }
+        catch (Exception ex)
+        {
+            SetStatus($"Error recargando: {ex.Message}");
+        }
     }
 
     public void SetExternalStatus(string text) => SetStatus(text);
@@ -106,26 +121,38 @@ public sealed partial class MainPage : Page
             q = q.Where(i =>
                 i.Title.Contains(s, StringComparison.OrdinalIgnoreCase)
                 || i.Value.Contains(s, StringComparison.OrdinalIgnoreCase)
-                || (i.Description is not null && i.Description.Contains(s, StringComparison.OrdinalIgnoreCase)));
+                || (
+                    i.Description is not null
+                    && i.Description.Contains(s, StringComparison.OrdinalIgnoreCase)
+                )
+            );
         }
         if (_filters.Type != FilterType.All)
         {
             var t = _filters.Type == FilterType.Url ? ItemTypes.Url : ItemTypes.Path;
             q = q.Where(i => i.Type == t);
         }
-        if (_filters.CategoryId is not null) q = q.Where(i => i.CategoryId == _filters.CategoryId);
-        if (_filters.TagId is not null) q = q.Where(i => App.State.ItemHasTag(i.Id, _filters.TagId));
-        if (_filters.FavoritesOnly) q = q.Where(i => i.IsFavorite);
-        if (_filters.BrokenOnly) q = q.Where(i => i.LinkStatus == "broken");
+        if (_filters.CategoryId is not null)
+            q = q.Where(i => i.CategoryId == _filters.CategoryId);
+        if (_filters.TagId is not null)
+            q = q.Where(i => App.State.ItemHasTag(i.Id, _filters.TagId));
+        if (_filters.FavoritesOnly)
+            q = q.Where(i => i.IsFavorite);
+        if (_filters.BrokenOnly)
+            q = q.Where(i => i.LinkStatus == "broken");
 
         return _filters.Sort switch
         {
             SortKey.AlphaAsc => q.OrderBy(i => i.Title, StringComparer.OrdinalIgnoreCase),
-            SortKey.AlphaDesc => q.OrderByDescending(i => i.Title, StringComparer.OrdinalIgnoreCase),
+            SortKey.AlphaDesc => q.OrderByDescending(
+                i => i.Title,
+                StringComparer.OrdinalIgnoreCase
+            ),
             SortKey.DateDesc => q.OrderByDescending(i => i.CreatedAt),
             SortKey.DateAsc => q.OrderBy(i => i.CreatedAt),
             SortKey.UsageDesc => q.OrderByDescending(i => i.UsageCount),
-            SortKey.CategoryAsc => q.OrderBy(i => i.CategoryId ?? string.Empty).ThenBy(i => i.Title),
+            SortKey.CategoryAsc => q.OrderBy(i => i.CategoryId ?? string.Empty)
+                .ThenBy(i => i.Title),
             _ => q,
         };
     }
@@ -134,8 +161,12 @@ public sealed partial class MainPage : Page
     {
         StatusText.Text = text;
 
-        Microsoft.UI.Xaml.Automation.Peers.FrameworkElementAutomationPeer
-            .CreatePeerForElement(StatusText)
-            ?.RaiseAutomationEvent(Microsoft.UI.Xaml.Automation.Peers.AutomationEvents.LiveRegionChanged);
+        Microsoft
+            .UI.Xaml.Automation.Peers.FrameworkElementAutomationPeer.CreatePeerForElement(
+                StatusText
+            )
+            ?.RaiseAutomationEvent(
+                Microsoft.UI.Xaml.Automation.Peers.AutomationEvents.LiveRegionChanged
+            );
     }
 }

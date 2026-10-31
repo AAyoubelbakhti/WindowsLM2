@@ -20,7 +20,8 @@ public sealed partial class MainPage : Page
     private void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         DetailsText.Text = Selected?.Details ?? string.Empty;
-        FavoriteMenuItem.Text = Selected?.IsFavorite == true ? "Quitar de favoritos" : "Marcar como favorito";
+        FavoriteMenuItem.Text =
+            Selected?.IsFavorite == true ? "Quitar de favoritos" : "Marcar como favorito";
         UpdateBulkBar();
     }
 
@@ -53,8 +54,16 @@ public sealed partial class MainPage : Page
         var opened = 0;
         foreach (var vm in items)
         {
-            try { ItemActions.Open(vm.Source); BumpUsage(vm.Source); opened++; }
-            catch (Exception ex) { Diagnostics.Log("bulk-open", ex); }
+            try
+            {
+                ItemActions.Open(vm.Source);
+                BumpUsage(vm.Source);
+                opened++;
+            }
+            catch (Exception ex)
+            {
+                Diagnostics.Log("bulk-open", ex);
+            }
         }
         SetStatus($"Abiertos {opened} de {items.Count}.");
     }
@@ -62,19 +71,24 @@ public sealed partial class MainPage : Page
     private void OnBulkCopyClick(object sender, RoutedEventArgs e)
     {
         var items = SelectedItems;
-        if (items.Count == 0) return;
+        if (items.Count == 0)
+            return;
         try
         {
             ItemActions.Copy(string.Join(Environment.NewLine, items.Select(i => i.Value)));
             SetStatus($"Copiadas {items.Count} URL.");
         }
-        catch (Exception ex) { SetStatus($"Error al copiar: {ex.Message}"); }
+        catch (Exception ex)
+        {
+            SetStatus($"Error al copiar: {ex.Message}");
+        }
     }
 
     private async void OnBulkCollectionClick(object sender, RoutedEventArgs e)
     {
         var ids = SelectedItems.Select(v => v.Id).ToList();
-        if (ids.Count == 0) return;
+        if (ids.Count == 0)
+            return;
         var dlg = new ShareCollectionDialog(App.State.Repo, ids) { XamlRoot = XamlRoot };
         await dlg.ShowGuardedAsync();
     }
@@ -82,12 +96,17 @@ public sealed partial class MainPage : Page
     private async void OnBulkDeleteClick(object sender, RoutedEventArgs e)
     {
         var items = SelectedItems;
-        if (items.Count == 0) return;
-        var ok = await DialogHelper.ConfirmAsync(XamlRoot,
+        if (items.Count == 0)
+            return;
+        var ok = await DialogHelper.ConfirmAsync(
+            XamlRoot,
             "Confirmar borrado múltiple",
             $"¿Borrar {items.Count} elementos? Podrás deshacerlo con Ctrl+Z.",
-            "Borrar", "Cancelar");
-        if (!ok) return;
+            "Borrar",
+            "Cancelar"
+        );
+        if (!ok)
+            return;
 
         var deletedItems = new List<Item>();
         var queuedCount = 0;
@@ -96,10 +115,15 @@ public sealed partial class MainPage : Page
             try
             {
                 var result = await App.State.DeleteItemAsync(vm.Id);
-                if (result == AppState.OpResult.QueuedOffline) queuedCount++;
-                else deletedItems.Add(vm.Source);
+                if (result == AppState.OpResult.QueuedOffline)
+                    queuedCount++;
+                else
+                    deletedItems.Add(vm.Source);
             }
-            catch (Exception ex) { Diagnostics.Log("bulk-delete", ex); }
+            catch (Exception ex)
+            {
+                Diagnostics.Log("bulk-delete", ex);
+            }
         }
         if (deletedItems.Count > 0)
         {
@@ -111,20 +135,23 @@ public sealed partial class MainPage : Page
                 {
                     foreach (var it in deletedItems)
                         await App.State.Repo.RestoreAsync(it);
-                });
+                }
+            );
         }
         RefreshVisible();
         if (queuedCount > 0)
-            SetStatus(deletedItems.Count > 0
-                ? $"Borrados {deletedItems.Count}, {queuedCount} en cola sin conexión, de {items.Count}."
-                : $"Sin conexión, {queuedCount} borrados encolados de {items.Count}.");
+            SetStatus(
+                deletedItems.Count > 0
+                    ? $"Borrados {deletedItems.Count}, {queuedCount} en cola sin conexión, de {items.Count}."
+                    : $"Sin conexión, {queuedCount} borrados encolados de {items.Count}."
+            );
         else
             SetStatus($"Borrados {deletedItems.Count} de {items.Count}. Ctrl+Z para deshacer.");
     }
 
     private static bool IsDown(Windows.System.VirtualKey key) =>
-        Microsoft.UI.Input.InputKeyboardSource
-            .GetKeyStateForCurrentThread(key)
+        Microsoft
+            .UI.Input.InputKeyboardSource.GetKeyStateForCurrentThread(key)
             .HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down);
 
     private void OnListKeyDown(object sender, KeyRoutedEventArgs e)
@@ -137,30 +164,41 @@ public sealed partial class MainPage : Page
             switch (e.Key)
             {
                 case Windows.System.VirtualKey.C when Selected is not null:
-                    OnCopyClick(sender, e); e.Handled = true; return;
+                    OnCopyClick(sender, e);
+                    e.Handled = true;
+                    return;
                 case Windows.System.VirtualKey.E when Selected is not null:
-                    _ = AddOrEditAsync(Selected.Source); e.Handled = true; return;
+                    _ = AddOrEditAsync(Selected.Source);
+                    e.Handled = true;
+                    return;
             }
             return;
         }
 
-        if (ctrl || alt) return;
+        if (ctrl || alt)
+            return;
 
         switch (e.Key)
         {
             case Windows.System.VirtualKey.Enter when Selected is not null:
-                OpenItem(Selected.Source); e.Handled = true; break;
+                OpenItem(Selected.Source);
+                e.Handled = true;
+                break;
             case Windows.System.VirtualKey.Delete when Selected is not null:
-                _ = DeleteWithConfirmAsync(Selected.Source); e.Handled = true; break;
+                _ = DeleteWithConfirmAsync(Selected.Source);
+                e.Handled = true;
+                break;
             default:
-                if (TypeAhead.TrySelect(e.Key)) e.Handled = true;
+                if (TypeAhead.TrySelect(e.Key))
+                    e.Handled = true;
                 break;
         }
     }
 
     private void OnItemDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
     {
-        if (Selected is { } vm) OpenItem(vm.Source);
+        if (Selected is { } vm)
+            OpenItem(vm.Source);
     }
 
     private void OnListRightTapped(object sender, RightTappedRoutedEventArgs e)
