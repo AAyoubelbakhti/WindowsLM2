@@ -15,7 +15,8 @@ public sealed partial class ShareLinkDialog : ContentDialog
     public ShareLinkDialog(ItemsRepository repo, string itemId, string itemTitle)
     {
         InitializeComponent();
-        _repo = repo; _itemId = itemId;
+        _repo = repo;
+        _itemId = itemId;
         ItemLabel.Text = $"Item: {itemTitle}";
 
         ExpiresCombo.Items.Add(new Expiry(null, "No caduca"));
@@ -38,8 +39,14 @@ public sealed partial class ShareLinkDialog : ContentDialog
             CopyButton.IsEnabled = true;
             SetStatus(InfoBarSeverity.Success, "Enlace generado. Copia y compártelo.");
         }
-        catch (Exception ex) { SetStatus(InfoBarSeverity.Error, $"{ex.GetType().Name}: {ex.Message}"); }
-        finally { def.Complete(); }
+        catch (Exception ex)
+        {
+            SetStatus(InfoBarSeverity.Error, $"{ex.GetType().Name}: {ex.Message}");
+        }
+        finally
+        {
+            def.Complete();
+        }
     }
 
     private void OnCopyClick(object sender, RoutedEventArgs e)
@@ -49,7 +56,10 @@ public sealed partial class ShareLinkDialog : ContentDialog
             ItemActions.Copy(ResultBox.Text);
             SetStatus(InfoBarSeverity.Success, "URL copiada al portapapeles.");
         }
-        catch (Exception ex) { SetStatus(InfoBarSeverity.Error, ex.Message); }
+        catch (Exception ex)
+        {
+            SetStatus(InfoBarSeverity.Error, ex.Message);
+        }
     }
 
     private void SetStatus(InfoBarSeverity severity, string msg)

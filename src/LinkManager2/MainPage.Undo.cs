@@ -14,7 +14,10 @@ public sealed partial class MainPage : Page
     /// Reverts the last archive or delete. Leaves the accelerator unhandled while a text
     /// input has focus so the native text-undo of the editing control keeps working.
     /// </summary>
-    private async void OnUndoInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+    private async void OnUndoInvoked(
+        KeyboardAccelerator sender,
+        KeyboardAcceleratorInvokedEventArgs args
+    )
     {
         if (FocusManager.GetFocusedElement(XamlRoot) is TextBox or PasswordBox or RichEditBox)
         {
@@ -24,7 +27,11 @@ public sealed partial class MainPage : Page
         args.Handled = true;
 
         var undo = _lastUndo;
-        if (undo is null) { SetStatus("Nada que deshacer."); return; }
+        if (undo is null)
+        {
+            SetStatus("Nada que deshacer.");
+            return;
+        }
         _lastUndo = null;
         SetStatus("Deshaciendo…");
         try

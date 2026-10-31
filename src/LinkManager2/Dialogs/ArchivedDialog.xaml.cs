@@ -45,17 +45,24 @@ public sealed partial class ArchivedDialog : ContentDialog
         {
             var entries = await _repo.ListArchivedAsync();
             _items.Clear();
-            foreach (var i in entries) _items.Add(i);
+            foreach (var i in entries)
+                _items.Add(i);
             ItemsList.SelectedItem = null;
-            Status(InfoBarSeverity.Informational,
-                entries.Count == 1 ? "1 archivado." : $"{entries.Count} archivados.");
+            Status(
+                InfoBarSeverity.Informational,
+                entries.Count == 1 ? "1 archivado." : $"{entries.Count} archivados."
+            );
         }
-        catch (Exception ex) { Status(InfoBarSeverity.Error, ex.Message); }
+        catch (Exception ex)
+        {
+            Status(InfoBarSeverity.Error, ex.Message);
+        }
     }
 
     private async void OnRestoreClick(object sender, RoutedEventArgs e)
     {
-        if (Selected is not { } item) return;
+        if (Selected is not { } item)
+            return;
         try
         {
             await _repo.ArchiveAsync(item.Id, false);
@@ -63,12 +70,16 @@ public sealed partial class ArchivedDialog : ContentDialog
             Status(InfoBarSeverity.Success, $"Restaurado: {item.Title}");
             await ReloadAsync();
         }
-        catch (Exception ex) { Status(InfoBarSeverity.Error, ex.Message); }
+        catch (Exception ex)
+        {
+            Status(InfoBarSeverity.Error, ex.Message);
+        }
     }
 
     private async void OnDeleteConfirmClick(object sender, RoutedEventArgs e)
     {
-        if (Selected is not { } item) return;
+        if (Selected is not { } item)
+            return;
         DeleteFlyout.Hide();
         try
         {
@@ -77,7 +88,10 @@ public sealed partial class ArchivedDialog : ContentDialog
             Status(InfoBarSeverity.Success, $"Borrado: {item.Title}");
             await ReloadAsync();
         }
-        catch (Exception ex) { Status(InfoBarSeverity.Error, ex.Message); }
+        catch (Exception ex)
+        {
+            Status(InfoBarSeverity.Error, ex.Message);
+        }
     }
 
     private void Status(InfoBarSeverity severity, string msg)

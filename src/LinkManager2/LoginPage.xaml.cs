@@ -34,8 +34,16 @@ public sealed partial class LoginPage : Page
 
         SetBusy(true);
         SubtitleText.Text = "Conectando con Supabase…";
-        try { await App.State.WaitReadyAsync(); }
-        catch (Exception ex) { ShowError($"Error conectando: {ex.Message}"); SetBusy(false); return; }
+        try
+        {
+            await App.State.WaitReadyAsync();
+        }
+        catch (Exception ex)
+        {
+            ShowError($"Error conectando: {ex.Message}");
+            SetBusy(false);
+            return;
+        }
 
         SubtitleText.Text = "Inicia sesión para sincronizar tus enlaces.";
         SetBusy(false);
@@ -51,8 +59,8 @@ public sealed partial class LoginPage : Page
 
     private void OnModeChanged(object sender, RoutedEventArgs e)
     {
-
-        if (SubmitButton is null || SignUpMode is null) return;
+        if (SubmitButton is null || SignUpMode is null)
+            return;
         SubmitButton.Content = SignUpMode.IsChecked == true ? "Crear cuenta" : "Iniciar sesión";
     }
 
@@ -67,13 +75,25 @@ public sealed partial class LoginPage : Page
 
     private async void OnSubmit(object sender, RoutedEventArgs e)
     {
-        if (_busy) return;
-        if (!EnsureReady()) return;
+        if (_busy)
+            return;
+        if (!EnsureReady())
+            return;
 
         var email = EmailBox.Text.Trim();
         var pass = PasswordBox.Password;
-        if (!IsValidEmail(email)) { ShowError("Introduce un correo válido."); EmailBox.Focus(FocusState.Programmatic); return; }
-        if (pass.Length < 6) { ShowError("La contraseña tiene al menos 6 caracteres."); PasswordBox.Focus(FocusState.Programmatic); return; }
+        if (!IsValidEmail(email))
+        {
+            ShowError("Introduce un correo válido.");
+            EmailBox.Focus(FocusState.Programmatic);
+            return;
+        }
+        if (pass.Length < 6)
+        {
+            ShowError("La contraseña tiene al menos 6 caracteres.");
+            PasswordBox.Focus(FocusState.Programmatic);
+            return;
+        }
 
         await RunAsync(async () =>
         {
@@ -82,7 +102,9 @@ public sealed partial class LoginPage : Page
                 await App.State.Auth.SignUpWithEmailAsync(email, pass);
                 if (!App.State.Auth.IsAuthenticated)
                 {
-                    ShowInfo("Cuenta creada. Revisa tu correo para confirmarla y luego inicia sesión.");
+                    ShowInfo(
+                        "Cuenta creada. Revisa tu correo para confirmarla y luego inicia sesión."
+                    );
                     SignInMode.IsChecked = true;
                     return;
                 }
@@ -97,7 +119,8 @@ public sealed partial class LoginPage : Page
 
     private async void OnForgotPassword(object sender, RoutedEventArgs e)
     {
-        if (_busy || !EnsureReady()) return;
+        if (_busy || !EnsureReady())
+            return;
         var email = EmailBox.Text.Trim();
         if (!IsValidEmail(email))
         {
@@ -120,12 +143,17 @@ public sealed partial class LoginPage : Page
 
     private async Task RunWebOAuthAsync(string provider, string label)
     {
-        if (_busy || !EnsureReady()) return;
+        if (_busy || !EnsureReady())
+            return;
         ShowInfoTransient($"Abriendo {label} en el navegador…");
         await RunAsync(async () =>
         {
             var ok = await OAuthListener.RunWebAssistedAsync(App.State.Auth, provider);
-            if (!ok) { ShowError($"No se completó el inicio con {label}."); return; }
+            if (!ok)
+            {
+                ShowError($"No se completó el inicio con {label}.");
+                return;
+            }
             GoToMain();
         });
     }
@@ -137,16 +165,28 @@ public sealed partial class LoginPage : Page
             Process.Start(new ProcessStartInfo { FileName = WebSignUpUrl, UseShellExecute = true });
             ShowInfo("Abrimos la web para crear tu cuenta. Vuelve aquí cuando termines.");
         }
-        catch (Exception ex) { ShowError($"No se pudo abrir el navegador: {ex.Message}"); }
+        catch (Exception ex)
+        {
+            ShowError($"No se pudo abrir el navegador: {ex.Message}");
+        }
     }
 
     private async Task RunAsync(Func<Task> body)
     {
         SetBusy(true);
         ErrorBar.IsOpen = false;
-        try { await body(); }
-        catch (Exception ex) { ShowError(AuthService.DescribeError(ex)); }
-        finally { SetBusy(false); }
+        try
+        {
+            await body();
+        }
+        catch (Exception ex)
+        {
+            ShowError(AuthService.DescribeError(ex));
+        }
+        finally
+        {
+            SetBusy(false);
+        }
     }
 
     private void GoToMain()
@@ -158,7 +198,8 @@ public sealed partial class LoginPage : Page
 
     private bool EnsureReady()
     {
-        if (App.SupabaseReady) return true;
+        if (App.SupabaseReady)
+            return true;
         ShowError(App.BootstrapError ?? "Supabase no está disponible.");
         return false;
     }
@@ -199,8 +240,16 @@ public sealed partial class LoginPage : Page
 
     private static bool IsValidEmail(string email)
     {
-        if (string.IsNullOrWhiteSpace(email)) return false;
-        try { _ = new MailAddress(email); return true; }
-        catch { return false; }
+        if (string.IsNullOrWhiteSpace(email))
+            return false;
+        try
+        {
+            _ = new MailAddress(email);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 }

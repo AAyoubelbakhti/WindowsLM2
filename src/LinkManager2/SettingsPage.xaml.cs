@@ -45,8 +45,10 @@ public sealed partial class SettingsPage : Page
         };
     }
 
-    private void OnEscapeBack(Microsoft.UI.Xaml.Input.KeyboardAccelerator sender,
-        Microsoft.UI.Xaml.Input.KeyboardAcceleratorInvokedEventArgs args)
+    private void OnEscapeBack(
+        Microsoft.UI.Xaml.Input.KeyboardAccelerator sender,
+        Microsoft.UI.Xaml.Input.KeyboardAcceleratorInvokedEventArgs args
+    )
     {
         args.Handled = true;
         OnBack(this, new RoutedEventArgs());
@@ -54,30 +56,44 @@ public sealed partial class SettingsPage : Page
 
     private void UpdateHotkeyButtonLabel()
     {
-        HotkeyCaptureButton.Content = HotkeyCaptureButton.IsChecked == true
-            ? "Pulsa la combinación…"
-            : $"Cambiar atajo (actual: {GlobalHotkey.Describe(_hotkeyModifiers, _hotkeyVirtualKey)})";
+        HotkeyCaptureButton.Content =
+            HotkeyCaptureButton.IsChecked == true
+                ? "Pulsa la combinación…"
+                : $"Cambiar atajo (actual: {GlobalHotkey.Describe(_hotkeyModifiers, _hotkeyVirtualKey)})";
     }
 
-    private void OnHotkeyCaptureClick(object sender, RoutedEventArgs e) => UpdateHotkeyButtonLabel();
+    private void OnHotkeyCaptureClick(object sender, RoutedEventArgs e) =>
+        UpdateHotkeyButtonLabel();
 
     private void OnHotkeyCaptureKeyDown(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
     {
-        if (HotkeyCaptureButton.IsChecked != true) return;
-
-        var key = e.Key;
-        if (key is Windows.System.VirtualKey.Control or Windows.System.VirtualKey.Shift
-            or Windows.System.VirtualKey.Menu or Windows.System.VirtualKey.LeftWindows
-            or Windows.System.VirtualKey.RightWindows)
+        if (HotkeyCaptureButton.IsChecked != true)
             return;
 
-        var isLetterOrDigit = (key >= Windows.System.VirtualKey.Number0 && key <= Windows.System.VirtualKey.Z);
-        if (!isLetterOrDigit) return;
+        var key = e.Key;
+        if (
+            key
+            is Windows.System.VirtualKey.Control
+                or Windows.System.VirtualKey.Shift
+                or Windows.System.VirtualKey.Menu
+                or Windows.System.VirtualKey.LeftWindows
+                or Windows.System.VirtualKey.RightWindows
+        )
+            return;
+
+        var isLetterOrDigit = (
+            key >= Windows.System.VirtualKey.Number0 && key <= Windows.System.VirtualKey.Z
+        );
+        if (!isLetterOrDigit)
+            return;
 
         uint modifiers = 0;
-        if (IsDown(Windows.System.VirtualKey.Control)) modifiers |= 0x0002;
-        if (IsDown(Windows.System.VirtualKey.Shift)) modifiers |= 0x0004;
-        if (IsDown(Windows.System.VirtualKey.Menu)) modifiers |= 0x0001;
+        if (IsDown(Windows.System.VirtualKey.Control))
+            modifiers |= 0x0002;
+        if (IsDown(Windows.System.VirtualKey.Shift))
+            modifiers |= 0x0004;
+        if (IsDown(Windows.System.VirtualKey.Menu))
+            modifiers |= 0x0001;
         if (modifiers == 0)
         {
             Status(InfoBarSeverity.Warning, "Usa al menos Ctrl, Mayús o Alt junto a la tecla.");
@@ -89,13 +105,15 @@ public sealed partial class SettingsPage : Page
         HotkeyCaptureButton.IsChecked = false;
         UpdateHotkeyButtonLabel();
         e.Handled = true;
-        Status(InfoBarSeverity.Informational,
-            $"Atajo: {GlobalHotkey.Describe(_hotkeyModifiers, _hotkeyVirtualKey)}. Guarda para aplicarlo.");
+        Status(
+            InfoBarSeverity.Informational,
+            $"Atajo: {GlobalHotkey.Describe(_hotkeyModifiers, _hotkeyVirtualKey)}. Guarda para aplicarlo."
+        );
     }
 
     private static bool IsDown(Windows.System.VirtualKey key) =>
-        Microsoft.UI.Input.InputKeyboardSource
-            .GetKeyStateForCurrentThread(key)
+        Microsoft
+            .UI.Input.InputKeyboardSource.GetKeyStateForCurrentThread(key)
             .HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down);
 
     private async Task LoadAsync()
@@ -127,7 +145,10 @@ public sealed partial class SettingsPage : Page
             StatusBar.IsOpen = false;
             _loaded = true;
         }
-        catch (Exception ex) { Status(InfoBarSeverity.Error, $"Error cargando: {ex.Message}"); }
+        catch (Exception ex)
+        {
+            Status(InfoBarSeverity.Error, $"Error cargando: {ex.Message}");
+        }
     }
 
     private void SelectThemeRadio(string theme)
@@ -138,13 +159,16 @@ public sealed partial class SettingsPage : Page
                 ThemeRadios.SelectedItem = rb;
                 return;
             }
-        if (ThemeRadios.Items.Count > 0) ThemeRadios.SelectedIndex = 0;
+        if (ThemeRadios.Items.Count > 0)
+            ThemeRadios.SelectedIndex = 0;
     }
 
     private void OnThemeChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (!_loaded) return;
-        if (ThemeRadios.SelectedItem is not RadioButton rb || rb.Tag is not string theme) return;
+        if (!_loaded)
+            return;
+        if (ThemeRadios.SelectedItem is not RadioButton rb || rb.Tag is not string theme)
+            return;
 
         var prefs = LocalPreferences.Load();
         prefs.Theme = theme;
@@ -158,7 +182,8 @@ public sealed partial class SettingsPage : Page
         try
         {
             var name = DisplayNameBox.Text.Trim();
-            if (name.Length > 0) await App.State.Repo.UpdateDisplayNameAsync(name);
+            if (name.Length > 0)
+                await App.State.Repo.UpdateDisplayNameAsync(name);
 
             var actionsVisible = new Dictionary<string, object?>();
             foreach (var (key, _) in ActionKeys)
@@ -189,7 +214,10 @@ public sealed partial class SettingsPage : Page
 
             Status(InfoBarSeverity.Success, "Ajustes guardados.");
         }
-        catch (Exception ex) { Status(InfoBarSeverity.Error, $"Error al guardar: {ex.Message}"); }
+        catch (Exception ex)
+        {
+            Status(InfoBarSeverity.Error, $"Error al guardar: {ex.Message}");
+        }
     }
 
     private async void OnDeleteAccount(object sender, RoutedEventArgs e)
@@ -198,26 +226,38 @@ public sealed partial class SettingsPage : Page
         {
             XamlRoot = XamlRoot,
             Title = "¿Eliminar tu cuenta?",
-            Content = "Se borrarán de forma permanente tu cuenta y todos tus datos " +
-                      "(enlaces, categorías, etiquetas, ajustes y enlaces compartidos). " +
-                      "Esta acción no se puede deshacer.",
+            Content =
+                "Se borrarán de forma permanente tu cuenta y todos tus datos "
+                + "(enlaces, categorías, etiquetas, ajustes y enlaces compartidos). "
+                + "Esta acción no se puede deshacer.",
             PrimaryButtonText = "Eliminar cuenta",
             CloseButtonText = "Cancelar",
             DefaultButton = ContentDialogButton.Close,
         };
-        if (await confirm.ShowGuardedAsync() != ContentDialogResult.Primary) return;
+        if (await confirm.ShowGuardedAsync() != ContentDialogResult.Primary)
+            return;
 
         Status(InfoBarSeverity.Informational, "Eliminando tu cuenta…");
         try
         {
             var token = App.State.Auth.CurrentSession?.AccessToken;
-            if (string.IsNullOrEmpty(token)) { Status(InfoBarSeverity.Error, "Sesión no válida."); return; }
+            if (string.IsNullOrEmpty(token))
+            {
+                Status(InfoBarSeverity.Error, "Sesión no válida.");
+                return;
+            }
 
             var status = await WebApi.DeleteAccountAsync(token);
             if (status is >= 200 and < 300)
             {
-                try { await App.State.Auth.SignOutAsync(); }
-                catch (Exception ex) { Diagnostics.Log("delete-account sign-out", ex); }
+                try
+                {
+                    await App.State.Auth.SignOutAsync();
+                }
+                catch (Exception ex)
+                {
+                    Diagnostics.Log("delete-account sign-out", ex);
+                }
                 ((App)Application.Current).Window!.NavigateTo(typeof(LoginPage));
             }
             else
@@ -225,7 +265,10 @@ public sealed partial class SettingsPage : Page
                 Status(InfoBarSeverity.Error, $"No se pudo eliminar la cuenta ({status}).");
             }
         }
-        catch (Exception ex) { Status(InfoBarSeverity.Error, $"Error al eliminar: {ex.Message}"); }
+        catch (Exception ex)
+        {
+            Status(InfoBarSeverity.Error, $"Error al eliminar: {ex.Message}");
+        }
     }
 
     private async void OnCheckUpdates(object sender, RoutedEventArgs e)
@@ -241,8 +284,10 @@ public sealed partial class SettingsPage : Page
                     SetUpdateBar(InfoBarSeverity.Success, "Ya tienes la última versión.");
                     break;
                 case UpdateStatus.NotInstalled:
-                    SetUpdateBar(InfoBarSeverity.Informational,
-                        "Las actualizaciones automáticas requieren instalar la app con el instalador (no la versión portable).");
+                    SetUpdateBar(
+                        InfoBarSeverity.Informational,
+                        "Las actualizaciones automáticas requieren instalar la app con el instalador (no la versión portable)."
+                    );
                     break;
                 case UpdateStatus.Downloaded:
                     SetUpdateBar(InfoBarSeverity.Success, $"Descargada la versión {version}.");
@@ -250,7 +295,8 @@ public sealed partial class SettingsPage : Page
                     {
                         XamlRoot = XamlRoot,
                         Title = "Actualización lista",
-                        Content = $"Se ha descargado la versión {version}. ¿Reiniciar ahora para aplicarla?",
+                        Content =
+                            $"Se ha descargado la versión {version}. ¿Reiniciar ahora para aplicarla?",
                         PrimaryButtonText = "Reiniciar y actualizar",
                         CloseButtonText = "Más tarde",
                         DefaultButton = ContentDialogButton.Primary,
@@ -259,15 +305,24 @@ public sealed partial class SettingsPage : Page
                     {
                         SetUpdateBar(InfoBarSeverity.Informational, "Aplicando actualización…");
                         if (!await UpdateService.ApplyAndRestartAsync())
-                            SetUpdateBar(InfoBarSeverity.Error, "No se pudo aplicar la actualización. Inténtalo de nuevo.");
+                            SetUpdateBar(
+                                InfoBarSeverity.Error,
+                                "No se pudo aplicar la actualización. Inténtalo de nuevo."
+                            );
                     }
                     break;
                 default:
-                    SetUpdateBar(InfoBarSeverity.Error, "No se pudo comprobar. Revisa la conexión.");
+                    SetUpdateBar(
+                        InfoBarSeverity.Error,
+                        "No se pudo comprobar. Revisa la conexión."
+                    );
                     break;
             }
         }
-        finally { CheckUpdatesButton.IsEnabled = true; }
+        finally
+        {
+            CheckUpdatesButton.IsEnabled = true;
+        }
     }
 
     private void SetUpdateBar(InfoBarSeverity severity, string msg)
@@ -280,8 +335,10 @@ public sealed partial class SettingsPage : Page
     private void OnBack(object sender, RoutedEventArgs e)
     {
         var frame = ((App)Application.Current).Window!.RootFrame;
-        if (frame.CanGoBack) frame.GoBack();
-        else frame.Navigate(typeof(MainPage));
+        if (frame.CanGoBack)
+            frame.GoBack();
+        else
+            frame.Navigate(typeof(MainPage));
     }
 
     private void Status(InfoBarSeverity severity, string msg)

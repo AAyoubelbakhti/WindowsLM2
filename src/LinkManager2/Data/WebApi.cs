@@ -12,15 +12,28 @@ public static class WebApi
 
     private static readonly HttpClient _http = new() { Timeout = TimeSpan.FromSeconds(20) };
 
-    public static async Task<string?> SendEmailAsync(string itemId, string toEmail, string message, string bearer)
+    public static async Task<string?> SendEmailAsync(
+        string itemId,
+        string toEmail,
+        string message,
+        string bearer
+    )
     {
         using var req = new HttpRequestMessage(HttpMethod.Post, $"{Base}/api/share-email")
         {
-            Content = JsonContent.Create(new { item_id = itemId, to_email = toEmail, message }),
+            Content = JsonContent.Create(
+                new
+                {
+                    item_id = itemId,
+                    to_email = toEmail,
+                    message,
+                }
+            ),
         };
         req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", bearer);
         var resp = await _http.SendAsync(req);
-        if (resp.IsSuccessStatusCode) return null;
+        if (resp.IsSuccessStatusCode)
+            return null;
         var body = await resp.Content.ReadAsStringAsync();
         return $"Error {(int)resp.StatusCode}: {body}";
     }
@@ -48,10 +61,15 @@ public static class WebApi
         };
         req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", bearer);
         var resp = await _http.SendAsync(req);
-        if (!resp.IsSuccessStatusCode) return null;
+        if (!resp.IsSuccessStatusCode)
+            return null;
         using var doc = System.Text.Json.JsonDocument.Parse(await resp.Content.ReadAsStringAsync());
         var root = doc.RootElement;
-        int Get(string k) => root.TryGetProperty(k, out var v) && v.ValueKind == System.Text.Json.JsonValueKind.Number ? v.GetInt32() : 0;
+        int Get(string k) =>
+            root.TryGetProperty(k, out var v)
+            && v.ValueKind == System.Text.Json.JsonValueKind.Number
+                ? v.GetInt32()
+                : 0;
         return new LinkCheckSummary(Get("checked"), Get("ok"), Get("broken"), Get("pending"));
     }
 
@@ -65,9 +83,13 @@ public static class WebApi
         };
         req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", bearer);
         var resp = await _http.SendAsync(req);
-        if (!resp.IsSuccessStatusCode) return null;
+        if (!resp.IsSuccessStatusCode)
+            return null;
         using var doc = System.Text.Json.JsonDocument.Parse(await resp.Content.ReadAsStringAsync());
-        return doc.RootElement.TryGetProperty("status", out var v) && v.ValueKind == System.Text.Json.JsonValueKind.String
-            ? v.GetString() : null;
+        return
+            doc.RootElement.TryGetProperty("status", out var v)
+            && v.ValueKind == System.Text.Json.JsonValueKind.String
+            ? v.GetString()
+            : null;
     }
 }

@@ -30,7 +30,8 @@ public sealed partial class EmailShareDialog : ContentDialog
 
             Status(InfoBarSeverity.Informational, "Enviando…");
 
-            var token = SupabaseClientHolder.Client.Auth.CurrentSession?.AccessToken
+            var token =
+                SupabaseClientHolder.Client.Auth.CurrentSession?.AccessToken
                 ?? throw new InvalidOperationException("Sin sesión.");
 
             var error = await WebApi.SendEmailAsync(_itemId, email, MessageBox.Text.Trim(), token);
@@ -41,8 +42,14 @@ public sealed partial class EmailShareDialog : ContentDialog
             }
             Status(InfoBarSeverity.Error, error);
         }
-        catch (Exception ex) { Status(InfoBarSeverity.Error, ex.Message); }
-        finally { def.Complete(); }
+        catch (Exception ex)
+        {
+            Status(InfoBarSeverity.Error, ex.Message);
+        }
+        finally
+        {
+            def.Complete();
+        }
     }
 
     private void Status(InfoBarSeverity severity, string msg)

@@ -14,11 +14,17 @@ public sealed partial class ItemTagsDialog : ContentDialog
     private readonly string _itemId;
     private readonly ObservableCollection<TagEntry> _tags = new();
 
-    public ItemTagsDialog(ItemsRepository repo, string itemId, string itemTitle,
-        IReadOnlyList<Tag> allTags, IReadOnlyList<string> currentTagIds)
+    public ItemTagsDialog(
+        ItemsRepository repo,
+        string itemId,
+        string itemTitle,
+        IReadOnlyList<Tag> allTags,
+        IReadOnlyList<string> currentTagIds
+    )
     {
         InitializeComponent();
-        _repo = repo; _itemId = itemId;
+        _repo = repo;
+        _itemId = itemId;
         ItemLabel.Text = $"Etiquetas para: {itemTitle}";
 
         TagsList.ItemsSource = _tags;
@@ -38,7 +44,8 @@ public sealed partial class ItemTagsDialog : ContentDialog
     private async void OnCreateClick(object sender, RoutedEventArgs e)
     {
         var name = NewTagBox.Text.Trim();
-        if (name.Length == 0) return;
+        if (name.Length == 0)
+            return;
         try
         {
             var created = await _repo.AddTagAsync(name);
@@ -48,7 +55,10 @@ public sealed partial class ItemTagsDialog : ContentDialog
             NewTagBox.Text = string.Empty;
             ErrorBar.IsOpen = false;
         }
-        catch (Exception ex) { ShowError($"No se pudo crear: {ex.Message}"); }
+        catch (Exception ex)
+        {
+            ShowError($"No se pudo crear: {ex.Message}");
+        }
     }
 
     private async void OnSaveClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
@@ -61,11 +71,21 @@ public sealed partial class ItemTagsDialog : ContentDialog
             await _repo.SetItemTagsAsync(_itemId, ids);
             args.Cancel = false;
         }
-        catch (Exception ex) { ShowError($"Error al guardar: {ex.Message}"); }
-        finally { def.Complete(); }
+        catch (Exception ex)
+        {
+            ShowError($"Error al guardar: {ex.Message}");
+        }
+        finally
+        {
+            def.Complete();
+        }
     }
 
-    private void ShowError(string msg) { ErrorBar.Title = msg; ErrorBar.IsOpen = true; }
+    private void ShowError(string msg)
+    {
+        ErrorBar.Title = msg;
+        ErrorBar.IsOpen = true;
+    }
 
     public sealed record TagEntry(string Id, string Name);
 }

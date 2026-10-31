@@ -18,7 +18,8 @@ internal static class OAuthListener
     public static async Task<bool> RunWebAssistedAsync(
         AuthService auth,
         string provider,
-        CancellationToken ct = default)
+        CancellationToken ct = default
+    )
     {
         var port = GetFreePort();
         var redirect = $"http://127.0.0.1:{port}/auth-callback";
@@ -27,9 +28,12 @@ internal static class OAuthListener
         listener.Prefixes.Add($"http://127.0.0.1:{port}/");
         listener.Start();
 
-        var state = Convert.ToHexString(System.Security.Cryptography.RandomNumberGenerator.GetBytes(16));
+        var state = Convert.ToHexString(
+            System.Security.Cryptography.RandomNumberGenerator.GetBytes(16)
+        );
         var (verifier, challenge) = Pkce.Create();
-        var bridge = "https://lm.aelbak.dev/auth/app-login"
+        var bridge =
+            "https://lm.aelbak.dev/auth/app-login"
             + $"?provider={Uri.EscapeDataString(provider)}"
             + $"&redirect={Uri.EscapeDataString(redirect)}"
             + $"&state={Uri.EscapeDataString(state)}"
@@ -54,7 +58,10 @@ internal static class OAuthListener
             try
             {
                 var ctxTask = listener.GetContextAsync();
-                var doneTask = await Task.WhenAny(ctxTask, Task.Delay(Timeout.Add(TimeSpan.FromSeconds(5)), linkedCts.Token));
+                var doneTask = await Task.WhenAny(
+                    ctxTask,
+                    Task.Delay(Timeout.Add(TimeSpan.FromSeconds(5)), linkedCts.Token)
+                );
                 if (doneTask != ctxTask)
                 {
                     listener.Stop();
@@ -68,52 +75,82 @@ internal static class OAuthListener
                 return false;
             }
 
-            if (ctx.Request.HttpMethod == "GET" &&
-                string.Equals(ctx.Request.Url?.AbsolutePath, "/auth-callback", StringComparison.Ordinal))
+            if (
+                ctx.Request.HttpMethod == "GET"
+                && string.Equals(
+                    ctx.Request.Url?.AbsolutePath,
+                    "/auth-callback",
+                    StringComparison.Ordinal
+                )
+            )
             {
                 break;
             }
-            try { ctx.Response.StatusCode = 404; ctx.Response.Close(); } catch { }
+            try
+            {
+                ctx.Response.StatusCode = 404;
+                ctx.Response.Close();
+            }
+            catch { }
         }
 
         var appCode = ctx.Request.QueryString["code"];
         var returnedState = ctx.Request.QueryString["state"];
-        var error = ctx.Request.QueryString["error_description"] ?? ctx.Request.QueryString["error"];
+        var error =
+            ctx.Request.QueryString["error_description"] ?? ctx.Request.QueryString["error"];
 
-        var stateOk = !string.IsNullOrEmpty(returnedState) &&
-            System.Security.Cryptography.CryptographicOperations.FixedTimeEquals(
-                Encoding.UTF8.GetBytes(returnedState), Encoding.UTF8.GetBytes(state));
+        var stateOk =
+            !string.IsNullOrEmpty(returnedState)
+            && System.Security.Cryptography.CryptographicOperations.FixedTimeEquals(
+                Encoding.UTF8.GetBytes(returnedState),
+                Encoding.UTF8.GetBytes(state)
+            );
 
         var ok = stateOk && string.IsNullOrEmpty(error) && !string.IsNullOrEmpty(appCode);
-        await WriteHtmlAsync(ctx, ok
-            ? "Sesión iniciada. Ya puedes cerrar esta pestaña y volver a LinkManager."
-            : $"Error de autenticación: {error ?? "no se recibió la sesión"}");
+        await WriteHtmlAsync(
+            ctx,
+            ok
+                ? "Sesión iniciada. Ya puedes cerrar esta pestaña y volver a LinkManager."
+                : $"Error de autenticación: {error ?? "no se recibió la sesión"}"
+        );
         listener.Stop();
 
-        if (!ok) return false;
+        if (!ok)
+            return false;
 
         var (access, refresh) = await ExchangeAppCodeAsync(appCode!, verifier, ct);
-        if (string.IsNullOrEmpty(access) || string.IsNullOrEmpty(refresh)) return false;
+        if (string.IsNullOrEmpty(access) || string.IsNullOrEmpty(refresh))
+            return false;
         await auth.SetSessionFromTokensAsync(access!, refresh!);
         return auth.IsAuthenticated;
     }
 
     private static readonly HttpClient _http = new() { Timeout = TimeSpan.FromSeconds(15) };
 
-    private static async Task<(string? Access, string? Refresh)> ExchangeAppCodeAsync(string code, string codeVerifier, CancellationToken ct)
+    private static async Task<(string? Access, string? Refresh)> ExchangeAppCodeAsync(
+        string code,
+        string codeVerifier,
+        CancellationToken ct
+    )
     {
         try
         {
-            using var req = new HttpRequestMessage(HttpMethod.Post, "https://lm.aelbak.dev/api/app-session")
+            using var req = new HttpRequestMessage(
+                HttpMethod.Post,
+                "https://lm.aelbak.dev/api/app-session"
+            )
             {
                 Content = JsonContent.Create(new { code, code_verifier = codeVerifier }),
             };
             var resp = await _http.SendAsync(req, ct);
-            if (!resp.IsSuccessStatusCode) return (null, null);
+            if (!resp.IsSuccessStatusCode)
+                return (null, null);
             using var doc = JsonDocument.Parse(await resp.Content.ReadAsStringAsync(ct));
             var root = doc.RootElement;
             string? Get(string k) =>
-                root.TryGetProperty(k, out var v) && v.ValueKind == JsonValueKind.String ? v.GetString() : null;
+                root.TryGetProperty(k, out var v) && v.ValueKind == JsonValueKind.String
+                    ? v.GetString()
+                    : null;
             return (Get("access_token"), Get("refresh_token"));
         }
         catch

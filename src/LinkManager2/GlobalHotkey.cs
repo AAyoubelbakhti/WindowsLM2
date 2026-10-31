@@ -35,32 +35,50 @@ internal sealed class GlobalHotkey : IDisposable
     public static string Describe(uint modifiers, uint virtualKey)
     {
         var parts = new System.Collections.Generic.List<string>();
-        if ((modifiers & MOD_CONTROL) != 0) parts.Add("Ctrl");
-        if ((modifiers & MOD_SHIFT) != 0) parts.Add("Mayús");
-        if ((modifiers & MOD_ALT) != 0) parts.Add("Alt");
-        if ((modifiers & MOD_WIN) != 0) parts.Add("Win");
+        if ((modifiers & MOD_CONTROL) != 0)
+            parts.Add("Ctrl");
+        if ((modifiers & MOD_SHIFT) != 0)
+            parts.Add("Mayús");
+        if ((modifiers & MOD_ALT) != 0)
+            parts.Add("Alt");
+        if ((modifiers & MOD_WIN) != 0)
+            parts.Add("Win");
         parts.Add(((char)virtualKey).ToString());
         return string.Join("+", parts);
     }
 
     public void Dispose()
     {
-        if (IsRegistered) UnregisterHotKey(_hwnd, HotkeyId);
+        if (IsRegistered)
+            UnregisterHotKey(_hwnd, HotkeyId);
         RemoveWindowSubclass(_hwnd, _subclass, HotkeyId);
         IsRegistered = false;
     }
 
-    private IntPtr SubclassProc(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam, IntPtr uIdSubclass, IntPtr dwRefData)
+    private IntPtr SubclassProc(
+        IntPtr hWnd,
+        uint uMsg,
+        IntPtr wParam,
+        IntPtr lParam,
+        IntPtr uIdSubclass,
+        IntPtr dwRefData
+    )
     {
         if (uMsg == WM_HOTKEY && wParam.ToInt32() == HotkeyId)
         {
-
             _window.DispatcherQueue.TryEnqueue(() => Pressed?.Invoke(this, EventArgs.Empty));
         }
         return DefSubclassProc(hWnd, uMsg, wParam, lParam);
     }
 
-    private delegate IntPtr SUBCLASSPROC(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam, IntPtr uIdSubclass, IntPtr dwRefData);
+    private delegate IntPtr SUBCLASSPROC(
+        IntPtr hWnd,
+        uint uMsg,
+        IntPtr wParam,
+        IntPtr lParam,
+        IntPtr uIdSubclass,
+        IntPtr dwRefData
+    );
 
     [DllImport("user32.dll")]
     private static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
@@ -69,11 +87,25 @@ internal sealed class GlobalHotkey : IDisposable
     private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
 
     [DllImport("comctl32.dll", CharSet = CharSet.Auto)]
-    private static extern bool SetWindowSubclass(IntPtr hWnd, SUBCLASSPROC pfnSubclass, IntPtr uIdSubclass, IntPtr dwRefData);
+    private static extern bool SetWindowSubclass(
+        IntPtr hWnd,
+        SUBCLASSPROC pfnSubclass,
+        IntPtr uIdSubclass,
+        IntPtr dwRefData
+    );
 
     [DllImport("comctl32.dll", CharSet = CharSet.Auto)]
-    private static extern bool RemoveWindowSubclass(IntPtr hWnd, SUBCLASSPROC pfnSubclass, IntPtr uIdSubclass);
+    private static extern bool RemoveWindowSubclass(
+        IntPtr hWnd,
+        SUBCLASSPROC pfnSubclass,
+        IntPtr uIdSubclass
+    );
 
     [DllImport("comctl32.dll", CharSet = CharSet.Auto)]
-    private static extern IntPtr DefSubclassProc(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam);
+    private static extern IntPtr DefSubclassProc(
+        IntPtr hWnd,
+        uint uMsg,
+        IntPtr wParam,
+        IntPtr lParam
+    );
 }

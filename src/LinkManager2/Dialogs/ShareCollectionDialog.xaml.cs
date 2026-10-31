@@ -42,8 +42,14 @@ public sealed partial class ShareCollectionDialog : ContentDialog
             OpenButton.IsEnabled = true;
             SetStatus(InfoBarSeverity.Success, "Colección creada. Copia o abre la URL.");
         }
-        catch (Exception ex) { SetStatus(InfoBarSeverity.Error, $"{ex.GetType().Name}: {ex.Message}"); }
-        finally { def.Complete(); }
+        catch (Exception ex)
+        {
+            SetStatus(InfoBarSeverity.Error, $"{ex.GetType().Name}: {ex.Message}");
+        }
+        finally
+        {
+            def.Complete();
+        }
     }
 
     private void OnCopyClick(object sender, RoutedEventArgs e)
@@ -53,13 +59,24 @@ public sealed partial class ShareCollectionDialog : ContentDialog
             ItemActions.Copy(ResultBox.Text);
             SetStatus(InfoBarSeverity.Success, "URL copiada al portapapeles.");
         }
-        catch (Exception ex) { SetStatus(InfoBarSeverity.Error, ex.Message); }
+        catch (Exception ex)
+        {
+            SetStatus(InfoBarSeverity.Error, ex.Message);
+        }
     }
 
     private void OnOpenClick(object sender, RoutedEventArgs e)
     {
-        try { Process.Start(new ProcessStartInfo { FileName = ResultBox.Text, UseShellExecute = true }); }
-        catch (Exception ex) { SetStatus(InfoBarSeverity.Error, ex.Message); }
+        try
+        {
+            Process.Start(
+                new ProcessStartInfo { FileName = ResultBox.Text, UseShellExecute = true }
+            );
+        }
+        catch (Exception ex)
+        {
+            SetStatus(InfoBarSeverity.Error, ex.Message);
+        }
     }
 
     private void SetStatus(InfoBarSeverity severity, string msg)

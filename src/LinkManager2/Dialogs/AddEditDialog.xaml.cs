@@ -22,9 +22,15 @@ public sealed partial class AddEditDialog : ContentDialog
     private readonly ItemsRepository? _repo;
     private readonly ObservableCollection<TagEntry> _tagEntries = new();
 
-    public AddEditDialog(IReadOnlyList<Category> categories, Item? initial,
-        string? prefillTitle = null, string? prefillValue = null,
-        IReadOnlyList<Tag>? allTags = null, ItemsRepository? repo = null, bool showQuickCreate = false)
+    public AddEditDialog(
+        IReadOnlyList<Category> categories,
+        Item? initial,
+        string? prefillTitle = null,
+        string? prefillValue = null,
+        IReadOnlyList<Tag>? allTags = null,
+        ItemsRepository? repo = null,
+        bool showQuickCreate = false
+    )
     {
         InitializeComponent();
         Title = initial is null ? "Añadir elemento" : "Editar elemento";
@@ -35,10 +41,17 @@ public sealed partial class AddEditDialog : ContentDialog
         DescriptionBox.Text = initial?.Description ?? string.Empty;
 
         CategoryCombo.Items.Add(new CategoryOption(null, "Sin categoría"));
-        foreach (var c in categories) CategoryCombo.Items.Add(new CategoryOption(c.Id, c.Name));
+        foreach (var c in categories)
+            CategoryCombo.Items.Add(new CategoryOption(c.Id, c.Name));
         CategoryCombo.SelectedIndex = initial?.CategoryId is null
             ? 0
-            : Math.Max(0, CategoryCombo.Items.Cast<CategoryOption>().ToList().FindIndex(o => o.Id == initial.CategoryId));
+            : Math.Max(
+                0,
+                CategoryCombo
+                    .Items.Cast<CategoryOption>()
+                    .ToList()
+                    .FindIndex(o => o.Id == initial.CategoryId)
+            );
 
         if (showQuickCreate && _repo is not null)
         {
@@ -53,9 +66,11 @@ public sealed partial class AddEditDialog : ContentDialog
 
     private async void OnCreateCategory(object sender, RoutedEventArgs e)
     {
-        if (_repo is null) return;
+        if (_repo is null)
+            return;
         var name = NewCategoryBox.Text.Trim();
-        if (name.Length == 0) return;
+        if (name.Length == 0)
+            return;
         try
         {
             var created = await _repo.AddCategoryAsync(name);
@@ -65,14 +80,19 @@ public sealed partial class AddEditDialog : ContentDialog
             NewCategoryBox.Text = string.Empty;
             ErrorBar.IsOpen = false;
         }
-        catch (Exception ex) { ShowError($"No se pudo crear la categoría: {ex.Message}"); }
+        catch (Exception ex)
+        {
+            ShowError($"No se pudo crear la categoría: {ex.Message}");
+        }
     }
 
     private async void OnCreateTag(object sender, RoutedEventArgs e)
     {
-        if (_repo is null) return;
+        if (_repo is null)
+            return;
         var name = NewTagBox.Text.Trim();
-        if (name.Length == 0) return;
+        if (name.Length == 0)
+            return;
         try
         {
             var created = await _repo.AddTagAsync(name);
@@ -82,7 +102,10 @@ public sealed partial class AddEditDialog : ContentDialog
             NewTagBox.Text = string.Empty;
             ErrorBar.IsOpen = false;
         }
-        catch (Exception ex) { ShowError($"No se pudo crear la etiqueta: {ex.Message}"); }
+        catch (Exception ex)
+        {
+            ShowError($"No se pudo crear la etiqueta: {ex.Message}");
+        }
     }
 
     private async void OnSaveClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
@@ -92,7 +115,12 @@ public sealed partial class AddEditDialog : ContentDialog
         try
         {
             var (ok, _) = Validation.DetectType(ItemValue);
-            if (!ok) { ShowError("El valor no es una URL ni una ruta válida."); ValueBox.Focus(FocusState.Programmatic); return; }
+            if (!ok)
+            {
+                ShowError("El valor no es una URL ni una ruta válida.");
+                ValueBox.Focus(FocusState.Programmatic);
+                return;
+            }
 
             if (string.IsNullOrWhiteSpace(ItemTitle))
             {
@@ -112,24 +140,35 @@ public sealed partial class AddEditDialog : ContentDialog
 
             args.Cancel = false;
         }
-        finally { def.Complete(); }
+        finally
+        {
+            def.Complete();
+        }
     }
 
-    private async void OnValueLostFocus(object sender, RoutedEventArgs e) => await TryAutofillTitleAsync();
+    private async void OnValueLostFocus(object sender, RoutedEventArgs e) =>
+        await TryAutofillTitleAsync();
 
     private async Task TryAutofillTitleAsync()
     {
-        if (!string.IsNullOrWhiteSpace(TitleBox.Text)) return;
+        if (!string.IsNullOrWhiteSpace(TitleBox.Text))
+            return;
         var url = ValueBox.Text.Trim();
-        if (!url.StartsWith("http://", StringComparison.OrdinalIgnoreCase) &&
-            !url.StartsWith("https://", StringComparison.OrdinalIgnoreCase)) return;
+        if (
+            !url.StartsWith("http://", StringComparison.OrdinalIgnoreCase)
+            && !url.StartsWith("https://", StringComparison.OrdinalIgnoreCase)
+        )
+            return;
         try
         {
             var meta = await MetadataFetcher.FetchAsync(url);
             if (!string.IsNullOrWhiteSpace(meta?.Title) && string.IsNullOrWhiteSpace(TitleBox.Text))
                 TitleBox.Text = meta!.Title;
         }
-        catch (Exception ex) { Diagnostics.Log("autofill title", ex); }
+        catch (Exception ex)
+        {
+            Diagnostics.Log("autofill title", ex);
+        }
     }
 
     private void ShowError(string msg)

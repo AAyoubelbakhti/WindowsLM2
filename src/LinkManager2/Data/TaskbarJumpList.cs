@@ -15,7 +15,8 @@ public static class TaskbarJumpList
     public static void Configure()
     {
         var exe = Process.GetCurrentProcess().MainModule?.FileName;
-        if (string.IsNullOrEmpty(exe)) return;
+        if (string.IsNullOrEmpty(exe))
+            return;
 
         ICustomDestinationList? list = null;
         IObjectCollection? tasks = null;
@@ -27,21 +28,37 @@ public static class TaskbarJumpList
             tasks = (IObjectCollection)new EnumerableObjectCollection();
             AddTask(tasks, exe, Startup.AddArg, "Añadir enlace", "Guarda un enlace nuevo.");
             AddTask(tasks, exe, Startup.SearchArg, "Buscar", "Abre la búsqueda de enlaces.");
-            AddTask(tasks, exe, Startup.SaveClipboardArg, "Guardar portapapeles",
-                "Guarda el enlace o la ruta del portapapeles.");
+            AddTask(
+                tasks,
+                exe,
+                Startup.SaveClipboardArg,
+                "Guardar portapapeles",
+                "Guarda el enlace o la ruta del portapapeles."
+            );
 
             list.AddUserTasks((IObjectArray)tasks);
             list.CommitList();
         }
-        catch (Exception ex) { Diagnostics.Log("jumplist configure", ex); }
+        catch (Exception ex)
+        {
+            Diagnostics.Log("jumplist configure", ex);
+        }
         finally
         {
-            if (tasks is not null) Marshal.ReleaseComObject(tasks);
-            if (list is not null) Marshal.ReleaseComObject(list);
+            if (tasks is not null)
+                Marshal.ReleaseComObject(tasks);
+            if (list is not null)
+                Marshal.ReleaseComObject(list);
         }
     }
 
-    private static void AddTask(IObjectCollection tasks, string exe, string arg, string title, string description)
+    private static void AddTask(
+        IObjectCollection tasks,
+        string exe,
+        string arg,
+        string title,
+        string description
+    )
     {
         IShellLinkW? link = null;
         try
@@ -61,28 +78,38 @@ public static class TaskbarJumpList
         }
         finally
         {
-            if (link is not null) Marshal.ReleaseComObject(link);
+            if (link is not null)
+                Marshal.ReleaseComObject(link);
         }
     }
 
-    private static readonly PropertyKey PkeyTitle =
-        new(new Guid("F29F85E0-4FF9-1068-AB91-08002B27B3D9"), 2);
+    private static readonly PropertyKey PkeyTitle = new(
+        new Guid("F29F85E0-4FF9-1068-AB91-08002B27B3D9"),
+        2
+    );
 
     [StructLayout(LayoutKind.Sequential)]
     private struct PropertyKey
     {
         public Guid FmtId;
         public int Pid;
-        public PropertyKey(Guid fmtId, int pid) { FmtId = fmtId; Pid = pid; }
+
+        public PropertyKey(Guid fmtId, int pid)
+        {
+            FmtId = fmtId;
+            Pid = pid;
+        }
     }
 
     private sealed class PropVariant : IDisposable
     {
         private IntPtr _native;
+
         public PropVariant(string value)
         {
             _native = Marshal.AllocCoTaskMem(16);
-            for (var i = 0; i < 16; i++) Marshal.WriteByte(_native, i, 0);
+            for (var i = 0; i < 16; i++)
+                Marshal.WriteByte(_native, i, 0);
             Marshal.WriteInt16(_native, 0, VT_LPWSTR);
             Marshal.WriteIntPtr(_native, 8, Marshal.StringToCoTaskMemUni(value));
         }
@@ -91,9 +118,11 @@ public static class TaskbarJumpList
 
         public void Dispose()
         {
-            if (_native == IntPtr.Zero) return;
+            if (_native == IntPtr.Zero)
+                return;
             var str = Marshal.ReadIntPtr(_native, 8);
-            if (str != IntPtr.Zero) Marshal.FreeCoTaskMem(str);
+            if (str != IntPtr.Zero)
+                Marshal.FreeCoTaskMem(str);
             Marshal.FreeCoTaskMem(_native);
             _native = IntPtr.Zero;
         }
@@ -110,8 +139,11 @@ public static class TaskbarJumpList
     [ComImport, Guid("00021401-0000-0000-c000-000000000046")]
     private class ShellLink { }
 
-    [ComImport, Guid("6332debf-87b5-4670-90c0-5e57b408a49e"),
-     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    [
+        ComImport,
+        Guid("6332debf-87b5-4670-90c0-5e57b408a49e"),
+        InterfaceType(ComInterfaceType.InterfaceIsIUnknown)
+    ]
     private interface ICustomDestinationList
     {
         void SetAppID([MarshalAs(UnmanagedType.LPWStr)] string pszAppID);
@@ -125,16 +157,22 @@ public static class TaskbarJumpList
         void AbortList();
     }
 
-    [ComImport, Guid("92CA9DCD-5622-4bba-A805-5E9F541BD8C9"),
-     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    [
+        ComImport,
+        Guid("92CA9DCD-5622-4bba-A805-5E9F541BD8C9"),
+        InterfaceType(ComInterfaceType.InterfaceIsIUnknown)
+    ]
     private interface IObjectArray
     {
         void GetCount(out uint pcObjects);
         void GetAt(uint uiIndex, in Guid riid, out IntPtr ppv);
     }
 
-    [ComImport, Guid("5632b1a4-e38a-400a-928a-d4cd63230295"),
-     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    [
+        ComImport,
+        Guid("5632b1a4-e38a-400a-928a-d4cd63230295"),
+        InterfaceType(ComInterfaceType.InterfaceIsIUnknown)
+    ]
     private interface IObjectCollection
     {
         void GetCount(out uint pcObjects);
@@ -145,34 +183,56 @@ public static class TaskbarJumpList
         void Clear();
     }
 
-    [ComImport, Guid("000214F9-0000-0000-C000-000000000046"),
-     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    [
+        ComImport,
+        Guid("000214F9-0000-0000-C000-000000000046"),
+        InterfaceType(ComInterfaceType.InterfaceIsIUnknown)
+    ]
     private interface IShellLinkW
     {
-        void GetPath([MarshalAs(UnmanagedType.LPWStr)] System.Text.StringBuilder pszFile,
-            int cch, IntPtr pfd, uint fFlags);
+        void GetPath(
+            [MarshalAs(UnmanagedType.LPWStr)] System.Text.StringBuilder pszFile,
+            int cch,
+            IntPtr pfd,
+            uint fFlags
+        );
         void GetIDList(out IntPtr ppidl);
         void SetIDList(IntPtr pidl);
-        void GetDescription([MarshalAs(UnmanagedType.LPWStr)] System.Text.StringBuilder pszName, int cch);
+        void GetDescription(
+            [MarshalAs(UnmanagedType.LPWStr)] System.Text.StringBuilder pszName,
+            int cch
+        );
         void SetDescription([MarshalAs(UnmanagedType.LPWStr)] string pszName);
-        void GetWorkingDirectory([MarshalAs(UnmanagedType.LPWStr)] System.Text.StringBuilder pszDir, int cch);
+        void GetWorkingDirectory(
+            [MarshalAs(UnmanagedType.LPWStr)] System.Text.StringBuilder pszDir,
+            int cch
+        );
         void SetWorkingDirectory([MarshalAs(UnmanagedType.LPWStr)] string pszDir);
-        void GetArguments([MarshalAs(UnmanagedType.LPWStr)] System.Text.StringBuilder pszArgs, int cch);
+        void GetArguments(
+            [MarshalAs(UnmanagedType.LPWStr)] System.Text.StringBuilder pszArgs,
+            int cch
+        );
         void SetArguments([MarshalAs(UnmanagedType.LPWStr)] string pszArgs);
         void GetHotkey(out ushort pwHotkey);
         void SetHotkey(ushort wHotkey);
         void GetShowCmd(out int piShowCmd);
         void SetShowCmd(int iShowCmd);
-        void GetIconLocation([MarshalAs(UnmanagedType.LPWStr)] System.Text.StringBuilder pszIconPath,
-            int cch, out int piIcon);
+        void GetIconLocation(
+            [MarshalAs(UnmanagedType.LPWStr)] System.Text.StringBuilder pszIconPath,
+            int cch,
+            out int piIcon
+        );
         void SetIconLocation([MarshalAs(UnmanagedType.LPWStr)] string pszIconPath, int iIcon);
         void SetRelativePath([MarshalAs(UnmanagedType.LPWStr)] string pszPathRel, uint dwReserved);
         void Resolve(IntPtr hwnd, uint fFlags);
         void SetPath([MarshalAs(UnmanagedType.LPWStr)] string pszFile);
     }
 
-    [ComImport, Guid("886d8eeb-8cf2-4446-8d02-cdba1dbdcf99"),
-     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    [
+        ComImport,
+        Guid("886d8eeb-8cf2-4446-8d02-cdba1dbdcf99"),
+        InterfaceType(ComInterfaceType.InterfaceIsIUnknown)
+    ]
     private interface IPropertyStore
     {
         void GetCount(out uint cProps);

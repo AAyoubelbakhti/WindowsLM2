@@ -6,7 +6,6 @@ namespace LinkManager2.Dialogs;
 
 internal static class DialogHelper
 {
-
     private static bool _open;
 
     public static async Task<ContentDialogResult> ShowGuardedAsync(this ContentDialog dialog)
@@ -19,16 +18,30 @@ internal static class DialogHelper
     /// Like ShowGuardedAsync but reports whether the dialog was actually shown, so callers
     /// can tell "another dialog was open" apart from "the user dismissed it".
     /// </summary>
-    public static async Task<(bool Shown, ContentDialogResult Result)> TryShowGuardedAsync(this ContentDialog dialog)
+    public static async Task<(bool Shown, ContentDialogResult Result)> TryShowGuardedAsync(
+        this ContentDialog dialog
+    )
     {
-        if (_open) return (false, ContentDialogResult.None);
+        if (_open)
+            return (false, ContentDialogResult.None);
         _open = true;
-        try { return (true, await dialog.ShowAsync()); }
-        finally { _open = false; }
+        try
+        {
+            return (true, await dialog.ShowAsync());
+        }
+        finally
+        {
+            _open = false;
+        }
     }
 
-    public static async Task<bool> ConfirmAsync(XamlRoot root, string title, string message,
-        string primary = "Aceptar", string cancel = "Cancelar")
+    public static async Task<bool> ConfirmAsync(
+        XamlRoot root,
+        string title,
+        string message,
+        string primary = "Aceptar",
+        string cancel = "Cancelar"
+    )
     {
         var dlg = new ContentDialog
         {

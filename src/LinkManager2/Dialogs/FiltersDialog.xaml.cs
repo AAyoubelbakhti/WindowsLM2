@@ -8,7 +8,11 @@ public sealed partial class FiltersDialog : ContentDialog
 {
     public FilterState Result { get; private set; }
 
-    public FiltersDialog(FilterState current, IReadOnlyList<Category> categories, IReadOnlyList<Tag> tags)
+    public FiltersDialog(
+        FilterState current,
+        IReadOnlyList<Category> categories,
+        IReadOnlyList<Tag> tags
+    )
     {
         InitializeComponent();
         Result = current.Clone();
@@ -19,11 +23,13 @@ public sealed partial class FiltersDialog : ContentDialog
         TypeCombo.SelectedIndex = (int)current.Type;
 
         CategoryCombo.Items.Add(new IdChoice(null, "Todas"));
-        foreach (var c in categories) CategoryCombo.Items.Add(new IdChoice(c.Id, c.Name));
+        foreach (var c in categories)
+            CategoryCombo.Items.Add(new IdChoice(c.Id, c.Name));
         SelectId(CategoryCombo, current.CategoryId);
 
         TagCombo.Items.Add(new IdChoice(null, "Todas"));
-        foreach (var t in tags) TagCombo.Items.Add(new IdChoice(t.Id, t.Name));
+        foreach (var t in tags)
+            TagCombo.Items.Add(new IdChoice(t.Id, t.Name));
         SelectId(TagCombo, current.TagId);
 
         FavoritesOnly.IsOn = current.FavoritesOnly;
@@ -39,10 +45,12 @@ public sealed partial class FiltersDialog : ContentDialog
         {
             if (((Choice<SortKey>)SortCombo.Items[i]!).Value == current.Sort)
             {
-                SortCombo.SelectedIndex = i; break;
+                SortCombo.SelectedIndex = i;
+                break;
             }
         }
-        if (SortCombo.SelectedIndex < 0) SortCombo.SelectedIndex = 0;
+        if (SortCombo.SelectedIndex < 0)
+            SortCombo.SelectedIndex = 0;
     }
 
     private void OnApply(ContentDialog sender, ContentDialogButtonClickEventArgs args)
@@ -64,7 +72,11 @@ public sealed partial class FiltersDialog : ContentDialog
     {
         for (var i = 0; i < combo.Items.Count; i++)
         {
-            if (((IdChoice)combo.Items[i]!).Id == id) { combo.SelectedIndex = i; return; }
+            if (((IdChoice)combo.Items[i]!).Id == id)
+            {
+                combo.SelectedIndex = i;
+                return;
+            }
         }
         combo.SelectedIndex = 0;
     }
@@ -73,6 +85,7 @@ public sealed partial class FiltersDialog : ContentDialog
     {
         public override string ToString() => Label;
     }
+
     private sealed record IdChoice(string? Id, string Name)
     {
         public override string ToString() => Name;

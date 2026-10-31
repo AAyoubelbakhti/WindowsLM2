@@ -49,11 +49,16 @@ public sealed class AuthService
     {
         for (var cur = ex; cur is not null; cur = cur.InnerException)
         {
-            if (cur is Supabase.Postgrest.Exceptions.PostgrestException pex && pex.StatusCode == 401)
+            if (
+                cur is Supabase.Postgrest.Exceptions.PostgrestException pex
+                && pex.StatusCode == 401
+            )
                 return true;
             var msg = cur.Message ?? string.Empty;
-            if (msg.Contains("JWT expired", StringComparison.OrdinalIgnoreCase)
-                || msg.Contains("invalid_grant", StringComparison.OrdinalIgnoreCase))
+            if (
+                msg.Contains("JWT expired", StringComparison.OrdinalIgnoreCase)
+                || msg.Contains("invalid_grant", StringComparison.OrdinalIgnoreCase)
+            )
                 return true;
         }
         return false;
@@ -61,13 +66,18 @@ public sealed class AuthService
 
     public static string DescribeError(Exception ex)
     {
-        if (ex is OperationCanceledException) return "Operación cancelada.";
+        if (ex is OperationCanceledException)
+            return "Operación cancelada.";
         var msg = ex.Message ?? string.Empty;
-        if (msg.Contains("invalid", StringComparison.OrdinalIgnoreCase) ||
-            msg.Contains("credential", StringComparison.OrdinalIgnoreCase))
+        if (
+            msg.Contains("invalid", StringComparison.OrdinalIgnoreCase)
+            || msg.Contains("credential", StringComparison.OrdinalIgnoreCase)
+        )
             return "Credenciales inválidas. Revisa el correo y la contraseña.";
-        if (msg.Contains("already registered", StringComparison.OrdinalIgnoreCase) ||
-            msg.Contains("already been registered", StringComparison.OrdinalIgnoreCase))
+        if (
+            msg.Contains("already registered", StringComparison.OrdinalIgnoreCase)
+            || msg.Contains("already been registered", StringComparison.OrdinalIgnoreCase)
+        )
             return "Ese correo ya tiene cuenta. Inicia sesión.";
         if (msg.Contains("rate", StringComparison.OrdinalIgnoreCase))
             return "Demasiados intentos. Espera unos minutos.";

@@ -18,7 +18,8 @@ internal sealed class CommandLayerController
         var foreground = GetForegroundWindow();
         _window.ShowFromTray();
         var root = _window.ContentXamlRoot;
-        if (root is null) return;
+        if (root is null)
+            return;
 
         var dlg = new CommandLayerDialog { XamlRoot = root };
         await dlg.ShowGuardedAsync();
@@ -36,7 +37,8 @@ internal sealed class CommandLayerController
     public void Search()
     {
         _window.ShowFromTray();
-        if (_window.RootFrame.Content is MainPage page) page.FocusSearch();
+        if (_window.RootFrame.Content is MainPage page)
+            page.FocusSearch();
     }
 
     private async void Dispatch(char key, IntPtr savedForeground)
@@ -48,7 +50,8 @@ internal sealed class CommandLayerController
                 break;
             case 'f':
                 _window.ShowFromTray();
-                if (_window.RootFrame.Content is MainPage searchPage) searchPage.FocusSearch();
+                if (_window.RootFrame.Content is MainPage searchPage)
+                    searchPage.FocusSearch();
                 break;
             case 'a':
                 await OpenClipboardTargetAsync();
@@ -64,8 +67,10 @@ internal sealed class CommandLayerController
             case 'l':
                 var cap = await CaptureBrowserUrlAsync(savedForeground);
                 _window.ShowFromTray();
-                if (cap is not null) await QuickAddAsync(cap.Title ?? string.Empty, cap.Url);
-                else _window.SetStatus("No se pudo leer la URL del navegador.");
+                if (cap is not null)
+                    await QuickAddAsync(cap.Title ?? string.Empty, cap.Url);
+                else
+                    _window.SetStatus("No se pudo leer la URL del navegador.");
                 break;
             case 'r':
                 var path = ExplorerPathReader.GetSelectedPath(savedForeground);
@@ -75,42 +80,67 @@ internal sealed class CommandLayerController
                     var title = System.IO.Path.GetFileName(path);
                     await QuickAddAsync(string.IsNullOrEmpty(title) ? path : title, path);
                 }
-                else _window.SetStatus("Sin ventana del Explorador detrás de la capa.");
+                else
+                    _window.SetStatus("Sin ventana del Explorador detrás de la capa.");
                 break;
         }
     }
 
     private async Task QuickAddAsync(string title, string value)
     {
-        if (_window.ContentXamlRoot is not { } root) return;
+        if (_window.ContentXamlRoot is not { } root)
+            return;
         await Task.Yield();
 
         string normalized = string.Empty;
         if (!string.IsNullOrWhiteSpace(value))
         {
             var (detected, type) = Validation.DetectType(value);
-            if (!detected) { _window.SetStatus("El valor capturado no es una URL ni ruta válida."); return; }
+            if (!detected)
+            {
+                _window.SetStatus("El valor capturado no es una URL ni ruta válida.");
+                return;
+            }
             normalized = type == ItemTypes.Url ? Validation.NormalizeUrl(value) : value;
         }
 
-        var dlg = new AddEditDialog(App.State.Categories, null, title, normalized) { XamlRoot = root };
-        if (await dlg.ShowGuardedAsync() != ContentDialogResult.Primary) return;
+        var dlg = new AddEditDialog(App.State.Categories, null, title, normalized)
+        {
+            XamlRoot = root,
+        };
+        if (await dlg.ShowGuardedAsync() != ContentDialogResult.Primary)
+            return;
 
         var (ok, finalType) = Validation.DetectType(dlg.ItemValue);
-        if (!ok) return;
-        normalized = finalType == ItemTypes.Url ? Validation.NormalizeUrl(dlg.ItemValue) : dlg.ItemValue;
+        if (!ok)
+            return;
+        normalized =
+            finalType == ItemTypes.Url ? Validation.NormalizeUrl(dlg.ItemValue) : dlg.ItemValue;
         try
         {
-            var result = await App.State.AddItemAsync(dlg.ItemTitle, normalized, finalType, dlg.ItemCategoryId, description: dlg.ItemDescription);
-            if (_window.RootFrame.Content is MainPage mp) await mp.RefreshAfterExternalChangeAsync();
-            var message = result == AppState.AddResult.QueuedOffline
-                ? $"Sin conexión, encolado: {dlg.ItemTitle}."
-                : $"Añadido: {dlg.ItemTitle}";
+            var result = await App.State.AddItemAsync(
+                dlg.ItemTitle,
+                normalized,
+                finalType,
+                dlg.ItemCategoryId,
+                description: dlg.ItemDescription
+            );
+            if (_window.RootFrame.Content is MainPage mp)
+                await mp.RefreshAfterExternalChangeAsync();
+            var message =
+                result == AppState.AddResult.QueuedOffline
+                    ? $"Sin conexión, encolado: {dlg.ItemTitle}."
+                    : $"Añadido: {dlg.ItemTitle}";
             _window.SetStatus(message);
-            Notifications.Show(result == AppState.AddResult.QueuedOffline ? "Enlace en cola" : "Enlace guardado",
-                message);
+            Notifications.Show(
+                result == AppState.AddResult.QueuedOffline ? "Enlace en cola" : "Enlace guardado",
+                message
+            );
         }
-        catch (Exception ex) { _window.SetStatus($"Error al añadir: {ex.Message}"); }
+        catch (Exception ex)
+        {
+            _window.SetStatus($"Error al añadir: {ex.Message}");
+        }
     }
 
     private async Task OpenClipboardTargetAsync()
@@ -118,15 +148,25 @@ internal sealed class CommandLayerController
         try
         {
             var pkg = Windows.ApplicationModel.DataTransfer.Clipboard.GetContent();
-            if (!pkg.Contains(Windows.ApplicationModel.DataTransfer.StandardDataFormats.Text)) return;
+            if (!pkg.Contains(Windows.ApplicationModel.DataTransfer.StandardDataFormats.Text))
+                return;
             var text = (await pkg.GetTextAsync())?.Trim();
-            if (string.IsNullOrEmpty(text)) return;
+            if (string.IsNullOrEmpty(text))
+                return;
             var (ok, _) = Validation.DetectType(text);
-            if (!ok) { _window.SetStatus("El portapapeles no contiene una URL ni ruta."); return; }
-            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
-            { FileName = text, UseShellExecute = true });
+            if (!ok)
+            {
+                _window.SetStatus("El portapapeles no contiene una URL ni ruta.");
+                return;
+            }
+            System.Diagnostics.Process.Start(
+                new System.Diagnostics.ProcessStartInfo { FileName = text, UseShellExecute = true }
+            );
         }
-        catch (Exception ex) { _window.SetStatus($"No se pudo abrir el portapapeles: {ex.Message}"); }
+        catch (Exception ex)
+        {
+            _window.SetStatus($"No se pudo abrir el portapapeles: {ex.Message}");
+        }
     }
 
     private async Task SaveClipboardTargetAsync()
@@ -143,11 +183,23 @@ internal sealed class CommandLayerController
             }
             text = (await pkg.GetTextAsync())?.Trim();
         }
-        catch (Exception ex) { _window.SetStatus($"No se pudo leer el portapapeles: {ex.Message}"); return; }
+        catch (Exception ex)
+        {
+            _window.SetStatus($"No se pudo leer el portapapeles: {ex.Message}");
+            return;
+        }
 
-        if (string.IsNullOrEmpty(text)) { _window.SetStatus("El portapapeles está vacío."); return; }
+        if (string.IsNullOrEmpty(text))
+        {
+            _window.SetStatus("El portapapeles está vacío.");
+            return;
+        }
         var (ok, type) = Validation.DetectType(text);
-        if (!ok) { _window.SetStatus("El portapapeles no contiene una URL ni ruta."); return; }
+        if (!ok)
+        {
+            _window.SetStatus("El portapapeles no contiene una URL ni ruta.");
+            return;
+        }
 
         var title = type == ItemTypes.Path ? System.IO.Path.GetFileName(text) : string.Empty;
         await QuickAddAsync(title, text);
@@ -159,7 +211,8 @@ internal sealed class CommandLayerController
     /// </summary>
     private static async Task<BrowserUrlReader.Capture?> CaptureBrowserUrlAsync(IntPtr hwnd)
     {
-        if (hwnd == IntPtr.Zero || IsOwnWindow(hwnd)) return null;
+        if (hwnd == IntPtr.Zero || IsOwnWindow(hwnd))
+            return null;
         return await Task.Run(() => BrowserUrlReader.TryCapture(hwnd));
     }
 

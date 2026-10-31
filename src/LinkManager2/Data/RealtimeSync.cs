@@ -28,14 +28,25 @@ internal static class RealtimeSync
         await _gate.WaitAsync().ConfigureAwait(false);
         try
         {
-            if (_channel is not null) return;
+            if (_channel is not null)
+                return;
 
             RealtimeChannel? channel = null;
             try
             {
                 await SupabaseClientHolder.Client.Realtime.ConnectAsync().ConfigureAwait(false);
-                channel = SupabaseClientHolder.Client.Realtime.Channel("realtime", "public", "items");
-                channel.AddPostgresChangeHandler(PostgresChangesOptions.ListenType.All, (_, _) => { _ = onChange(); });
+                channel = SupabaseClientHolder.Client.Realtime.Channel(
+                    "realtime",
+                    "public",
+                    "items"
+                );
+                channel.AddPostgresChangeHandler(
+                    PostgresChangesOptions.ListenType.All,
+                    (_, _) =>
+                    {
+                        _ = onChange();
+                    }
+                );
                 await channel.Subscribe().ConfigureAwait(false);
                 _channel = channel;
             }
@@ -44,13 +55,22 @@ internal static class RealtimeSync
                 Diagnostics.Log("realtime start", ex);
                 if (channel is not null)
                 {
-                    try { channel.Unsubscribe(); }
-                    catch (Exception cleanupEx) { Diagnostics.Log("realtime start cleanup", cleanupEx); }
+                    try
+                    {
+                        channel.Unsubscribe();
+                    }
+                    catch (Exception cleanupEx)
+                    {
+                        Diagnostics.Log("realtime start cleanup", cleanupEx);
+                    }
                 }
                 _channel = null;
             }
         }
-        finally { _gate.Release(); }
+        finally
+        {
+            _gate.Release();
+        }
     }
 
     public static void Stop()
@@ -60,10 +80,20 @@ internal static class RealtimeSync
         {
             var channel = _channel;
             _channel = null;
-            if (channel is null) return;
-            try { channel.Unsubscribe(); }
-            catch (Exception ex) { Diagnostics.Log("realtime unsubscribe", ex); }
+            if (channel is null)
+                return;
+            try
+            {
+                channel.Unsubscribe();
+            }
+            catch (Exception ex)
+            {
+                Diagnostics.Log("realtime unsubscribe", ex);
+            }
         }
-        finally { _gate.Release(); }
+        finally
+        {
+            _gate.Release();
+        }
     }
 }

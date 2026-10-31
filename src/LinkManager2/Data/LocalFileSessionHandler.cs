@@ -14,7 +14,8 @@ internal sealed class LocalFileSessionHandler : IGotrueSessionPersistence<Sessio
         {
             var dir = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "LinkManager");
+                "LinkManager"
+            );
             Directory.CreateDirectory(dir);
             return dir;
         }
@@ -31,25 +32,37 @@ internal sealed class LocalFileSessionHandler : IGotrueSessionPersistence<Sessio
         {
             var json = JsonConvert.SerializeObject(session);
             var cipher = ProtectedData.Protect(
-                Encoding.UTF8.GetBytes(json), Entropy, DataProtectionScope.CurrentUser);
+                Encoding.UTF8.GetBytes(json),
+                Entropy,
+                DataProtectionScope.CurrentUser
+            );
             File.WriteAllBytes(EncryptedPath, cipher);
             DeleteLegacyPlain();
         }
-        catch (Exception ex) { Diagnostics.Log("session save", ex); }
+        catch (Exception ex)
+        {
+            Diagnostics.Log("session save", ex);
+        }
     }
 
     /// <summary>Best-effort deletion of the persisted session; a failed delete is ignored so sign-out
     /// and recovery paths never throw.</summary>
     public void DestroySession()
     {
-        try { if (File.Exists(EncryptedPath)) File.Delete(EncryptedPath); } catch { }
+        try
+        {
+            if (File.Exists(EncryptedPath))
+                File.Delete(EncryptedPath);
+        }
+        catch { }
         DeleteLegacyPlain();
     }
 
     public Session? LoadSession()
     {
         var session = LoadEncrypted();
-        if (session != null) return session;
+        if (session != null)
+            return session;
         return MigrateLegacyPlain();
     }
 
@@ -57,29 +70,47 @@ internal sealed class LocalFileSessionHandler : IGotrueSessionPersistence<Sessio
     {
         try
         {
-            if (!File.Exists(EncryptedPath)) return null;
+            if (!File.Exists(EncryptedPath))
+                return null;
             var plain = ProtectedData.Unprotect(
-                File.ReadAllBytes(EncryptedPath), Entropy, DataProtectionScope.CurrentUser);
+                File.ReadAllBytes(EncryptedPath),
+                Entropy,
+                DataProtectionScope.CurrentUser
+            );
             return JsonConvert.DeserializeObject<Session>(Encoding.UTF8.GetString(plain));
         }
-        catch { return null; }
+        catch
+        {
+            return null;
+        }
     }
 
     private Session? MigrateLegacyPlain()
     {
         try
         {
-            if (!File.Exists(LegacyPlainPath)) return null;
+            if (!File.Exists(LegacyPlainPath))
+                return null;
             var session = JsonConvert.DeserializeObject<Session>(File.ReadAllText(LegacyPlainPath));
-            if (session != null) SaveSession(session);
-            else DeleteLegacyPlain();
+            if (session != null)
+                SaveSession(session);
+            else
+                DeleteLegacyPlain();
             return session;
         }
-        catch { return null; }
+        catch
+        {
+            return null;
+        }
     }
 
     private static void DeleteLegacyPlain()
     {
-        try { if (File.Exists(LegacyPlainPath)) File.Delete(LegacyPlainPath); } catch { }
+        try
+        {
+            if (File.Exists(LegacyPlainPath))
+                File.Delete(LegacyPlainPath);
+        }
+        catch { }
     }
 }

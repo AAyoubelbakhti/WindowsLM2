@@ -14,14 +14,17 @@ public sealed partial class MainPage : Page
 {
     private void OnSearchChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
     {
-
-        if (args.Reason != AutoSuggestionBoxTextChangeReason.UserInput) return;
+        if (args.Reason != AutoSuggestionBoxTextChangeReason.UserInput)
+            return;
         UpdateSuggestions(sender.Text);
         _searchDebounce.Stop();
         _searchDebounce.Start();
     }
 
-    private void OnSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+    private void OnSuggestionChosen(
+        AutoSuggestBox sender,
+        AutoSuggestBoxSuggestionChosenEventArgs args
+    )
     {
         if (args.SelectedItem is string title)
         {
@@ -33,9 +36,13 @@ public sealed partial class MainPage : Page
 
     private void UpdateSuggestions(string query)
     {
-        if (string.IsNullOrWhiteSpace(query)) { SearchBox.ItemsSource = null; return; }
-        SearchBox.ItemsSource = App.State.Items
-            .Where(i => i.Title.Contains(query, StringComparison.OrdinalIgnoreCase))
+        if (string.IsNullOrWhiteSpace(query))
+        {
+            SearchBox.ItemsSource = null;
+            return;
+        }
+        SearchBox.ItemsSource = App
+            .State.Items.Where(i => i.Title.Contains(query, StringComparison.OrdinalIgnoreCase))
             .Select(i => i.Title)
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .Take(8)
@@ -75,38 +82,56 @@ public sealed partial class MainPage : Page
         var count = _filters.ActiveCount;
         FiltersButton.Content = count > 0 ? $"Filtros ({count})" : "Filtros";
 
-        if (count == 0 && _filters.Sort == SortKey.AlphaAsc) { SetFiltersStatusText(string.Empty); return; }
+        if (count == 0 && _filters.Sort == SortKey.AlphaAsc)
+        {
+            SetFiltersStatusText(string.Empty);
+            return;
+        }
 
         var parts = new List<string>();
         if (_filters.Type != FilterType.All)
             parts.Add(_filters.Type == FilterType.Url ? "Tipo: enlaces" : "Tipo: rutas");
         if (_filters.CategoryId is not null)
-            parts.Add($"Categoría: {App.State.Categories.FirstOrDefault(c => c.Id == _filters.CategoryId)?.Name ?? "?"}");
+            parts.Add(
+                $"Categoría: {App.State.Categories.FirstOrDefault(c => c.Id == _filters.CategoryId)?.Name ?? "?"}"
+            );
         if (_filters.TagId is not null)
-            parts.Add($"Etiqueta: {App.State.Tags.FirstOrDefault(t => t.Id == _filters.TagId)?.Name ?? "?"}");
-        if (_filters.FavoritesOnly) parts.Add("Solo favoritos");
-        if (_filters.BrokenOnly) parts.Add("Solo rotos");
+            parts.Add(
+                $"Etiqueta: {App.State.Tags.FirstOrDefault(t => t.Id == _filters.TagId)?.Name ?? "?"}"
+            );
+        if (_filters.FavoritesOnly)
+            parts.Add("Solo favoritos");
+        if (_filters.BrokenOnly)
+            parts.Add("Solo rotos");
         if (_filters.Sort != SortKey.AlphaAsc)
-            parts.Add(_filters.Sort switch
-            {
-                SortKey.AlphaDesc => "Orden: Z–A",
-                SortKey.DateDesc => "Orden: más recientes",
-                SortKey.DateAsc => "Orden: más antiguos",
-                SortKey.UsageDesc => "Orden: más usados",
-                SortKey.CategoryAsc => "Orden: por categoría",
-                _ => "",
-            });
+            parts.Add(
+                _filters.Sort switch
+                {
+                    SortKey.AlphaDesc => "Orden: Z–A",
+                    SortKey.DateDesc => "Orden: más recientes",
+                    SortKey.DateAsc => "Orden: más antiguos",
+                    SortKey.UsageDesc => "Orden: más usados",
+                    SortKey.CategoryAsc => "Orden: por categoría",
+                    _ => "",
+                }
+            );
         SetFiltersStatusText("Activos: " + string.Join(" · ", parts));
     }
 
     /// <summary>Updates the filters live region and raises LiveRegionChanged only when the text actually changes.</summary>
     private void SetFiltersStatusText(string text)
     {
-        if (FiltersStatus.Text == text) return;
+        if (FiltersStatus.Text == text)
+            return;
         FiltersStatus.Text = text;
-        if (text.Length == 0) return;
-        Microsoft.UI.Xaml.Automation.Peers.FrameworkElementAutomationPeer
-            .CreatePeerForElement(FiltersStatus)
-            ?.RaiseAutomationEvent(Microsoft.UI.Xaml.Automation.Peers.AutomationEvents.LiveRegionChanged);
+        if (text.Length == 0)
+            return;
+        Microsoft
+            .UI.Xaml.Automation.Peers.FrameworkElementAutomationPeer.CreatePeerForElement(
+                FiltersStatus
+            )
+            ?.RaiseAutomationEvent(
+                Microsoft.UI.Xaml.Automation.Peers.AutomationEvents.LiveRegionChanged
+            );
     }
 }
