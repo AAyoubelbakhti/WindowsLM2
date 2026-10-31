@@ -52,16 +52,7 @@ public sealed partial class MainPage : Page
                     )
             );
             await FlushPendingAsync();
-
-            _ = RealtimeSync.StartAsync(() =>
-            {
-                DispatcherQueue.TryEnqueue(() =>
-                {
-                    _realtimeDebounce.Stop();
-                    _realtimeDebounce.Start();
-                });
-                return System.Threading.Tasks.Task.CompletedTask;
-            });
+            StartRealtime();
 
             _ = RunStartupChecksAsync();
         }
@@ -113,6 +104,7 @@ public sealed partial class MainPage : Page
                     )
                 );
                 await FlushPendingAsync();
+                StartRealtime();
                 return true;
             }
             catch (Exception retryEx)
@@ -122,11 +114,30 @@ public sealed partial class MainPage : Page
         }
 
         SetStatus(Strings.Get("Startup_SessionExpired"));
-        RealtimeSync.Stop();
+        await RealtimeSync.StopAsync();
         App.State.Clear();
         ((App)Application.Current).Window!.NavigateTo(typeof(LoginPage));
         return true;
     }
+
+    /// <summary>
+    /// Subscribes to remote changes once the list has loaded from the server; a later call is a
+    /// no-op, so every successful full reload can call it and an app started offline catches up.
+    /// Each change reloads the list after a short debounce, except deletes of rows the list never
+    /// had, which realtime sends to every user.
+    /// </summary>
+    private void StartRealtime() =>
+        _ = RealtimeSync.StartAsync(deletedId =>
+        {
+            DispatcherQueue.TryEnqueue(() =>
+            {
+                if (deletedId is not null && App.State.Items.All(i => i.Id != deletedId))
+                    return;
+                _realtimeDebounce.Stop();
+                _realtimeDebounce.Start();
+            });
+            return Task.CompletedTask;
+        });
 
     private async Task RunStartupChecksAsync()
     {

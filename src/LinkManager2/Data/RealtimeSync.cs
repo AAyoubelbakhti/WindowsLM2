@@ -8,7 +8,7 @@ namespace LinkManager2.Data;
 
 /// <summary>
 /// Subscribes to realtime changes on the items table and invokes a callback per change.
-/// Rebindable across sign-out/sign-in: Stop() tears down the current channel so a fresh
+/// Rebindable across sign-out/sign-in: StopAsync() tears down the current channel so a fresh
 /// StartAsync after a new login re-subscribes against the new session instead of no-opping.
 /// The client runs with AutoConnectRealtime=false, so the socket is connected here, after
 /// authentication, rather than eagerly at bootstrap.
@@ -22,8 +22,9 @@ internal static class RealtimeSync
     /// Idempotent: concurrent or repeated calls never open a second channel. The gate serializes
     /// the connect+subscribe so a slow first call can't race a second into a duplicate subscription;
     /// if subscribing throws, the partial channel is torn down so a later call can retry cleanly.
+    /// The callback receives the id of the row a delete removed, or null for any other change.
     /// </summary>
-    public static async Task StartAsync(Func<Task> onChange)
+    public static async Task StartAsync(Func<string?, Task> onChange)
     {
         await _gate.WaitAsync().ConfigureAwait(false);
         try
@@ -37,10 +38,7 @@ internal static class RealtimeSync
                 await SupabaseClientHolder.Client.Realtime.ConnectAsync().ConfigureAwait(false);
                 channel = SupabaseClientHolder.Client.Realtime.Channel("items");
                 channel.OnPostgresChange(
-                    (_, _) =>
-                    {
-                        _ = onChange();
-                    },
+                    (_, change) => onChange(DeletedItemId(change)),
                     PostgresChangesOptions.ListenType.All,
                     new PostgresChangesFilter { Table = "items" }
                 );
@@ -70,9 +68,19 @@ internal static class RealtimeSync
         }
     }
 
-    public static void Stop()
+    /// <summary>
+    /// Realtime cannot check row level security on a row that no longer exists, so every
+    /// subscriber receives every user's deletes with the primary key alone; the id lets the caller
+    /// ignore the ones for rows it never had.
+    /// </summary>
+    private static string? DeletedItemId(PostgresChangesResponse change) =>
+        change.Payload?.Data?.Type == Constants.EventType.Delete
+            ? change.OldModel<Item>()?.Id
+            : null;
+
+    public static async Task StopAsync()
     {
-        _gate.Wait();
+        await _gate.WaitAsync().ConfigureAwait(false);
         try
         {
             var channel = _channel;

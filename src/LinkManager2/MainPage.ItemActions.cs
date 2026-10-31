@@ -606,6 +606,7 @@ public sealed partial class MainPage : Page
             await App.State.ReloadAllAsync();
             RefreshVisible();
             SetStatus(Strings.Format("Actions_ItemCount", App.State.Items.Count));
+            StartRealtime();
         }
         catch (Exception ex)
         {
@@ -640,7 +641,7 @@ public sealed partial class MainPage : Page
     private async void OnSignOutClick(object sender, RoutedEventArgs e)
     {
         _lastUndo = null;
-        RealtimeSync.Stop();
+        await RealtimeSync.StopAsync();
         App.State.ClearLocalCacheForCurrentUser();
         try
         {

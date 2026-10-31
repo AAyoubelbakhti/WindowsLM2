@@ -1,4 +1,5 @@
 using Supabase;
+using Supabase.Core.Interfaces;
 
 namespace LinkManager2.Data;
 
@@ -28,7 +29,28 @@ public static class SupabaseClientHolder
             new SupabaseOptions { AutoConnectRealtime = false, AutoRefreshToken = true }
         );
         _client.Auth.SetPersistence(new LocalFileSessionHandler());
+        UseApiKeyOnlyRealtimeHandshake(_client);
         _initTask = Task.Run(() => InitializeAndRefreshAsync(_client));
+    }
+
+    /// <summary>
+    /// Sends the realtime websocket handshake with the apikey alone, as browsers do. The user's
+    /// token travels in the channel join instead, which the client keeps current on every refresh,
+    /// so a session token in the Authorization header can no longer fail the connection with 401.
+    /// </summary>
+    private static void UseApiKeyOnlyRealtimeHandshake(Client c)
+    {
+        var realtime = (IGettableHeaders)c.Realtime;
+        var sdkHeaders = realtime.GetHeaders;
+        realtime.GetHeaders = () =>
+        {
+            var headers = new Dictionary<string, string>(
+                sdkHeaders?.Invoke() ?? new Dictionary<string, string>(),
+                StringComparer.OrdinalIgnoreCase
+            );
+            headers.Remove("Authorization");
+            return headers;
+        };
     }
 
     public static Task Ready => _initTask ?? throw NotInit();

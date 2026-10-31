@@ -254,6 +254,7 @@ public sealed partial class SettingsPage : Page
             var status = await WebApi.DeleteAccountAsync(token);
             if (status is >= 200 and < 300)
             {
+                await RealtimeSync.StopAsync();
                 try
                 {
                     await App.State.Auth.SignOutAsync();
