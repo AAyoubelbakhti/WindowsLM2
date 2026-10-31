@@ -280,7 +280,7 @@ public sealed class AppState
                     Cache.DeletePending(id);
                     flushedCount++;
                 }
-                catch (Exception ex) when (IsRetryable(ex))
+                catch (Exception ex) when (IsRetryable(ex) || AuthService.IsAuthExpired(ex))
                 {
                     brokeOffline = true;
                     break;

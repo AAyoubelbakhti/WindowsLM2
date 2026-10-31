@@ -99,6 +99,7 @@ public sealed partial class MainPage : Page
                 await App.State.ReloadAllAsync();
                 RefreshVisible();
                 SetStatus($"{App.State.Items.Count} elementos · {App.State.Auth.UserEmail}");
+                await FlushPendingAsync();
                 return true;
             }
             catch (Exception retryEx)

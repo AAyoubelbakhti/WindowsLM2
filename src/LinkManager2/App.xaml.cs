@@ -57,7 +57,6 @@ public partial class App : Application
 
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
-        Notifications.Register();
         TaskbarJumpList.Configure();
 
         var request = Startup.Parse(Environment.GetCommandLineArgs());

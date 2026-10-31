@@ -19,10 +19,16 @@ public sealed partial class MainPage : Page
 
     private void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
+        UpdateSelectionDetails();
+        UpdateBulkBar();
+    }
+
+    /// <summary>Shows the selected row's details and words the favorite command for it; also run after a refresh that kept the same row selected.</summary>
+    private void UpdateSelectionDetails()
+    {
         DetailsText.Text = Selected?.Details ?? string.Empty;
         FavoriteMenuItem.Text =
             Selected?.IsFavorite == true ? "Quitar de favoritos" : "Marcar como favorito";
-        UpdateBulkBar();
     }
 
     /// <summary>

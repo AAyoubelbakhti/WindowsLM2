@@ -153,10 +153,10 @@
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="local:ItemViewModel">
 
-                        <Grid AutomationProperties.Name="{x:Bind AccessibleName}"
-                              AutomationProperties.HelpText="{x:Bind Details}"
-                              ToolTipService.ToolTip="{x:Bind Details}">
-                            <TextBlock Text="{x:Bind DisplayTitle}"
+                        <Grid AutomationProperties.Name="{x:Bind AccessibleName, Mode=OneWay}"
+                              AutomationProperties.HelpText="{x:Bind Details, Mode=OneWay}"
+                              ToolTipService.ToolTip="{x:Bind Details, Mode=OneWay}">
+                            <TextBlock Text="{x:Bind DisplayTitle, Mode=OneWay}"
                                        TextWrapping="Wrap"
                                        MaxLines="2"
                                        TextTrimming="CharacterEllipsis" />

@@ -62,23 +62,32 @@ public sealed class ItemViewModel : INotifyPropertyChanged
         }
     }
 
+    private (string, string, string) _shown;
+
     public ItemViewModel(Item item, string? categoryName)
     {
         _item = item;
         CategoryName = categoryName ?? "Sin categoría";
+        _shown = Shown();
     }
 
     /// <summary>
-    /// Replaces the underlying item (and optional category name) and notifies every derived
-    /// property so a single row refreshes in place instead of rebuilding the whole list.
+    /// Points the row at the latest copy of its item so it refreshes in place instead of being
+    /// rebuilt. Notifies only when what the row shows or reads aloud changed, so an unchanged row
+    /// stays silent for the screen reader.
     /// </summary>
-    public void UpdateSource(Item item, string? categoryName = null)
+    public void UpdateSource(Item item, string? categoryName)
     {
         _item = item;
-        if (categoryName is not null)
-            CategoryName = categoryName;
+        CategoryName = categoryName ?? "Sin categoría";
+        var shown = Shown();
+        if (shown == _shown)
+            return;
+        _shown = shown;
         RaiseAllChanged();
     }
+
+    private (string, string, string) Shown() => (DisplayTitle, AccessibleName, Details);
 
     private void RaiseAllChanged()
     {

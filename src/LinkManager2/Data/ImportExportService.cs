@@ -53,11 +53,9 @@ public static class ImportExportService
             state.Items.Select(i => i.Title),
             StringComparer.OrdinalIgnoreCase
         );
-        var existingCats = state.Categories.ToDictionary(
-            c => c.Name,
-            c => c.Id,
-            StringComparer.OrdinalIgnoreCase
-        );
+        var existingCats = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var c in state.Categories)
+            existingCats.TryAdd(c.Name, c.Id);
 
         var wantedCats = new HashSet<string>(parsed.Categories, StringComparer.OrdinalIgnoreCase);
         foreach (var p in parsed.Items)

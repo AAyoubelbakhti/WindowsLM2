@@ -90,8 +90,15 @@ public sealed partial class SharedDialog : ContentDialog
     {
         if (Selected is not { } entry)
             return;
-        ItemActions.Copy(entry.Url);
-        Status(InfoBarSeverity.Success, "Enlace copiado al portapapeles.");
+        try
+        {
+            ItemActions.Copy(entry.Url);
+            Status(InfoBarSeverity.Success, "Enlace copiado al portapapeles.");
+        }
+        catch (Exception ex)
+        {
+            Status(InfoBarSeverity.Error, ex.Message);
+        }
     }
 
     private async void OnRevokeConfirmClick(object sender, RoutedEventArgs e)

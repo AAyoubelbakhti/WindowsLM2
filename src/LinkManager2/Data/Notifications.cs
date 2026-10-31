@@ -1,58 +1,32 @@
-using System;
-using Microsoft.Windows.AppNotifications;
-using Microsoft.Windows.AppNotifications.Builder;
+using Windows.UI.Notifications;
 
 namespace LinkManager2.Data;
 
 /// <summary>
-/// Thin wrapper over AppNotificationManager for the unpackaged app. Register() must run once
-/// during startup before any toast is shown; Show() is a no-op when the user disabled toasts
-/// or when registration failed. Toasts carry plain text so a screen reader announces them.
+/// Toasts through the Windows toast API under the app id Velopack gives the Start Menu shortcut.
+/// AppNotificationManager cannot register a self-contained unpackaged app (WindowsAppSDK #6774).
+/// Show() is a no-op when the user disabled toasts; toasts carry plain text so a screen reader
+/// announces them.
 /// </summary>
 public static class Notifications
 {
-    private static bool _registered;
-
-    public static void Register()
-    {
-        if (_registered)
-            return;
-        try
-        {
-            AppNotificationManager.Default.Register();
-            _registered = true;
-        }
-        catch (Exception ex)
-        {
-            Diagnostics.Log("notifications register", ex);
-        }
-    }
-
-    public static void Unregister()
-    {
-        if (!_registered)
-            return;
-        try
-        {
-            AppNotificationManager.Default.Unregister();
-        }
-        catch (Exception ex)
-        {
-            Diagnostics.Log("notifications unregister", ex);
-        }
-        _registered = false;
-    }
+    private const string AppId = "velopack.LinkManager";
 
     public static void Show(string title, string? body = null)
     {
-        if (!_registered || !LocalPreferences.Load().NotificationsEnabled)
+        if (!LocalPreferences.Load().NotificationsEnabled)
             return;
         try
         {
-            var builder = new AppNotificationBuilder().AddText(title);
-            if (!string.IsNullOrWhiteSpace(body))
-                builder.AddText(body);
-            AppNotificationManager.Default.Show(builder.BuildNotification());
+            var hasBody = !string.IsNullOrWhiteSpace(body);
+            var xml = ToastNotificationManager.GetTemplateContent(
+                hasBody ? ToastTemplateType.ToastText02 : ToastTemplateType.ToastText01
+            );
+            var lines = xml.GetElementsByTagName("text");
+            lines[0].AppendChild(xml.CreateTextNode(title));
+            if (hasBody)
+                lines[1].AppendChild(xml.CreateTextNode(body!));
+            ToastNotificationManager.CreateToastNotifier(AppId).Show(new ToastNotification(xml));
         }
         catch (Exception ex)
         {

@@ -59,28 +59,62 @@ public sealed partial class MainPage : Page
         Loaded += OnLoaded;
     }
 
+    /// <summary>
+    /// Brings the list to the current filters reusing the row of every item still shown. It is
+    /// never cleared: refilling it (a Reset) while rows are selected or a screen reader is reading
+    /// them can leave WinUI asking for rows that no longer exist, which closes the app; reused rows
+    /// also keep the keyboard focus where it was.
+    /// </summary>
     private void RefreshVisible()
     {
         var selectedId = (ItemsList.SelectedItem as ItemViewModel)?.Id;
-        Visible.Clear();
-        var byId = App.State.Categories.ToDictionary(c => c.Id, c => c.Name);
-        foreach (var item in ApplyFilters(App.State.Items))
+        var names = App.State.Categories.ToDictionary(c => c.Id, c => c.Name);
+        var rows = new Dictionary<string, ItemViewModel>();
+        foreach (var vm in Visible)
+            rows.TryAdd(vm.Id, vm);
+        var next = new List<ItemViewModel>();
+        foreach (var item in ApplyFilters(App.State.Items, names))
         {
             var catName =
-                item.CategoryId is not null && byId.TryGetValue(item.CategoryId, out var n)
+                item.CategoryId is not null && names.TryGetValue(item.CategoryId, out var n)
                     ? n
                     : null;
-            Visible.Add(new ItemViewModel(item, catName));
+            if (rows.Remove(item.Id, out var row))
+                row.UpdateSource(item, catName);
+            else
+                row = new ItemViewModel(item, catName);
+            next.Add(row);
         }
+        SyncVisible(next);
 
-        if (selectedId is not null)
-        {
-            var match = Visible.FirstOrDefault(v => v.Id == selectedId);
-            if (match is not null)
-                ItemsList.SelectedItem = match;
-        }
+        if (
+            selectedId is not null
+            && ItemsList.SelectedItem is null
+            && Visible.FirstOrDefault(v => v.Id == selectedId) is { } match
+        )
+            ItemsList.SelectedItem = match;
+        UpdateSelectionDetails();
         UpdateFiltersStatus();
         UpdateEmptyState();
+    }
+
+    /// <summary>Turns <see cref="Visible"/> into <paramref name="next"/> with single removes, moves and inserts.</summary>
+    private void SyncVisible(IReadOnlyList<ItemViewModel> next)
+    {
+        var keep = new HashSet<ItemViewModel>(next);
+        for (var i = Visible.Count - 1; i >= 0; i--)
+            if (!keep.Contains(Visible[i]))
+                Visible.RemoveAt(i);
+        for (var i = 0; i < next.Count; i++)
+        {
+            if (i < Visible.Count && ReferenceEquals(Visible[i], next[i]))
+                continue;
+            var at = Visible.IndexOf(next[i]);
+            if (at > i)
+                Visible.Move(at, i);
+            else
+                Visible.Insert(i, next[i]);
+        }
     }
 
     private void UpdateEmptyState()
@@ -112,7 +146,10 @@ public sealed partial class MainPage : Page
 
     public void FocusSearch() => SearchBox.Focus(FocusState.Programmatic);
 
-    private IEnumerable<Item> ApplyFilters(IEnumerable<Item> items)
+    private IEnumerable<Item> ApplyFilters(
+        IEnumerable<Item> items,
+        IReadOnlyDictionary<string, string> categoryNames
+    )
     {
         var q = items;
         if (!string.IsNullOrWhiteSpace(_filters.Search))
@@ -151,8 +188,15 @@ public sealed partial class MainPage : Page
             SortKey.DateDesc => q.OrderByDescending(i => i.CreatedAt),
             SortKey.DateAsc => q.OrderBy(i => i.CreatedAt),
             SortKey.UsageDesc => q.OrderByDescending(i => i.UsageCount),
-            SortKey.CategoryAsc => q.OrderBy(i => i.CategoryId ?? string.Empty)
-                .ThenBy(i => i.Title),
+            SortKey.CategoryAsc => q.OrderBy(
+                    i =>
+                        i.CategoryId is not null
+                        && categoryNames.TryGetValue(i.CategoryId, out var n)
+                            ? n
+                            : string.Empty,
+                    StringComparer.OrdinalIgnoreCase
+                )
+                .ThenBy(i => i.Title, StringComparer.OrdinalIgnoreCase),
             _ => q,
         };
     }

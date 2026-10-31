@@ -110,11 +110,14 @@ public sealed class ItemsRepository
         var session =
             _client.Auth.CurrentSession?.AccessToken
             ?? throw new InvalidOperationException("Sin sesión activa.");
+        var userId =
+            _client.Auth.CurrentUser?.Id
+            ?? throw new InvalidOperationException("Sin sesión activa.");
 
         var payload = new Dictionary<string, object?>
         {
             ["id"] = item.Id,
-            ["user_id"] = item.UserId,
+            ["user_id"] = userId,
             ["category_id"] = item.CategoryId,
             ["title"] = item.Title,
             ["value"] = item.Value,

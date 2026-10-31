@@ -437,8 +437,7 @@ public sealed partial class MainPage : Page
             XamlRoot = XamlRoot,
         };
         await dlg.ShowGuardedAsync();
-        await App.State.ReloadAllAsync();
-        RefreshVisible();
+        await ReloadAfterManageAsync();
     }
 
     private async void OnManageTagsClick(object sender, RoutedEventArgs e)
@@ -460,8 +459,21 @@ public sealed partial class MainPage : Page
             XamlRoot = XamlRoot,
         };
         await dlg.ShowGuardedAsync();
-        await App.State.ReloadAllAsync();
-        RefreshVisible();
+        await ReloadAfterManageAsync();
+    }
+
+    /// <summary>Reloads after categories or tags were managed; without connection it keeps the current list and says why.</summary>
+    private async Task ReloadAfterManageAsync()
+    {
+        try
+        {
+            await App.State.ReloadAllAsync();
+            RefreshVisible();
+        }
+        catch (Exception ex)
+        {
+            SetStatus($"Error recargando: {ex.Message}");
+        }
     }
 
     private async void OnImportClick(object sender, RoutedEventArgs e)

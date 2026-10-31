@@ -388,11 +388,6 @@ public sealed partial class MainWindow : Window
         catch { }
         try
         {
-            LinkManager2.Data.Notifications.Unregister();
-        }
-        catch { }
-        try
-        {
             SupabaseClientHolder.Shutdown();
         }
         catch { }
