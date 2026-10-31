@@ -70,7 +70,7 @@ internal sealed class CommandLayerController
                 if (cap is not null)
                     await QuickAddAsync(cap.Title ?? string.Empty, cap.Url);
                 else
-                    _window.SetStatus("No se pudo leer la URL del navegador.");
+                    _window.SetStatus(Strings.Get("Layer_BrowserUrlUnreadable"));
                 break;
             case 'r':
                 var path = ExplorerPathReader.GetSelectedPath(savedForeground);
@@ -81,7 +81,7 @@ internal sealed class CommandLayerController
                     await QuickAddAsync(string.IsNullOrEmpty(title) ? path : title, path);
                 }
                 else
-                    _window.SetStatus("Sin ventana del Explorador detrás de la capa.");
+                    _window.SetStatus(Strings.Get("Layer_NoExplorerWindow"));
                 break;
         }
     }
@@ -98,7 +98,7 @@ internal sealed class CommandLayerController
             var (detected, type) = Validation.DetectType(value);
             if (!detected)
             {
-                _window.SetStatus("El valor capturado no es una URL ni ruta válida.");
+                _window.SetStatus(Strings.Get("Layer_CapturedValueInvalid"));
                 return;
             }
             normalized = type == ItemTypes.Url ? Validation.NormalizeUrl(value) : value;
@@ -129,17 +129,21 @@ internal sealed class CommandLayerController
                 await mp.RefreshAfterExternalChangeAsync();
             var message =
                 result == AppState.AddResult.QueuedOffline
-                    ? $"Sin conexión, encolado: {dlg.ItemTitle}."
-                    : $"Añadido: {dlg.ItemTitle}";
+                    ? Strings.Format("Actions_AddQueued", dlg.ItemTitle)
+                    : Strings.Format("Actions_Added", dlg.ItemTitle);
             _window.SetStatus(message);
             Notifications.Show(
-                result == AppState.AddResult.QueuedOffline ? "Enlace en cola" : "Enlace guardado",
+                Strings.Get(
+                    result == AppState.AddResult.QueuedOffline
+                        ? "Layer_NotificationQueued"
+                        : "Layer_NotificationSaved"
+                ),
                 message
             );
         }
         catch (Exception ex)
         {
-            _window.SetStatus($"Error al añadir: {ex.Message}");
+            _window.SetStatus(Strings.Format("Layer_AddError", ex.Message));
         }
     }
 
@@ -156,7 +160,7 @@ internal sealed class CommandLayerController
             var (ok, _) = Validation.DetectType(text);
             if (!ok)
             {
-                _window.SetStatus("El portapapeles no contiene una URL ni ruta.");
+                _window.SetStatus(Strings.Get("Layer_ClipboardNotTarget"));
                 return;
             }
             System.Diagnostics.Process.Start(
@@ -165,7 +169,7 @@ internal sealed class CommandLayerController
         }
         catch (Exception ex)
         {
-            _window.SetStatus($"No se pudo abrir el portapapeles: {ex.Message}");
+            _window.SetStatus(Strings.Format("Layer_ClipboardOpenError", ex.Message));
         }
     }
 
@@ -178,26 +182,26 @@ internal sealed class CommandLayerController
             var pkg = Windows.ApplicationModel.DataTransfer.Clipboard.GetContent();
             if (!pkg.Contains(Windows.ApplicationModel.DataTransfer.StandardDataFormats.Text))
             {
-                _window.SetStatus("El portapapeles no contiene texto.");
+                _window.SetStatus(Strings.Get("Layer_ClipboardNoText"));
                 return;
             }
             text = (await pkg.GetTextAsync())?.Trim();
         }
         catch (Exception ex)
         {
-            _window.SetStatus($"No se pudo leer el portapapeles: {ex.Message}");
+            _window.SetStatus(Strings.Format("Layer_ClipboardReadError", ex.Message));
             return;
         }
 
         if (string.IsNullOrEmpty(text))
         {
-            _window.SetStatus("El portapapeles está vacío.");
+            _window.SetStatus(Strings.Get("Layer_ClipboardEmpty"));
             return;
         }
         var (ok, type) = Validation.DetectType(text);
         if (!ok)
         {
-            _window.SetStatus("El portapapeles no contiene una URL ni ruta.");
+            _window.SetStatus(Strings.Get("Layer_ClipboardNotTarget"));
             return;
         }
 

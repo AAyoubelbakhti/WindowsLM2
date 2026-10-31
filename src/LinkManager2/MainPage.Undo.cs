@@ -29,21 +29,21 @@ public sealed partial class MainPage : Page
         var undo = _lastUndo;
         if (undo is null)
         {
-            SetStatus("Nada que deshacer.");
+            SetStatus(Strings.Get("Main_UndoNothing"));
             return;
         }
         _lastUndo = null;
-        SetStatus("Deshaciendo…");
+        SetStatus(Strings.Get("Main_Undoing"));
         try
         {
             await undo.RevertAsync();
             await App.State.ReloadItemsAsync();
             RefreshVisible();
-            SetStatus($"Deshecho: {undo.Description}");
+            SetStatus(Strings.Format("Main_UndoDone", undo.Description));
         }
         catch (Exception ex)
         {
-            SetStatus($"No se pudo deshacer: {ex.Message}");
+            SetStatus(Strings.Format("Main_UndoFailed", ex.Message));
         }
     }
 }

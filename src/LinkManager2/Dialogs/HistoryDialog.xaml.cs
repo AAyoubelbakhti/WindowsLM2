@@ -8,22 +8,22 @@ public sealed partial class HistoryDialog : ContentDialog
 {
     private static readonly Dictionary<string, string> _labels = new()
     {
-        ["create"] = "Creado",
-        ["update"] = "Modificado",
-        ["delete"] = "Borrado",
-        ["archive"] = "Archivado",
-        ["unarchive"] = "Restaurado",
+        ["create"] = Strings.Get("History_Created"),
+        ["update"] = Strings.Get("History_Updated"),
+        ["delete"] = Strings.Get("History_Deleted"),
+        ["archive"] = Strings.Get("History_Archived"),
+        ["unarchive"] = Strings.Get("History_Restored"),
     };
 
     public HistoryDialog(string itemTitle, IReadOnlyList<ItemHistoryEntry> entries)
     {
         InitializeComponent();
-        ItemLabel.Text = $"Eventos de: {itemTitle}";
+        ItemLabel.Text = Strings.Format("History_ItemLabel", itemTitle);
 
         var rows = new List<EntryRow>();
         if (entries.Count == 0)
         {
-            rows.Add(new EntryRow("Sin eventos", ""));
+            rows.Add(new EntryRow(Strings.Get("History_Empty"), ""));
         }
         else
         {

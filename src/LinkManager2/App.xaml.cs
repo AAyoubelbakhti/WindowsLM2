@@ -9,10 +9,10 @@ public partial class App : Application
 {
     public MainWindow? Window { get; private set; }
 
-    public const int Build = 21;
+    public const int Build = 22;
 
     /// <summary>Semantic app version reported to the backend (devices.app_version); keep in sync with Build and Velopack packVersion.</summary>
-    public const string Version = "1.7.0";
+    public const string Version = "1.8.0";
 
     public static AppState State { get; private set; } = null!;
 
@@ -122,9 +122,7 @@ public partial class App : Application
         var (url, key) = AppState.LoadConfig();
         if (string.IsNullOrWhiteSpace(url) || string.IsNullOrWhiteSpace(key))
         {
-            BootstrapError =
-                "Falta configuración de Supabase. Define LM_SUPABASE_URL y LM_SUPABASE_ANON_KEY "
-                + "o coloca appsettings.Local.json junto al ejecutable.";
+            BootstrapError = Strings.Get("App_MissingConfig");
             return;
         }
         try
@@ -135,7 +133,7 @@ public partial class App : Application
         }
         catch (Exception ex)
         {
-            BootstrapError = $"No se pudo iniciar Supabase: {ex.Message}";
+            BootstrapError = Strings.Format("App_SupabaseInitFailed", ex.Message);
         }
     }
 }

@@ -296,20 +296,20 @@ public sealed class AppState
             if (droppedCount > 0)
             {
                 Notifications.Show(
-                    "Cambios pendientes descartados",
+                    Strings.Get("State_DroppedTitle"),
                     droppedCount == 1
-                        ? "1 cambio pendiente fue rechazado por el servidor y se descartó."
-                        : $"{droppedCount} cambios pendientes fueron rechazados por el servidor y se descartaron."
+                        ? Strings.Get("State_DroppedOne")
+                        : Strings.Format("State_DroppedMany", droppedCount)
                 );
             }
             if (flushedCount > 0 && !brokeOffline)
             {
                 await ReloadItemsAsync();
                 Notifications.Show(
-                    "Cola sincronizada",
+                    Strings.Get("State_SyncedTitle"),
                     flushedCount == 1
-                        ? "Se aplicó 1 cambio que estaba pendiente."
-                        : $"Se aplicaron {flushedCount} cambios que estaban pendientes."
+                        ? Strings.Get("State_SyncedOne")
+                        : Strings.Format("State_SyncedMany", flushedCount)
                 );
             }
         }

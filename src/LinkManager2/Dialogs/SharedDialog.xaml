@@ -6,8 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Title="Compartidos"
-    CloseButtonText="Cerrar">
+    x:Uid="Shared_Dialog">
     <Grid Width="480" Height="520" RowSpacing="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -17,9 +16,9 @@
 
         <ListView Grid.Row="0"
                   x:Name="ItemsList"
+                  x:Uid="Shared_List"
                   SelectionMode="Single"
-                  SelectionChanged="OnSelectionChanged"
-                  AutomationProperties.Name="Enlaces y colecciones compartidos">
+                  SelectionChanged="OnSelectionChanged">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel AutomationProperties.Name="{Binding AccessibleName}">
@@ -38,20 +37,18 @@
             </Grid.ColumnDefinitions>
             <Button x:Name="CopyButton"
                     Grid.Column="1"
+                    x:Uid="Shared_CopyButton"
                     IsEnabled="False"
-                    Content="Copiar enlace"
-                    Click="OnCopyClick"
-                    AutomationProperties.Name="Copiar la URL pública seleccionada" />
+                    Click="OnCopyClick" />
             <Button x:Name="RevokeButton"
                     Grid.Column="2"
-                    IsEnabled="False"
-                    Content="Revocar"
-                    AutomationProperties.Name="Revocar el elemento compartido seleccionado">
+                    x:Uid="Shared_RevokeButton"
+                    IsEnabled="False">
                 <Button.Flyout>
                     <Flyout x:Name="RevokeFlyout">
                         <StackPanel Spacing="8" MaxWidth="260">
                             <TextBlock x:Name="RevokeConfirmText" TextWrapping="Wrap" />
-                            <Button Content="Confirmar revocación"
+                            <Button x:Uid="Shared_ConfirmRevokeButton"
                                     Style="{StaticResource AccentButtonStyle}"
                                     Click="OnRevokeConfirmClick"
                                     HorizontalAlignment="Stretch" />

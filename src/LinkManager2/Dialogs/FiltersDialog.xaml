@@ -6,29 +6,18 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Title="Filtros"
+    x:Uid="Filters_Dialog"
     DefaultButton="Primary"
-    PrimaryButtonText="Aplicar"
-    SecondaryButtonText="Limpiar"
-    CloseButtonText="Cancelar"
     PrimaryButtonClick="OnApply"
     SecondaryButtonClick="OnClear">
     <StackPanel Spacing="12" Width="400">
-        <ComboBox x:Name="TypeCombo" Header="Tipo" HorizontalAlignment="Stretch"
-                  AutomationProperties.Name="Tipo de elemento" />
-        <ComboBox x:Name="CategoryCombo" Header="Categoría" HorizontalAlignment="Stretch"
-                  AutomationProperties.Name="Categoría" />
-        <ComboBox x:Name="TagCombo" Header="Etiqueta" HorizontalAlignment="Stretch"
-                  AutomationProperties.Name="Etiqueta" />
+        <ComboBox x:Name="TypeCombo" x:Uid="Filters_TypeCombo" HorizontalAlignment="Stretch" />
+        <ComboBox x:Name="CategoryCombo" x:Uid="Filters_CategoryCombo" HorizontalAlignment="Stretch" />
+        <ComboBox x:Name="TagCombo" x:Uid="Filters_TagCombo" HorizontalAlignment="Stretch" />
         <ToggleSwitch x:Name="FavoritesOnly"
-                      Header="Solo favoritos"
-                      OnContent="Sí" OffContent="No"
-                      AutomationProperties.Name="Mostrar solo favoritos" />
+                      x:Uid="Filters_FavoritesOnly" />
         <ToggleSwitch x:Name="BrokenOnly"
-                      Header="Solo enlaces rotos"
-                      OnContent="Sí" OffContent="No"
-                      AutomationProperties.Name="Mostrar solo enlaces rotos" />
-        <ComboBox x:Name="SortCombo" Header="Ordenar por" HorizontalAlignment="Stretch"
-                  AutomationProperties.Name="Orden de la lista" />
+                      x:Uid="Filters_BrokenOnly" />
+        <ComboBox x:Name="SortCombo" x:Uid="Filters_SortCombo" HorizontalAlignment="Stretch" />
     </StackPanel>
 </ContentDialog>

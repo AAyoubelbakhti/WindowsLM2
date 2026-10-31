@@ -17,112 +17,83 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <TextBlock x:Name="HeadingText" Text="Ajustes" FontSize="24" FontWeight="SemiBold"
+                <TextBlock x:Name="HeadingText" x:Uid="Settings_HeadingText" FontSize="24" FontWeight="SemiBold"
                            IsTabStop="True"
                            AutomationProperties.HeadingLevel="Level1" />
-                <Button Grid.Column="1" Content="Volver" Click="OnBack"
-                        AutomationProperties.Name="Volver a la lista" />
+                <Button x:Uid="Settings_BackButton" Grid.Column="1" Click="OnBack" />
             </Grid>
 
-            <TextBlock Text="Cuenta" FontSize="18" FontWeight="SemiBold"
+            <TextBlock x:Uid="Settings_AccountHeading" FontSize="18" FontWeight="SemiBold"
                        AutomationProperties.HeadingLevel="Level2" />
-            <Expander Header="Perfil" IsExpanded="True" HorizontalAlignment="Stretch">
+            <Expander x:Uid="Settings_ProfileExpander" IsExpanded="True" HorizontalAlignment="Stretch">
                 <StackPanel Spacing="10" Padding="0,8">
                     <TextBox x:Name="DisplayNameBox"
-                             Header="Nombre público"
-                             MaxLength="60"
-                             AutomationProperties.Name="Nombre público"
-                             AutomationProperties.HelpText="Aparece en la web. No se muestra tu email." />
-                    <HyperlinkButton Content="Gestionar cuenta y contraseña en aelbak.dev"
-                                     NavigateUri="https://aelbak.dev/cuenta"
-                                     AutomationProperties.Name="Gestionar cuenta y contraseña en aelbak.dev" />
+                             x:Uid="Settings_DisplayNameBox"
+                             MaxLength="60" />
+                    <HyperlinkButton x:Uid="Settings_AccountLink"
+                                     NavigateUri="https://aelbak.dev/cuenta" />
                 </StackPanel>
             </Expander>
 
-            <TextBlock Text="Apariencia" FontSize="18" FontWeight="SemiBold"
+            <TextBlock x:Uid="Settings_AppearanceHeading" FontSize="18" FontWeight="SemiBold"
                        AutomationProperties.HeadingLevel="Level2" />
-            <Expander Header="Tema" IsExpanded="True" HorizontalAlignment="Stretch">
+            <Expander x:Uid="Settings_ThemeExpander" IsExpanded="True" HorizontalAlignment="Stretch">
                 <RadioButtons x:Name="ThemeRadios"
-                              Header="Tema de la aplicación"
-                              SelectionChanged="OnThemeChanged"
-                              AutomationProperties.Name="Tema de la aplicación">
-                    <RadioButton Content="Seguir a Windows" Tag="system"
-                                 AutomationProperties.Name="Seguir el tema de Windows" />
-                    <RadioButton Content="Claro" Tag="light"
-                                 AutomationProperties.Name="Tema claro" />
-                    <RadioButton Content="Oscuro" Tag="dark"
-                                 AutomationProperties.Name="Tema oscuro" />
+                              x:Uid="Settings_ThemeRadios"
+                              SelectionChanged="OnThemeChanged">
+                    <RadioButton x:Uid="Settings_ThemeSystem" Tag="system" />
+                    <RadioButton x:Uid="Settings_ThemeLight" Tag="light" />
+                    <RadioButton x:Uid="Settings_ThemeDark" Tag="dark" />
                 </RadioButtons>
             </Expander>
 
-            <TextBlock Text="Enlaces" FontSize="18" FontWeight="SemiBold"
+            <TextBlock x:Uid="Settings_LinksHeading" FontSize="18" FontWeight="SemiBold"
                        AutomationProperties.HeadingLevel="Level2" />
-            <Expander Header="Acciones visibles en el menú contextual" IsExpanded="True" HorizontalAlignment="Stretch">
+            <Expander x:Uid="Settings_ActionsExpander" IsExpanded="True" HorizontalAlignment="Stretch">
                 <StackPanel x:Name="ActionsPanel" Spacing="6" Padding="0,8" />
             </Expander>
-            <Expander Header="Historial" IsExpanded="False" HorizontalAlignment="Stretch">
+            <Expander x:Uid="Settings_HistoryExpander" IsExpanded="False" HorizontalAlignment="Stretch">
                 <ToggleSwitch x:Name="HistoryToggle"
-                              Header="Habilitar historial por elemento"
-                              OnContent="Activado" OffContent="Desactivado"
-                              AutomationProperties.Name="Activar historial"
-                              AutomationProperties.HelpText="Registra cada creación, modificación o borrado." />
+                              x:Uid="Settings_HistoryToggle" />
             </Expander>
-            <Expander Header="Privacidad al compartir" IsExpanded="False" HorizontalAlignment="Stretch">
+            <Expander x:Uid="Settings_SharingExpander" IsExpanded="False" HorizontalAlignment="Stretch">
                 <StackPanel Spacing="10" Padding="0,8">
-                    <TextBlock Text="Desactivado por defecto. Si lo activas, quien abra tus enlaces públicos verá la categoría y/o las etiquetas que les asignaste."
+                    <TextBlock x:Uid="Settings_SharingNote"
                                TextWrapping="Wrap" Opacity="0.7" />
                     <ToggleSwitch x:Name="ShareCategoriesToggle"
-                                  Header="Mostrar la categoría en mis enlaces públicos"
-                                  OnContent="Activado" OffContent="Desactivado"
-                                  AutomationProperties.Name="Mostrar la categoría en enlaces públicos" />
+                                  x:Uid="Settings_ShareCategoriesToggle" />
                     <ToggleSwitch x:Name="ShareTagsToggle"
-                                  Header="Mostrar las etiquetas en mis enlaces públicos"
-                                  OnContent="Activado" OffContent="Desactivado"
-                                  AutomationProperties.Name="Mostrar las etiquetas en enlaces públicos" />
+                                  x:Uid="Settings_ShareTagsToggle" />
                 </StackPanel>
             </Expander>
 
-            <TextBlock Text="Este equipo" FontSize="18" FontWeight="SemiBold"
+            <TextBlock x:Uid="Settings_DeviceHeading" FontSize="18" FontWeight="SemiBold"
                        AutomationProperties.HeadingLevel="Level2" />
-            <Expander Header="Ventana y sistema" IsExpanded="True" HorizontalAlignment="Stretch">
+            <Expander x:Uid="Settings_SystemExpander" IsExpanded="True" HorizontalAlignment="Stretch">
                 <StackPanel Spacing="10" Padding="0,8">
                     <ToggleSwitch x:Name="MicaToggle"
-                                  Header="Fondo translúcido Mica"
-                                  OnContent="Activado" OffContent="Desactivado"
-                                  AutomationProperties.Name="Fondo translúcido Mica" />
+                                  x:Uid="Settings_MicaToggle" />
                     <ToggleSwitch x:Name="TrayToggle"
-                                  Header="Al cerrar, minimizar a la bandeja del sistema"
-                                  OnContent="Activado" OffContent="Desactivado"
-                                  AutomationProperties.Name="Minimizar a la bandeja al cerrar"
-                                  AutomationProperties.HelpText="Si está activado, cerrar la ventana solo la oculta. Para salir usa el menú de la bandeja → Salir." />
+                                  x:Uid="Settings_TrayToggle" />
                     <ToggleSwitch x:Name="HotkeyToggle"
-                                  Header="Atajo global para abrir la ventana"
-                                  OnContent="Activado" OffContent="Desactivado"
-                                  AutomationProperties.Name="Atajo global de teclado" />
+                                  x:Uid="Settings_HotkeyToggle" />
                     <ToggleButton x:Name="HotkeyCaptureButton"
+                                  x:Uid="Settings_HotkeyCaptureButton"
                                   Click="OnHotkeyCaptureClick"
                                   KeyDown="OnHotkeyCaptureKeyDown"
-                                  HorizontalAlignment="Left"
-                                  AutomationProperties.Name="Cambiar la combinación del atajo global"
-                                  AutomationProperties.HelpText="Actívalo y pulsa la nueva combinación con Ctrl, Mayús o Alt más una tecla." />
+                                  HorizontalAlignment="Left" />
                     <ToggleSwitch x:Name="StartupToggle"
-                                  Header="Abrir LinkManager al iniciar Windows"
-                                  OnContent="Activado" OffContent="Desactivado"
-                                  AutomationProperties.Name="Abrir al iniciar Windows" />
+                                  x:Uid="Settings_StartupToggle" />
                     <ToggleSwitch x:Name="NotificationsToggle"
-                                  Header="Mostrar notificaciones del sistema"
-                                  OnContent="Activado" OffContent="Desactivado"
-                                  AutomationProperties.Name="Mostrar notificaciones del sistema"
-                                  AutomationProperties.HelpText="Avisa al descargar actualizaciones, al sincronizar la cola sin conexión y al guardar enlaces desde la bandeja." />
+                                  x:Uid="Settings_NotificationsToggle" />
                 </StackPanel>
             </Expander>
-            <Expander Header="Actualizaciones" IsExpanded="False" HorizontalAlignment="Stretch">
+            <Expander x:Uid="Settings_UpdatesExpander" IsExpanded="False" HorizontalAlignment="Stretch">
                 <StackPanel Spacing="10" Padding="0,8">
-                    <TextBlock Text="LinkManager se actualiza solo en segundo plano. También puedes comprobarlo ahora."
+                    <TextBlock x:Uid="Settings_UpdatesNote"
                                TextWrapping="Wrap" Opacity="0.8" />
-                    <Button x:Name="CheckUpdatesButton" Content="Buscar actualizaciones"
-                            Click="OnCheckUpdates"
-                            AutomationProperties.Name="Buscar actualizaciones ahora" />
+                    <Button x:Name="CheckUpdatesButton" x:Uid="Settings_CheckUpdatesButton"
+                            Click="OnCheckUpdates" />
                     <InfoBar x:Name="UpdateBar" IsOpen="False" IsClosable="False" />
                 </StackPanel>
             </Expander>
@@ -136,25 +107,22 @@
                          x:Name="StatusBar"
                          IsOpen="False"
                          IsClosable="False" />
-                <Button Grid.Column="1" Content="Guardar"
+                <Button x:Uid="Settings_SaveButton" Grid.Column="1"
                         Style="{StaticResource AccentButtonStyle}"
-                        Click="OnSave"
-                        AutomationProperties.Name="Guardar todos los ajustes" />
+                        Click="OnSave" />
             </Grid>
 
-            <TextBlock Text="Avanzado" FontSize="18" FontWeight="SemiBold"
+            <TextBlock x:Uid="Settings_AdvancedHeading" FontSize="18" FontWeight="SemiBold"
                        AutomationProperties.HeadingLevel="Level2" />
-            <HyperlinkButton Content="Política de privacidad"
-                             NavigateUri="https://lm.aelbak.dev/privacidad"
-                             AutomationProperties.Name="Abrir la política de privacidad" />
-            <Expander Header="Zona de peligro" IsExpanded="False" HorizontalAlignment="Stretch">
+            <HyperlinkButton x:Uid="Settings_PrivacyLink"
+                             NavigateUri="https://lm.aelbak.dev/privacidad" />
+            <Expander x:Uid="Settings_DangerExpander" IsExpanded="False" HorizontalAlignment="Stretch">
                 <StackPanel Spacing="10" Padding="0,8">
-                    <TextBlock Text="Eliminar tu cuenta borra de forma permanente tu cuenta y todos tus datos (enlaces, categorías, etiquetas, ajustes y enlaces compartidos). No se puede deshacer."
+                    <TextBlock x:Uid="Settings_DangerNote"
                                TextWrapping="Wrap" Opacity="0.8" />
                     <Button x:Name="DeleteAccountButton"
-                            Content="Eliminar cuenta"
-                            Click="OnDeleteAccount"
-                            AutomationProperties.Name="Eliminar mi cuenta de forma permanente" />
+                            x:Uid="Settings_DeleteAccountButton"
+                            Click="OnDeleteAccount" />
                 </StackPanel>
             </Expander>
         </StackPanel>

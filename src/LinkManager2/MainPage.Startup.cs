@@ -34,16 +34,23 @@ public sealed partial class MainPage : Page
         }
         catch (Exception ex)
         {
-            SetStatus($"Caché ilegible: {ex.Message}");
+            SetStatus(Strings.Format("Startup_CacheUnreadable", ex.Message));
         }
-        SetStatus("Cargando…");
+        SetStatus(Strings.Get("Startup_Loading"));
 
         try
         {
             await App.State.ReloadAllAsync();
             _loading = false;
             RefreshVisible();
-            SetStatus(warning ?? $"{App.State.Items.Count} elementos · {App.State.Auth.UserEmail}");
+            SetStatus(
+                warning
+                    ?? Strings.Format(
+                        "Startup_ItemCountWithUser",
+                        App.State.Items.Count,
+                        App.State.Auth.UserEmail
+                    )
+            );
             await FlushPendingAsync();
 
             _ = RealtimeSync.StartAsync(() =>
@@ -64,7 +71,7 @@ public sealed partial class MainPage : Page
             if (await TryRecoverExpiredSessionAsync(ex))
                 return;
             UpdateEmptyState();
-            SetStatus($"Sin conexión: {ex.Message}. Mostrando caché.");
+            SetStatus(Strings.Format("Startup_OfflineShowingCache", ex.Message));
         }
     }
 
@@ -91,14 +98,20 @@ public sealed partial class MainPage : Page
         if (!AuthService.IsAuthExpired(ex))
             return false;
 
-        SetStatus("Sesión caducada. Reconectando…");
+        SetStatus(Strings.Get("Startup_SessionExpiredReconnecting"));
         if (await App.State.Auth.TryRefreshSessionAsync())
         {
             try
             {
                 await App.State.ReloadAllAsync();
                 RefreshVisible();
-                SetStatus($"{App.State.Items.Count} elementos · {App.State.Auth.UserEmail}");
+                SetStatus(
+                    Strings.Format(
+                        "Startup_ItemCountWithUser",
+                        App.State.Items.Count,
+                        App.State.Auth.UserEmail
+                    )
+                );
                 await FlushPendingAsync();
                 return true;
             }
@@ -108,7 +121,7 @@ public sealed partial class MainPage : Page
             }
         }
 
-        SetStatus("Tu sesión ha caducado. Vuelve a iniciar sesión.");
+        SetStatus(Strings.Get("Startup_SessionExpired"));
         RealtimeSync.Stop();
         App.State.Clear();
         ((App)Application.Current).Window!.NavigateTo(typeof(LoginPage));
@@ -128,24 +141,23 @@ public sealed partial class MainPage : Page
 
     private async Task ForceUpdateAsync(string? gateMessage)
     {
-        SetStatus("Actualización obligatoria. Descargando…");
+        SetStatus(Strings.Get("Startup_ForcedUpdateDownloading"));
         var (status, _) = await UpdateService.CheckAndDownloadAsync();
         if (status == UpdateStatus.Downloaded)
         {
-            SetStatus("Aplicando actualización…");
+            SetStatus(Strings.Get("Startup_ApplyingUpdate"));
             await UpdateService.ApplyAndRestartAsync();
             return;
         }
 
-        var message = gateMessage ?? "Hay una versión nueva obligatoria.";
+        var message = gateMessage ?? Strings.Get("Startup_ForcedUpdateDefaultMessage");
         var dlg = new ContentDialog
         {
             XamlRoot = XamlRoot,
-            Title = "Actualización necesaria",
-            Content =
-                $"{message}\n\nNo se pudo descargar la actualización automáticamente. Comprueba tu conexión y reinicia la app, o actualiza desde Ajustes.",
-            PrimaryButtonText = "Reintentar",
-            CloseButtonText = "Cerrar",
+            Title = Strings.Get("Startup_ForcedUpdateTitle"),
+            Content = Strings.Format("Startup_ForcedUpdateBody", message),
+            PrimaryButtonText = Strings.Get("Startup_ForcedUpdateRetry"),
+            CloseButtonText = Strings.Get("Common_Close"),
             DefaultButton = ContentDialogButton.Primary,
         };
         var (shown, result) = await dlg.TryShowGuardedAsync();
@@ -154,7 +166,7 @@ public sealed partial class MainPage : Page
             await ForceUpdateAsync(gateMessage);
             return;
         }
-        SetStatus("Actualización pendiente. La app se actualizará al recuperar conexión.");
+        SetStatus(Strings.Get("Startup_UpdatePending"));
     }
 
     private async Task CheckForUpdatesAsync()
@@ -166,17 +178,17 @@ public sealed partial class MainPage : Page
         var dlg = new ContentDialog
         {
             XamlRoot = XamlRoot,
-            Title = "Actualización disponible",
-            Content = $"Se ha descargado la versión {version}. ¿Reiniciar ahora para aplicarla?",
-            PrimaryButtonText = "Reiniciar y actualizar",
-            CloseButtonText = "Más tarde",
+            Title = Strings.Get("Startup_UpdateAvailableTitle"),
+            Content = Strings.Format("Startup_UpdateAvailableBody", version),
+            PrimaryButtonText = Strings.Get("Startup_UpdateAvailableRestart"),
+            CloseButtonText = Strings.Get("Startup_UpdateAvailableLater"),
             DefaultButton = ContentDialogButton.Primary,
         };
         if (await dlg.ShowGuardedAsync() == ContentDialogResult.Primary)
         {
-            SetStatus("Aplicando actualización…");
+            SetStatus(Strings.Get("Startup_ApplyingUpdate"));
             if (!await UpdateService.ApplyAndRestartAsync())
-                SetStatus("No se pudo aplicar la actualización. Inténtalo desde Ajustes.");
+                SetStatus(Strings.Get("Startup_ApplyUpdateFailed"));
         }
     }
 

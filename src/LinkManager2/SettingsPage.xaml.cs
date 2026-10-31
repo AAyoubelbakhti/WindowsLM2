@@ -10,16 +10,16 @@ namespace LinkManager2;
 
 public sealed partial class SettingsPage : Page
 {
-    private static readonly (string Key, string Label)[] ActionKeys =
+    private static readonly (string Key, string LabelKey)[] ActionKeys =
     {
-        ("copy", "Copiar URL"),
-        ("share", "Compartir"),
-        ("email", "Enviar por email"),
-        ("tags", "Editar etiquetas"),
-        ("history", "Ver historial"),
-        ("publink", "Crear enlace público"),
-        ("edit", "Editar elemento"),
-        ("archive", "Archivar"),
+        ("copy", "Settings_ActionCopy"),
+        ("share", "Settings_ActionShare"),
+        ("email", "Settings_ActionEmail"),
+        ("tags", "Settings_ActionTags"),
+        ("history", "Settings_ActionHistory"),
+        ("publink", "Settings_ActionPublink"),
+        ("edit", "Settings_ActionEdit"),
+        ("archive", "Settings_ActionArchive"),
     };
 
     private readonly Dictionary<string, CheckBox> _checks = new();
@@ -31,8 +31,9 @@ public sealed partial class SettingsPage : Page
     public SettingsPage()
     {
         InitializeComponent();
-        foreach (var (key, label) in ActionKeys)
+        foreach (var (key, labelKey) in ActionKeys)
         {
+            var label = Strings.Get(labelKey);
             var cb = new CheckBox { Content = label, IsChecked = true };
             Microsoft.UI.Xaml.Automation.AutomationProperties.SetName(cb, label);
             _checks[key] = cb;
@@ -58,8 +59,11 @@ public sealed partial class SettingsPage : Page
     {
         HotkeyCaptureButton.Content =
             HotkeyCaptureButton.IsChecked == true
-                ? "Pulsa la combinación…"
-                : $"Cambiar atajo (actual: {GlobalHotkey.Describe(_hotkeyModifiers, _hotkeyVirtualKey)})";
+                ? Strings.Get("Settings_HotkeyCapturing")
+                : Strings.Format(
+                    "Settings_HotkeyChange",
+                    GlobalHotkey.Describe(_hotkeyModifiers, _hotkeyVirtualKey)
+                );
     }
 
     private void OnHotkeyCaptureClick(object sender, RoutedEventArgs e) =>
@@ -96,7 +100,7 @@ public sealed partial class SettingsPage : Page
             modifiers |= 0x0001;
         if (modifiers == 0)
         {
-            Status(InfoBarSeverity.Warning, "Usa al menos Ctrl, Mayús o Alt junto a la tecla.");
+            Status(InfoBarSeverity.Warning, Strings.Get("Settings_HotkeyNeedsModifier"));
             return;
         }
 
@@ -107,7 +111,10 @@ public sealed partial class SettingsPage : Page
         e.Handled = true;
         Status(
             InfoBarSeverity.Informational,
-            $"Atajo: {GlobalHotkey.Describe(_hotkeyModifiers, _hotkeyVirtualKey)}. Guarda para aplicarlo."
+            Strings.Format(
+                "Settings_HotkeySet",
+                GlobalHotkey.Describe(_hotkeyModifiers, _hotkeyVirtualKey)
+            )
         );
     }
 
@@ -118,7 +125,7 @@ public sealed partial class SettingsPage : Page
 
     private async Task LoadAsync()
     {
-        Status(InfoBarSeverity.Informational, "Cargando…");
+        Status(InfoBarSeverity.Informational, Strings.Get("Settings_Loading"));
         try
         {
             var profile = await App.State.Repo.GetProfileAsync();
@@ -147,7 +154,7 @@ public sealed partial class SettingsPage : Page
         }
         catch (Exception ex)
         {
-            Status(InfoBarSeverity.Error, $"Error cargando: {ex.Message}");
+            Status(InfoBarSeverity.Error, Strings.Format("Settings_LoadError", ex.Message));
         }
     }
 
@@ -178,7 +185,7 @@ public sealed partial class SettingsPage : Page
 
     private async void OnSave(object sender, RoutedEventArgs e)
     {
-        Status(InfoBarSeverity.Informational, "Guardando…");
+        Status(InfoBarSeverity.Informational, Strings.Get("Settings_Saving"));
         try
         {
             var name = DisplayNameBox.Text.Trim();
@@ -212,11 +219,11 @@ public sealed partial class SettingsPage : Page
 
             ((App)Application.Current).Window?.ReloadPreferences();
 
-            Status(InfoBarSeverity.Success, "Ajustes guardados.");
+            Status(InfoBarSeverity.Success, Strings.Get("Settings_Saved"));
         }
         catch (Exception ex)
         {
-            Status(InfoBarSeverity.Error, $"Error al guardar: {ex.Message}");
+            Status(InfoBarSeverity.Error, Strings.Format("Settings_SaveError", ex.Message));
         }
     }
 
@@ -225,25 +232,22 @@ public sealed partial class SettingsPage : Page
         var confirm = new ContentDialog
         {
             XamlRoot = XamlRoot,
-            Title = "¿Eliminar tu cuenta?",
-            Content =
-                "Se borrarán de forma permanente tu cuenta y todos tus datos "
-                + "(enlaces, categorías, etiquetas, ajustes y enlaces compartidos). "
-                + "Esta acción no se puede deshacer.",
-            PrimaryButtonText = "Eliminar cuenta",
-            CloseButtonText = "Cancelar",
+            Title = Strings.Get("Settings_DeleteDialogTitle"),
+            Content = Strings.Get("Settings_DeleteDialogBody"),
+            PrimaryButtonText = Strings.Get("Settings_DeleteDialogConfirm"),
+            CloseButtonText = Strings.Get("Common_Cancel"),
             DefaultButton = ContentDialogButton.Close,
         };
         if (await confirm.ShowGuardedAsync() != ContentDialogResult.Primary)
             return;
 
-        Status(InfoBarSeverity.Informational, "Eliminando tu cuenta…");
+        Status(InfoBarSeverity.Informational, Strings.Get("Settings_Deleting"));
         try
         {
             var token = App.State.Auth.CurrentSession?.AccessToken;
             if (string.IsNullOrEmpty(token))
             {
-                Status(InfoBarSeverity.Error, "Sesión no válida.");
+                Status(InfoBarSeverity.Error, Strings.Get("Settings_InvalidSession"));
                 return;
             }
 
@@ -262,60 +266,62 @@ public sealed partial class SettingsPage : Page
             }
             else
             {
-                Status(InfoBarSeverity.Error, $"No se pudo eliminar la cuenta ({status}).");
+                Status(InfoBarSeverity.Error, Strings.Format("Settings_DeleteFailed", status));
             }
         }
         catch (Exception ex)
         {
-            Status(InfoBarSeverity.Error, $"Error al eliminar: {ex.Message}");
+            Status(InfoBarSeverity.Error, Strings.Format("Settings_DeleteError", ex.Message));
         }
     }
 
     private async void OnCheckUpdates(object sender, RoutedEventArgs e)
     {
         CheckUpdatesButton.IsEnabled = false;
-        SetUpdateBar(InfoBarSeverity.Informational, "Buscando actualizaciones…");
+        SetUpdateBar(InfoBarSeverity.Informational, Strings.Get("Settings_UpdateChecking"));
         try
         {
             var (status, version) = await UpdateService.CheckAndDownloadAsync();
             switch (status)
             {
                 case UpdateStatus.UpToDate:
-                    SetUpdateBar(InfoBarSeverity.Success, "Ya tienes la última versión.");
+                    SetUpdateBar(InfoBarSeverity.Success, Strings.Get("Settings_UpdateUpToDate"));
                     break;
                 case UpdateStatus.NotInstalled:
                     SetUpdateBar(
                         InfoBarSeverity.Informational,
-                        "Las actualizaciones automáticas requieren instalar la app con el instalador (no la versión portable)."
+                        Strings.Get("Settings_UpdateNotInstalled")
                     );
                     break;
                 case UpdateStatus.Downloaded:
-                    SetUpdateBar(InfoBarSeverity.Success, $"Descargada la versión {version}.");
+                    SetUpdateBar(
+                        InfoBarSeverity.Success,
+                        Strings.Format("Settings_UpdateDownloaded", version)
+                    );
                     var dlg = new ContentDialog
                     {
                         XamlRoot = XamlRoot,
-                        Title = "Actualización lista",
-                        Content =
-                            $"Se ha descargado la versión {version}. ¿Reiniciar ahora para aplicarla?",
-                        PrimaryButtonText = "Reiniciar y actualizar",
-                        CloseButtonText = "Más tarde",
+                        Title = Strings.Get("Settings_UpdateReadyTitle"),
+                        Content = Strings.Format("Settings_UpdateReadyBody", version),
+                        PrimaryButtonText = Strings.Get("Settings_UpdateRestart"),
+                        CloseButtonText = Strings.Get("Settings_UpdateLater"),
                         DefaultButton = ContentDialogButton.Primary,
                     };
                     if (await dlg.ShowGuardedAsync() == ContentDialogResult.Primary)
                     {
-                        SetUpdateBar(InfoBarSeverity.Informational, "Aplicando actualización…");
+                        SetUpdateBar(
+                            InfoBarSeverity.Informational,
+                            Strings.Get("Settings_UpdateApplying")
+                        );
                         if (!await UpdateService.ApplyAndRestartAsync())
                             SetUpdateBar(
                                 InfoBarSeverity.Error,
-                                "No se pudo aplicar la actualización. Inténtalo de nuevo."
+                                Strings.Get("Settings_UpdateApplyFailed")
                             );
                     }
                     break;
                 default:
-                    SetUpdateBar(
-                        InfoBarSeverity.Error,
-                        "No se pudo comprobar. Revisa la conexión."
-                    );
+                    SetUpdateBar(InfoBarSeverity.Error, Strings.Get("Settings_UpdateCheckFailed"));
                     break;
             }
         }

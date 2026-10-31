@@ -6,25 +6,20 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Title="Enviar por email"
+    x:Uid="EmailShare_Dialog"
     DefaultButton="Primary"
-    PrimaryButtonText="Enviar"
-    CloseButtonText="Cancelar"
     PrimaryButtonClick="OnSendClick">
     <StackPanel Spacing="12" Width="460">
         <TextBlock x:Name="ItemLabel" Opacity="0.75" TextWrapping="Wrap" />
         <TextBox x:Name="EmailBox"
-                 Header="Email destinatario"
-                 InputScope="EmailSmtpAddress"
-                 PlaceholderText="destinatario@correo.com"
-                 AutomationProperties.Name="Email del destinatario" />
+                 x:Uid="EmailShare_EmailBox"
+                 InputScope="EmailSmtpAddress" />
         <TextBox x:Name="MessageBox"
-                 Header="Mensaje (opcional, máx. 500)"
+                 x:Uid="EmailShare_MessageBox"
                  AcceptsReturn="True"
                  TextWrapping="Wrap"
                  Height="100"
-                 MaxLength="500"
-                 AutomationProperties.Name="Mensaje opcional" />
+                 MaxLength="500" />
         <InfoBar x:Name="StatusBar" IsOpen="False" IsClosable="False" />
     </StackPanel>
 </ContentDialog>

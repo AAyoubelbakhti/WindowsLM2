@@ -40,7 +40,7 @@ public sealed partial class MainPage : Page
         var (ok, type) = Validation.DetectType(dlg.ItemValue);
         if (!ok)
         {
-            SetStatus("Valor inválido.");
+            SetStatus(Strings.Get("Actions_InvalidValue"));
             return;
         }
         var value = type == ItemTypes.Url ? Validation.NormalizeUrl(dlg.ItemValue) : dlg.ItemValue;
@@ -54,14 +54,14 @@ public sealed partial class MainPage : Page
             {
                 var keep = await DialogHelper.ConfirmAsync(
                     XamlRoot,
-                    "Enlace duplicado",
-                    $"Ya tienes este enlace guardado como \"{existing.Title}\". ¿Guardarlo de todos modos?",
-                    "Guardar igualmente",
-                    "Cancelar"
+                    Strings.Get("Actions_DuplicateTitle"),
+                    Strings.Format("Actions_DuplicateMessage", existing.Title),
+                    Strings.Get("Actions_DuplicateConfirm"),
+                    Strings.Get("Common_Cancel")
                 );
                 if (!keep)
                 {
-                    SetStatus("Cancelado: ya tenías ese enlace.");
+                    SetStatus(Strings.Get("Actions_DuplicateCancelled"));
                     return;
                 }
             }
@@ -81,8 +81,8 @@ public sealed partial class MainPage : Page
                 );
                 SetStatus(
                     result == AppState.AddResult.QueuedOffline
-                        ? $"Sin conexión, encolado: {dlg.ItemTitle}."
-                        : $"Añadido: {dlg.ItemTitle}"
+                        ? Strings.Format("Actions_AddQueued", dlg.ItemTitle)
+                        : Strings.Format("Actions_Added", dlg.ItemTitle)
                 );
 
                 if (result == AppState.AddResult.Added)
@@ -125,15 +125,15 @@ public sealed partial class MainPage : Page
                 );
                 SetStatus(
                     result == AppState.OpResult.QueuedOffline
-                        ? $"Sin conexión, cambios encolados: {dlg.ItemTitle}."
-                        : $"Actualizado: {dlg.ItemTitle}"
+                        ? Strings.Format("Actions_UpdateQueued", dlg.ItemTitle)
+                        : Strings.Format("Actions_Updated", dlg.ItemTitle)
                 );
             }
             RefreshVisible();
         }
         catch (Exception ex)
         {
-            SetStatus($"Error: {ex.Message}");
+            SetStatus(Strings.Format("Common_Error", ex.Message));
         }
     }
 
@@ -147,10 +147,10 @@ public sealed partial class MainPage : Page
     {
         var ok = await DialogHelper.ConfirmAsync(
             XamlRoot,
-            "Confirmar borrado",
-            $"¿Borrar el elemento \"{item.Title}\"?",
-            "Borrar",
-            "Cancelar"
+            Strings.Get("Actions_DeleteConfirmTitle"),
+            Strings.Format("Actions_DeleteConfirmMessage", item.Title),
+            Strings.Get("Actions_DeleteConfirmButton"),
+            Strings.Get("Common_Cancel")
         );
         if (!ok)
             return;
@@ -160,21 +160,21 @@ public sealed partial class MainPage : Page
             if (result == AppState.OpResult.QueuedOffline)
             {
                 RefreshVisible();
-                SetStatus($"Sin conexión, borrado encolado: {item.Title}.");
+                SetStatus(Strings.Format("Actions_DeleteQueued", item.Title));
                 return;
             }
             _lastUndo = new UndoAction(
-                $"borrar \"{item.Title}\"",
+                Strings.Format("Actions_UndoDelete", item.Title),
                 () => App.State.Repo.RestoreAsync(item)
             );
             RefreshVisible();
-            SetStatus($"Borrado: {item.Title}. Ctrl+Z para deshacer.");
+            SetStatus(Strings.Format("Actions_Deleted", item.Title));
         }
         catch (Exception ex)
         {
             if (await TryRecoverExpiredSessionAsync(ex))
                 return;
-            SetStatus($"Error al borrar: {ex.Message}");
+            SetStatus(Strings.Format("Actions_DeleteError", ex.Message));
         }
     }
 
@@ -202,19 +202,19 @@ public sealed partial class MainPage : Page
             if (result == AppState.OpResult.QueuedOffline)
             {
                 RefreshVisible();
-                SetStatus($"Sin conexión, archivado encolado: {item.Title}.");
+                SetStatus(Strings.Format("Actions_ArchiveQueued", item.Title));
                 return;
             }
             _lastUndo = new UndoAction(
-                $"archivar \"{item.Title}\"",
+                Strings.Format("Actions_UndoArchive", item.Title),
                 () => App.State.Repo.ArchiveAsync(item.Id, false)
             );
             RefreshVisible();
-            SetStatus($"Archivado: {item.Title}. Ctrl+Z para deshacer.");
+            SetStatus(Strings.Format("Actions_Archived", item.Title));
         }
         catch (Exception ex)
         {
-            SetStatus($"Error al archivar: {ex.Message}");
+            SetStatus(Strings.Format("Actions_ArchiveError", ex.Message));
         }
     }
 
@@ -229,12 +229,12 @@ public sealed partial class MainPage : Page
         try
         {
             ItemActions.Open(item);
-            SetStatus($"Abierto: {item.Title}");
+            SetStatus(Strings.Format("Actions_Opened", item.Title));
             BumpUsage(item);
         }
         catch (Exception ex)
         {
-            SetStatus($"No se pudo abrir: {ex.Message}");
+            SetStatus(Strings.Format("Actions_OpenError", ex.Message));
         }
     }
 
@@ -261,12 +261,12 @@ public sealed partial class MainPage : Page
             try
             {
                 ItemActions.Copy(vm.Value);
-                SetStatus($"Copiado: {vm.Title}");
+                SetStatus(Strings.Format("Actions_Copied", vm.Title));
                 BumpUsage(vm.Source);
             }
             catch (Exception ex)
             {
-                SetStatus($"Error al copiar: {ex.Message}");
+                SetStatus(Strings.Format("Actions_CopyError", ex.Message));
             }
         }
     }
@@ -278,11 +278,11 @@ public sealed partial class MainPage : Page
         try
         {
             ItemActions.Share(((App)Application.Current).Window!, vm.Source);
-            SetStatus($"Panel de compartir lanzado para {vm.Title}.");
+            SetStatus(Strings.Format("Actions_ShareLaunched", vm.Title));
         }
         catch (Exception ex)
         {
-            SetStatus($"Share UI falló: {ex.Message}");
+            SetStatus(Strings.Format("Actions_ShareError", ex.Message));
         }
     }
 
@@ -300,19 +300,21 @@ public sealed partial class MainPage : Page
                 RefreshVisible();
                 SetStatus(
                     target
-                        ? $"Sin conexión, favorito encolado: {vm.Source.Title}."
-                        : $"Sin conexión, quitar favorito encolado: {vm.Source.Title}."
+                        ? Strings.Format("Actions_FavoriteQueued", vm.Source.Title)
+                        : Strings.Format("Actions_UnfavoriteQueued", vm.Source.Title)
                 );
                 return;
             }
             RefreshVisible();
             SetStatus(
-                target ? $"Favorito: {vm.Source.Title}" : $"Quitado de favoritos: {vm.Source.Title}"
+                target
+                    ? Strings.Format("Actions_Favorited", vm.Source.Title)
+                    : Strings.Format("Actions_Unfavorited", vm.Source.Title)
             );
         }
         catch (Exception ex)
         {
-            SetStatus($"Error con favorito: {ex.Message}");
+            SetStatus(Strings.Format("Actions_FavoriteError", ex.Message));
         }
     }
 
@@ -331,12 +333,12 @@ public sealed partial class MainPage : Page
             {
                 await App.State.ReloadTagsAsync();
                 RefreshVisible();
-                SetStatus("Etiquetas actualizadas.");
+                SetStatus(Strings.Get("Actions_TagsUpdated"));
             }
         }
         catch (Exception ex)
         {
-            SetStatus($"Error con etiquetas: {ex.Message}");
+            SetStatus(Strings.Format("Actions_TagsError", ex.Message));
         }
     }
 
@@ -348,8 +350,8 @@ public sealed partial class MainPage : Page
         {
             await DialogHelper.InfoAsync(
                 XamlRoot,
-                "Historial desactivado",
-                "Actívalo en Ajustes si quieres ver eventos."
+                Strings.Get("Actions_HistoryDisabledTitle"),
+                Strings.Get("Actions_HistoryDisabledMessage")
             );
             return;
         }
@@ -361,7 +363,7 @@ public sealed partial class MainPage : Page
         }
         catch (Exception ex)
         {
-            SetStatus($"Error cargando historial: {ex.Message}");
+            SetStatus(Strings.Format("Actions_HistoryError", ex.Message));
         }
     }
 
@@ -378,7 +380,7 @@ public sealed partial class MainPage : Page
         var ids = Visible.Select(v => v.Id).ToList();
         if (ids.Count == 0)
         {
-            SetStatus("No hay enlaces visibles para incluir. Ajusta los filtros.");
+            SetStatus(Strings.Get("Actions_NoVisibleLinks"));
             return;
         }
         var dlg = new ShareCollectionDialog(App.State.Repo, ids) { XamlRoot = XamlRoot };
@@ -406,7 +408,7 @@ public sealed partial class MainPage : Page
             }
             catch (Exception ex)
             {
-                SetStatus($"Error recargando: {ex.Message}");
+                SetStatus(Strings.Format("Actions_ReloadError", ex.Message));
             }
         }
     }
@@ -421,7 +423,7 @@ public sealed partial class MainPage : Page
     private async void OnManageCategoriesClick(object sender, RoutedEventArgs e)
     {
         var dlg = new ManageListDialog(
-            "Categorías",
+            Strings.Get("Actions_ManageCategoriesTitle"),
             async ct =>
                 (await App.State.Repo.ListCategoriesAsync(ct))
                     .Select(c => new ListEntry(c.Id, c.Name))
@@ -443,7 +445,7 @@ public sealed partial class MainPage : Page
     private async void OnManageTagsClick(object sender, RoutedEventArgs e)
     {
         var dlg = new ManageListDialog(
-            "Etiquetas",
+            Strings.Get("Actions_ManageTagsTitle"),
             async ct =>
                 (await App.State.Repo.ListTagsAsync(ct))
                     .Select(t => new ListEntry(t.Id, t.Name))
@@ -472,7 +474,7 @@ public sealed partial class MainPage : Page
         }
         catch (Exception ex)
         {
-            SetStatus($"Error recargando: {ex.Message}");
+            SetStatus(Strings.Format("Actions_ReloadError", ex.Message));
         }
     }
 
@@ -491,17 +493,17 @@ public sealed partial class MainPage : Page
         if (file is null)
             return;
 
-        SetStatus("Importando…");
+        SetStatus(Strings.Get("Actions_Importing"));
         try
         {
             var result = await ImportExportService.ImportFileAsync(App.State, file.Path);
             await App.State.ReloadAllAsync();
             RefreshVisible();
-            SetStatus($"Importación: {result.Inserted} nuevos, {result.Skipped} omitidos.");
+            SetStatus(Strings.Format("Actions_Imported", result.Inserted, result.Skipped));
         }
         catch (Exception ex)
         {
-            SetStatus($"Error importando: {ex.Message}");
+            SetStatus(Strings.Format("Actions_ImportError", ex.Message));
         }
     }
 
@@ -520,11 +522,11 @@ public sealed partial class MainPage : Page
         try
         {
             await ImportExportService.ExportJsonAsync(App.State, file.Path);
-            SetStatus($"Exportado a {file.Path}");
+            SetStatus(Strings.Format("Actions_Exported", file.Path));
         }
         catch (Exception ex)
         {
-            SetStatus($"Error exportando: {ex.Message}");
+            SetStatus(Strings.Format("Actions_ExportError", ex.Message));
         }
     }
 
@@ -533,16 +535,16 @@ public sealed partial class MainPage : Page
         var token = App.State.Auth.CurrentSession?.AccessToken;
         if (string.IsNullOrEmpty(token))
         {
-            SetStatus("Sesión no válida para comprobar enlaces.");
+            SetStatus(Strings.Get("Actions_CheckInvalidSession"));
             return;
         }
-        SetStatus("Comprobando enlaces…");
+        SetStatus(Strings.Get("Actions_CheckingLinks"));
         try
         {
             var summary = await WebApi.CheckAllLinksAsync(token);
             if (summary is null)
             {
-                SetStatus("No se pudieron comprobar los enlaces.");
+                SetStatus(Strings.Get("Actions_CheckLinksFailed"));
                 return;
             }
             await App.State.ReloadItemsAsync();
@@ -550,13 +552,13 @@ public sealed partial class MainPage : Page
             var s = summary.Value;
             SetStatus(
                 s.Pending > 0
-                    ? $"Comprobados {s.Checked}: {s.Broken} rotos. Quedan {s.Pending}, vuelve a comprobar."
-                    : $"Comprobados {s.Checked}: {s.Broken} rotos, {s.Ok} correctos."
+                    ? Strings.Format("Actions_CheckLinksPending", s.Checked, s.Broken, s.Pending)
+                    : Strings.Format("Actions_CheckLinksDone", s.Checked, s.Broken, s.Ok)
             );
         }
         catch (Exception ex)
         {
-            SetStatus($"Error comprobando enlaces: {ex.Message}");
+            SetStatus(Strings.Format("Actions_CheckLinksError", ex.Message));
         }
     }
 
@@ -567,16 +569,16 @@ public sealed partial class MainPage : Page
         var token = App.State.Auth.CurrentSession?.AccessToken;
         if (string.IsNullOrEmpty(token))
         {
-            SetStatus("Sesión no válida para comprobar enlaces.");
+            SetStatus(Strings.Get("Actions_CheckInvalidSession"));
             return;
         }
-        SetStatus($"Comprobando: {vm.Title}…");
+        SetStatus(Strings.Format("Actions_CheckingLink", vm.Title));
         try
         {
             var status = await WebApi.CheckLinkAsync(vm.Id, token);
             if (status is null)
             {
-                SetStatus("No se pudo comprobar el enlace.");
+                SetStatus(Strings.Get("Actions_CheckLinkFailed"));
                 return;
             }
             await App.State.ReloadItemsAsync();
@@ -584,30 +586,30 @@ public sealed partial class MainPage : Page
             SetStatus(
                 status switch
                 {
-                    "broken" => $"Roto: {vm.Title}",
-                    "ok" => $"Correcto: {vm.Title}",
-                    _ => $"Sin determinar: {vm.Title}",
+                    "broken" => Strings.Format("Actions_LinkBroken", vm.Title),
+                    "ok" => Strings.Format("Actions_LinkOk", vm.Title),
+                    _ => Strings.Format("Actions_LinkUnknown", vm.Title),
                 }
             );
         }
         catch (Exception ex)
         {
-            SetStatus($"Error comprobando enlace: {ex.Message}");
+            SetStatus(Strings.Format("Actions_CheckLinkError", ex.Message));
         }
     }
 
     private async void OnReloadClick(object sender, RoutedEventArgs e)
     {
-        SetStatus("Recargando…");
+        SetStatus(Strings.Get("Actions_Reloading"));
         try
         {
             await App.State.ReloadAllAsync();
             RefreshVisible();
-            SetStatus($"{App.State.Items.Count} elementos.");
+            SetStatus(Strings.Format("Actions_ItemCount", App.State.Items.Count));
         }
         catch (Exception ex)
         {
-            SetStatus($"Error: {ex.Message}");
+            SetStatus(Strings.Format("Common_Error", ex.Message));
         }
     }
 
@@ -628,7 +630,7 @@ public sealed partial class MainPage : Page
         }
         catch (Exception ex)
         {
-            SetStatus($"No se pudo abrir el navegador: {ex.Message}");
+            SetStatus(Strings.Format("Actions_OpenBrowserError", ex.Message));
         }
     }
 

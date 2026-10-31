@@ -39,10 +39,12 @@ internal static class DialogHelper
         XamlRoot root,
         string title,
         string message,
-        string primary = "Aceptar",
-        string cancel = "Cancelar"
+        string? primary = null,
+        string? cancel = null
     )
     {
+        primary ??= Strings.Get("Common_Accept");
+        cancel ??= Strings.Get("Common_Cancel");
         var dlg = new ContentDialog
         {
             XamlRoot = root,
@@ -62,7 +64,7 @@ internal static class DialogHelper
             XamlRoot = root,
             Title = title,
             Content = message,
-            CloseButtonText = "Cerrar",
+            CloseButtonText = Strings.Get("Common_Close"),
         };
         return dlg.ShowGuardedAsync();
     }

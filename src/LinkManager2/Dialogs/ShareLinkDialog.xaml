@@ -6,23 +6,18 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Title="Enlace público"
+    x:Uid="ShareLink_Dialog"
     DefaultButton="Primary"
-    PrimaryButtonText="Generar"
-    CloseButtonText="Cerrar"
     PrimaryButtonClick="OnGenerateClick">
     <StackPanel Spacing="12" Width="460">
         <TextBlock x:Name="ItemLabel" Opacity="0.75" TextWrapping="Wrap" />
-        <ComboBox x:Name="ExpiresCombo" Header="Caducidad" HorizontalAlignment="Stretch"
-                  AutomationProperties.Name="Caducidad del enlace" />
+        <ComboBox x:Name="ExpiresCombo" x:Uid="ShareLink_ExpiresCombo" HorizontalAlignment="Stretch" />
         <TextBox x:Name="ResultBox"
-                 Header="URL generada"
+                 x:Uid="ShareLink_ResultBox"
                  IsReadOnly="True"
-                 FontFamily="{StaticResource AppMonoFont}"
-                 AutomationProperties.Name="URL pública generada" />
+                 FontFamily="{StaticResource AppMonoFont}" />
         <StackPanel Orientation="Horizontal" Spacing="8">
-            <Button x:Name="CopyButton" Content="Copiar URL" IsEnabled="False" Click="OnCopyClick"
-                    AutomationProperties.Name="Copiar URL al portapapeles" />
+            <Button x:Name="CopyButton" x:Uid="ShareLink_CopyButton" IsEnabled="False" Click="OnCopyClick" />
         </StackPanel>
         <InfoBar x:Name="StatusBar" IsOpen="False" IsClosable="False" />
     </StackPanel>

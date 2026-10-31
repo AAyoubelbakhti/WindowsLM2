@@ -6,10 +6,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Title="Etiquetas"
+    x:Uid="ItemTags_Dialog"
     DefaultButton="Primary"
-    PrimaryButtonText="Guardar"
-    CloseButtonText="Cancelar"
     PrimaryButtonClick="OnSaveClick">
     <Grid Width="440" Height="420" RowSpacing="10">
         <Grid.RowDefinitions>
@@ -26,8 +24,8 @@
 
         <ListView Grid.Row="1"
                   x:Name="TagsList"
-                  SelectionMode="Multiple"
-                  AutomationProperties.Name="Etiquetas disponibles">
+                  x:Uid="ItemTags_TagsList"
+                  SelectionMode="Multiple">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Name}" />
@@ -41,14 +39,12 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <TextBox x:Name="NewTagBox"
-                     Grid.Column="0"
-                     PlaceholderText="Nueva etiqueta…"
-                     AutomationProperties.Name="Nueva etiqueta" />
+                     x:Uid="ItemTags_NewTagBox"
+                     Grid.Column="0" />
             <Button x:Name="CreateButton"
+                    x:Uid="ItemTags_CreateButton"
                     Grid.Column="1"
-                    Content="Crear"
-                    Click="OnCreateClick"
-                    AutomationProperties.Name="Crear etiqueta" />
+                    Click="OnCreateClick" />
         </Grid>
 
         <InfoBar Grid.Row="3"

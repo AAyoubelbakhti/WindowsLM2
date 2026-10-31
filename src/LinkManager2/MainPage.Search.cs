@@ -74,13 +74,16 @@ public sealed partial class MainPage : Page
     private void AnnounceResultCount()
     {
         var n = Visible.Count;
-        SetStatus(n == 1 ? "1 resultado" : $"{n} resultados");
+        SetStatus(
+            n == 1 ? Strings.Get("Main_Results_One") : Strings.Format("Main_Results_Many", n)
+        );
     }
 
     private void UpdateFiltersStatus()
     {
         var count = _filters.ActiveCount;
-        FiltersButton.Content = count > 0 ? $"Filtros ({count})" : "Filtros";
+        FiltersButton.Content =
+            count > 0 ? Strings.Format("Main_FiltersCount", count) : Strings.Get("Main_Filters");
 
         if (count == 0 && _filters.Sort == SortKey.AlphaAsc)
         {
@@ -90,32 +93,43 @@ public sealed partial class MainPage : Page
 
         var parts = new List<string>();
         if (_filters.Type != FilterType.All)
-            parts.Add(_filters.Type == FilterType.Url ? "Tipo: enlaces" : "Tipo: rutas");
+            parts.Add(
+                Strings.Get(
+                    _filters.Type == FilterType.Url ? "Main_FilterTypeUrls" : "Main_FilterTypePaths"
+                )
+            );
         if (_filters.CategoryId is not null)
             parts.Add(
-                $"Categoría: {App.State.Categories.FirstOrDefault(c => c.Id == _filters.CategoryId)?.Name ?? "?"}"
+                Strings.Format(
+                    "Main_FilterCategory",
+                    App.State.Categories.FirstOrDefault(c => c.Id == _filters.CategoryId)?.Name
+                        ?? "?"
+                )
             );
         if (_filters.TagId is not null)
             parts.Add(
-                $"Etiqueta: {App.State.Tags.FirstOrDefault(t => t.Id == _filters.TagId)?.Name ?? "?"}"
+                Strings.Format(
+                    "Main_FilterTag",
+                    App.State.Tags.FirstOrDefault(t => t.Id == _filters.TagId)?.Name ?? "?"
+                )
             );
         if (_filters.FavoritesOnly)
-            parts.Add("Solo favoritos");
+            parts.Add(Strings.Get("Main_FilterFavorites"));
         if (_filters.BrokenOnly)
-            parts.Add("Solo rotos");
+            parts.Add(Strings.Get("Main_FilterBroken"));
         if (_filters.Sort != SortKey.AlphaAsc)
             parts.Add(
                 _filters.Sort switch
                 {
-                    SortKey.AlphaDesc => "Orden: Z–A",
-                    SortKey.DateDesc => "Orden: más recientes",
-                    SortKey.DateAsc => "Orden: más antiguos",
-                    SortKey.UsageDesc => "Orden: más usados",
-                    SortKey.CategoryAsc => "Orden: por categoría",
+                    SortKey.AlphaDesc => Strings.Get("Main_SortAlphaDesc"),
+                    SortKey.DateDesc => Strings.Get("Main_SortDateDesc"),
+                    SortKey.DateAsc => Strings.Get("Main_SortDateAsc"),
+                    SortKey.UsageDesc => Strings.Get("Main_SortUsageDesc"),
+                    SortKey.CategoryAsc => Strings.Get("Main_SortCategory"),
                     _ => "",
                 }
             );
-        SetFiltersStatusText("Activos: " + string.Join(" · ", parts));
+        SetFiltersStatusText(Strings.Format("Main_FiltersActive", string.Join(" · ", parts)));
     }
 
     /// <summary>Updates the filters live region and raises LiveRegionChanged only when the text actually changes.</summary>

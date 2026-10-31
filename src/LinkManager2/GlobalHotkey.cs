@@ -36,13 +36,13 @@ internal sealed class GlobalHotkey : IDisposable
     {
         var parts = new System.Collections.Generic.List<string>();
         if ((modifiers & MOD_CONTROL) != 0)
-            parts.Add("Ctrl");
+            parts.Add(Strings.Get("Hotkey_Ctrl"));
         if ((modifiers & MOD_SHIFT) != 0)
-            parts.Add("Mayús");
+            parts.Add(Strings.Get("Hotkey_Shift"));
         if ((modifiers & MOD_ALT) != 0)
-            parts.Add("Alt");
+            parts.Add(Strings.Get("Hotkey_Alt"));
         if ((modifiers & MOD_WIN) != 0)
-            parts.Add("Win");
+            parts.Add(Strings.Get("Hotkey_Win"));
         parts.Add(((char)virtualKey).ToString());
         return string.Join("+", parts);
     }

@@ -1,0 +1,1805 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Actions_Added" xml:space="preserve">
+    <value>Añadido: {0}</value>
+  </data>
+  <data name="Actions_AddQueued" xml:space="preserve">
+    <value>Sin conexión, encolado: {0}.</value>
+  </data>
+  <data name="Actions_Archived" xml:space="preserve">
+    <value>Archivado: {0}. Ctrl+Z para deshacer.</value>
+  </data>
+  <data name="Actions_ArchiveError" xml:space="preserve">
+    <value>Error al archivar: {0}</value>
+  </data>
+  <data name="Actions_ArchiveQueued" xml:space="preserve">
+    <value>Sin conexión, archivado encolado: {0}.</value>
+  </data>
+  <data name="Actions_CheckingLink" xml:space="preserve">
+    <value>Comprobando: {0}…</value>
+  </data>
+  <data name="Actions_CheckingLinks" xml:space="preserve">
+    <value>Comprobando enlaces…</value>
+  </data>
+  <data name="Actions_CheckInvalidSession" xml:space="preserve">
+    <value>Sesión no válida para comprobar enlaces.</value>
+  </data>
+  <data name="Actions_CheckLinkError" xml:space="preserve">
+    <value>Error comprobando enlace: {0}</value>
+  </data>
+  <data name="Actions_CheckLinkFailed" xml:space="preserve">
+    <value>No se pudo comprobar el enlace.</value>
+  </data>
+  <data name="Actions_CheckLinksDone" xml:space="preserve">
+    <value>Comprobados {0}: {1} rotos, {2} correctos.</value>
+  </data>
+  <data name="Actions_CheckLinksError" xml:space="preserve">
+    <value>Error comprobando enlaces: {0}</value>
+  </data>
+  <data name="Actions_CheckLinksFailed" xml:space="preserve">
+    <value>No se pudieron comprobar los enlaces.</value>
+  </data>
+  <data name="Actions_CheckLinksPending" xml:space="preserve">
+    <value>Comprobados {0}: {1} rotos. Quedan {2}, vuelve a comprobar.</value>
+  </data>
+  <data name="Actions_Copied" xml:space="preserve">
+    <value>Copiado: {0}</value>
+  </data>
+  <data name="Actions_CopyError" xml:space="preserve">
+    <value>Error al copiar: {0}</value>
+  </data>
+  <data name="Actions_DeleteConfirmButton" xml:space="preserve">
+    <value>Borrar</value>
+  </data>
+  <data name="Actions_DeleteConfirmMessage" xml:space="preserve">
+    <value>¿Borrar el elemento "{0}"?</value>
+  </data>
+  <data name="Actions_DeleteConfirmTitle" xml:space="preserve">
+    <value>Confirmar borrado</value>
+  </data>
+  <data name="Actions_Deleted" xml:space="preserve">
+    <value>Borrado: {0}. Ctrl+Z para deshacer.</value>
+  </data>
+  <data name="Actions_DeleteError" xml:space="preserve">
+    <value>Error al borrar: {0}</value>
+  </data>
+  <data name="Actions_DeleteQueued" xml:space="preserve">
+    <value>Sin conexión, borrado encolado: {0}.</value>
+  </data>
+  <data name="Actions_DuplicateCancelled" xml:space="preserve">
+    <value>Cancelado: ya tenías ese enlace.</value>
+  </data>
+  <data name="Actions_DuplicateConfirm" xml:space="preserve">
+    <value>Guardar igualmente</value>
+  </data>
+  <data name="Actions_DuplicateMessage" xml:space="preserve">
+    <value>Ya tienes este enlace guardado como "{0}". ¿Guardarlo de todos modos?</value>
+  </data>
+  <data name="Actions_DuplicateTitle" xml:space="preserve">
+    <value>Enlace duplicado</value>
+  </data>
+  <data name="Actions_Exported" xml:space="preserve">
+    <value>Exportado a {0}</value>
+  </data>
+  <data name="Actions_ExportError" xml:space="preserve">
+    <value>Error exportando: {0}</value>
+  </data>
+  <data name="Actions_Favorited" xml:space="preserve">
+    <value>Favorito: {0}</value>
+  </data>
+  <data name="Actions_FavoriteError" xml:space="preserve">
+    <value>Error con favorito: {0}</value>
+  </data>
+  <data name="Actions_FavoriteQueued" xml:space="preserve">
+    <value>Sin conexión, favorito encolado: {0}.</value>
+  </data>
+  <data name="Actions_HistoryDisabledMessage" xml:space="preserve">
+    <value>Actívalo en Ajustes si quieres ver eventos.</value>
+  </data>
+  <data name="Actions_HistoryDisabledTitle" xml:space="preserve">
+    <value>Historial desactivado</value>
+  </data>
+  <data name="Actions_HistoryError" xml:space="preserve">
+    <value>Error cargando historial: {0}</value>
+  </data>
+  <data name="Actions_Imported" xml:space="preserve">
+    <value>Importación: {0} nuevos, {1} omitidos.</value>
+  </data>
+  <data name="Actions_ImportError" xml:space="preserve">
+    <value>Error importando: {0}</value>
+  </data>
+  <data name="Actions_Importing" xml:space="preserve">
+    <value>Importando…</value>
+  </data>
+  <data name="Actions_InvalidValue" xml:space="preserve">
+    <value>Valor inválido.</value>
+  </data>
+  <data name="Actions_ItemCount" xml:space="preserve">
+    <value>{0} elementos.</value>
+  </data>
+  <data name="Actions_LinkBroken" xml:space="preserve">
+    <value>Roto: {0}</value>
+  </data>
+  <data name="Actions_LinkOk" xml:space="preserve">
+    <value>Correcto: {0}</value>
+  </data>
+  <data name="Actions_LinkUnknown" xml:space="preserve">
+    <value>Sin determinar: {0}</value>
+  </data>
+  <data name="Actions_ManageCategoriesTitle" xml:space="preserve">
+    <value>Categorías</value>
+  </data>
+  <data name="Actions_ManageTagsTitle" xml:space="preserve">
+    <value>Etiquetas</value>
+  </data>
+  <data name="Actions_NoVisibleLinks" xml:space="preserve">
+    <value>No hay enlaces visibles para incluir. Ajusta los filtros.</value>
+  </data>
+  <data name="Actions_OpenBrowserError" xml:space="preserve">
+    <value>No se pudo abrir el navegador: {0}</value>
+  </data>
+  <data name="Actions_Opened" xml:space="preserve">
+    <value>Abierto: {0}</value>
+  </data>
+  <data name="Actions_OpenError" xml:space="preserve">
+    <value>No se pudo abrir: {0}</value>
+  </data>
+  <data name="Actions_ReloadError" xml:space="preserve">
+    <value>Error recargando: {0}</value>
+  </data>
+  <data name="Actions_Reloading" xml:space="preserve">
+    <value>Recargando…</value>
+  </data>
+  <data name="Actions_ShareError" xml:space="preserve">
+    <value>Share UI falló: {0}</value>
+  </data>
+  <data name="Actions_ShareLaunched" xml:space="preserve">
+    <value>Panel de compartir lanzado para {0}.</value>
+  </data>
+  <data name="Actions_TagsError" xml:space="preserve">
+    <value>Error con etiquetas: {0}</value>
+  </data>
+  <data name="Actions_TagsUpdated" xml:space="preserve">
+    <value>Etiquetas actualizadas.</value>
+  </data>
+  <data name="Actions_UndoArchive" xml:space="preserve">
+    <value>archivar "{0}"</value>
+  </data>
+  <data name="Actions_UndoDelete" xml:space="preserve">
+    <value>borrar "{0}"</value>
+  </data>
+  <data name="Actions_Unfavorited" xml:space="preserve">
+    <value>Quitado de favoritos: {0}</value>
+  </data>
+  <data name="Actions_UnfavoriteQueued" xml:space="preserve">
+    <value>Sin conexión, quitar favorito encolado: {0}.</value>
+  </data>
+  <data name="Actions_Updated" xml:space="preserve">
+    <value>Actualizado: {0}</value>
+  </data>
+  <data name="Actions_UpdateQueued" xml:space="preserve">
+    <value>Sin conexión, cambios encolados: {0}.</value>
+  </data>
+  <data name="AddEdit_CategoryCombo.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Categoría</value>
+  </data>
+  <data name="AddEdit_CategoryCombo.Header" xml:space="preserve">
+    <value>Categoría</value>
+  </data>
+  <data name="AddEdit_CategoryCreateFailed" xml:space="preserve">
+    <value>No se pudo crear la categoría: {0}</value>
+  </data>
+  <data name="AddEdit_CreateCategoryButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Crear categoría</value>
+  </data>
+  <data name="AddEdit_CreateCategoryButton.Content" xml:space="preserve">
+    <value>Crear categoría</value>
+  </data>
+  <data name="AddEdit_CreateTagButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Crear etiqueta</value>
+  </data>
+  <data name="AddEdit_CreateTagButton.Content" xml:space="preserve">
+    <value>Crear etiqueta</value>
+  </data>
+  <data name="AddEdit_DescriptionBox.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.HelpText" xml:space="preserve">
+    <value>Descripción o notas propias. Se pueden buscar.</value>
+  </data>
+  <data name="AddEdit_DescriptionBox.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Notas</value>
+  </data>
+  <data name="AddEdit_DescriptionBox.Header" xml:space="preserve">
+    <value>Notas</value>
+  </data>
+  <data name="AddEdit_Dialog.CloseButtonText" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="AddEdit_Dialog.PrimaryButtonText" xml:space="preserve">
+    <value>Guardar</value>
+  </data>
+  <data name="AddEdit_InvalidValue" xml:space="preserve">
+    <value>El valor no es una URL ni una ruta válida.</value>
+  </data>
+  <data name="AddEdit_NewCategoryBox.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Nueva categoría</value>
+  </data>
+  <data name="AddEdit_NewCategoryBox.PlaceholderText" xml:space="preserve">
+    <value>Nueva categoría</value>
+  </data>
+  <data name="AddEdit_NewTagBox.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Nueva etiqueta</value>
+  </data>
+  <data name="AddEdit_NewTagBox.PlaceholderText" xml:space="preserve">
+    <value>Nueva etiqueta…</value>
+  </data>
+  <data name="AddEdit_NoCategory" xml:space="preserve">
+    <value>Sin categoría</value>
+  </data>
+  <data name="AddEdit_SearchingTitle" xml:space="preserve">
+    <value>Buscando título…</value>
+  </data>
+  <data name="AddEdit_TagCreateFailed" xml:space="preserve">
+    <value>No se pudo crear la etiqueta: {0}</value>
+  </data>
+  <data name="AddEdit_TagsHeading.Text" xml:space="preserve">
+    <value>Etiquetas</value>
+  </data>
+  <data name="AddEdit_TagsList.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Etiquetas disponibles</value>
+  </data>
+  <data name="AddEdit_TitleAdd" xml:space="preserve">
+    <value>Añadir elemento</value>
+  </data>
+  <data name="AddEdit_TitleBox.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Título del elemento</value>
+  </data>
+  <data name="AddEdit_TitleBox.Header" xml:space="preserve">
+    <value>Título</value>
+  </data>
+  <data name="AddEdit_TitleEdit" xml:space="preserve">
+    <value>Editar elemento</value>
+  </data>
+  <data name="AddEdit_TitleRequired" xml:space="preserve">
+    <value>Escribe un título o usa una URL con OpenGraph.</value>
+  </data>
+  <data name="AddEdit_TitleSuggested" xml:space="preserve">
+    <value>Título sugerido. Revisa y pulsa Guardar de nuevo.</value>
+  </data>
+  <data name="AddEdit_ValueBox.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.HelpText" xml:space="preserve">
+    <value>URL o ruta de archivo</value>
+  </data>
+  <data name="AddEdit_ValueBox.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Valor</value>
+  </data>
+  <data name="AddEdit_ValueBox.Header" xml:space="preserve">
+    <value>Valor (URL o ruta)</value>
+  </data>
+  <data name="App_MissingConfig" xml:space="preserve">
+    <value>Falta configuración de Supabase. Define LM_SUPABASE_URL y LM_SUPABASE_ANON_KEY o coloca appsettings.Local.json junto al ejecutable.</value>
+  </data>
+  <data name="App_SupabaseInitFailed" xml:space="preserve">
+    <value>No se pudo iniciar Supabase: {0}</value>
+  </data>
+  <data name="Archived_ConfirmDeleteButton.Content" xml:space="preserve">
+    <value>Confirmar borrado</value>
+  </data>
+  <data name="Archived_CountMany" xml:space="preserve">
+    <value>{0} archivados.</value>
+  </data>
+  <data name="Archived_CountOne" xml:space="preserve">
+    <value>1 archivado.</value>
+  </data>
+  <data name="Archived_DeleteButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Borrar definitivamente el elemento seleccionado</value>
+  </data>
+  <data name="Archived_DeleteButton.Content" xml:space="preserve">
+    <value>Borrar</value>
+  </data>
+  <data name="Archived_DeleteConfirm" xml:space="preserve">
+    <value>¿Borrar definitivamente "{0}"? No se puede deshacer.</value>
+  </data>
+  <data name="Archived_Deleted" xml:space="preserve">
+    <value>Borrado: {0}</value>
+  </data>
+  <data name="Archived_Dialog.CloseButtonText" xml:space="preserve">
+    <value>Cerrar</value>
+  </data>
+  <data name="Archived_Dialog.Title" xml:space="preserve">
+    <value>Archivados</value>
+  </data>
+  <data name="Archived_ItemsList.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Elementos archivados</value>
+  </data>
+  <data name="Archived_RestoreButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Restaurar el elemento seleccionado</value>
+  </data>
+  <data name="Archived_RestoreButton.Content" xml:space="preserve">
+    <value>Restaurar</value>
+  </data>
+  <data name="Archived_Restored" xml:space="preserve">
+    <value>Restaurado: {0}</value>
+  </data>
+  <data name="Auth_AlreadyRegistered" xml:space="preserve">
+    <value>Ese correo ya tiene cuenta. Inicia sesión.</value>
+  </data>
+  <data name="Auth_Cancelled" xml:space="preserve">
+    <value>Operación cancelada.</value>
+  </data>
+  <data name="Auth_EmptySession" xml:space="preserve">
+    <value>Supabase devolvió sesión vacía.</value>
+  </data>
+  <data name="Auth_InvalidCredentials" xml:space="preserve">
+    <value>Credenciales inválidas. Revisa el correo y la contraseña.</value>
+  </data>
+  <data name="Auth_NotConfirmed" xml:space="preserve">
+    <value>Confirma tu correo antes de iniciar sesión.</value>
+  </data>
+  <data name="Auth_RateLimited" xml:space="preserve">
+    <value>Demasiados intentos. Espera unos minutos.</value>
+  </data>
+  <data name="Common_Accept" xml:space="preserve">
+    <value>Aceptar</value>
+  </data>
+  <data name="Common_Cancel" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="Common_Close" xml:space="preserve">
+    <value>Cerrar</value>
+  </data>
+  <data name="Common_Error" xml:space="preserve">
+    <value>Error: {0}</value>
+  </data>
+  <data name="Dialog_ErrorDetail" xml:space="preserve">
+    <value>{0}: {1}</value>
+  </data>
+  <data name="Dialog_ExpiryNever" xml:space="preserve">
+    <value>No caduca</value>
+  </data>
+  <data name="Dialog_ExpiryOneDay" xml:space="preserve">
+    <value>1 día</value>
+  </data>
+  <data name="Dialog_ExpirySevenDays" xml:space="preserve">
+    <value>7 días</value>
+  </data>
+  <data name="Dialog_ExpiryThirtyDays" xml:space="preserve">
+    <value>30 días</value>
+  </data>
+  <data name="Dialog_Generating" xml:space="preserve">
+    <value>Generando…</value>
+  </data>
+  <data name="Dialog_UrlCopied" xml:space="preserve">
+    <value>URL copiada al portapapeles.</value>
+  </data>
+  <data name="EmailShare_Dialog.CloseButtonText" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="EmailShare_Dialog.PrimaryButtonText" xml:space="preserve">
+    <value>Enviar</value>
+  </data>
+  <data name="EmailShare_Dialog.Title" xml:space="preserve">
+    <value>Enviar por email</value>
+  </data>
+  <data name="EmailShare_EmailBox.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Email del destinatario</value>
+  </data>
+  <data name="EmailShare_EmailBox.Header" xml:space="preserve">
+    <value>Email destinatario</value>
+  </data>
+  <data name="EmailShare_EmailBox.PlaceholderText" xml:space="preserve">
+    <value>destinatario@correo.com</value>
+  </data>
+  <data name="EmailShare_InvalidEmail" xml:space="preserve">
+    <value>Email inválido.</value>
+  </data>
+  <data name="EmailShare_ItemLabel" xml:space="preserve">
+    <value>Item: {0}</value>
+  </data>
+  <data name="EmailShare_MessageBox.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Mensaje opcional</value>
+  </data>
+  <data name="EmailShare_MessageBox.Header" xml:space="preserve">
+    <value>Mensaje (opcional, máx. 500)</value>
+  </data>
+  <data name="EmailShare_NoSession" xml:space="preserve">
+    <value>Sin sesión.</value>
+  </data>
+  <data name="EmailShare_Sending" xml:space="preserve">
+    <value>Enviando…</value>
+  </data>
+  <data name="Filters_AllFeminine" xml:space="preserve">
+    <value>Todas</value>
+  </data>
+  <data name="Filters_BrokenOnly.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Mostrar solo enlaces rotos</value>
+  </data>
+  <data name="Filters_BrokenOnly.Header" xml:space="preserve">
+    <value>Solo enlaces rotos</value>
+  </data>
+  <data name="Filters_BrokenOnly.OffContent" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="Filters_BrokenOnly.OnContent" xml:space="preserve">
+    <value>Sí</value>
+  </data>
+  <data name="Filters_CategoryCombo.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Categoría</value>
+  </data>
+  <data name="Filters_CategoryCombo.Header" xml:space="preserve">
+    <value>Categoría</value>
+  </data>
+  <data name="Filters_Dialog.CloseButtonText" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="Filters_Dialog.PrimaryButtonText" xml:space="preserve">
+    <value>Aplicar</value>
+  </data>
+  <data name="Filters_Dialog.SecondaryButtonText" xml:space="preserve">
+    <value>Limpiar</value>
+  </data>
+  <data name="Filters_Dialog.Title" xml:space="preserve">
+    <value>Filtros</value>
+  </data>
+  <data name="Filters_FavoritesOnly.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Mostrar solo favoritos</value>
+  </data>
+  <data name="Filters_FavoritesOnly.Header" xml:space="preserve">
+    <value>Solo favoritos</value>
+  </data>
+  <data name="Filters_FavoritesOnly.OffContent" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="Filters_FavoritesOnly.OnContent" xml:space="preserve">
+    <value>Sí</value>
+  </data>
+  <data name="Filters_SortAlphaAsc" xml:space="preserve">
+    <value>Alfabéticamente (A–Z)</value>
+  </data>
+  <data name="Filters_SortAlphaDesc" xml:space="preserve">
+    <value>Alfabéticamente (Z–A)</value>
+  </data>
+  <data name="Filters_SortCategoryAsc" xml:space="preserve">
+    <value>Por categoría</value>
+  </data>
+  <data name="Filters_SortCombo.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Orden de la lista</value>
+  </data>
+  <data name="Filters_SortCombo.Header" xml:space="preserve">
+    <value>Ordenar por</value>
+  </data>
+  <data name="Filters_SortDateAsc" xml:space="preserve">
+    <value>Más antiguos primero</value>
+  </data>
+  <data name="Filters_SortDateDesc" xml:space="preserve">
+    <value>Más recientes primero</value>
+  </data>
+  <data name="Filters_SortUsageDesc" xml:space="preserve">
+    <value>Más usados</value>
+  </data>
+  <data name="Filters_TagCombo.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Etiqueta</value>
+  </data>
+  <data name="Filters_TagCombo.Header" xml:space="preserve">
+    <value>Etiqueta</value>
+  </data>
+  <data name="Filters_TypeAll" xml:space="preserve">
+    <value>Todos</value>
+  </data>
+  <data name="Filters_TypeCombo.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Tipo de elemento</value>
+  </data>
+  <data name="Filters_TypeCombo.Header" xml:space="preserve">
+    <value>Tipo</value>
+  </data>
+  <data name="Filters_TypeLinks" xml:space="preserve">
+    <value>Solo enlaces</value>
+  </data>
+  <data name="Filters_TypePaths" xml:space="preserve">
+    <value>Solo rutas</value>
+  </data>
+  <data name="Help_Body" xml:space="preserve">
+    <value>Global ({0} abre la capa de comandos):
+  G  Mostrar el gestor
+  F  Mostrar el gestor y buscar (foco en el buscador)
+  L  Capturar el enlace del navegador activo
+  R  Capturar la ruta del Explorador
+  A  Abrir el enlace/ruta del portapapeles
+  P  Guardar el enlace/ruta del portapapeles
+  H  Esta ayuda
+
+En la lista:
+  Ctrl+N Añadir · Ctrl+E Editar · Ctrl+C Copiar · Supr Borrar
+  Ctrl+F Buscar · Ctrl+L Filtros · F5 Recargar
+  Intro / doble clic Abrir · Clic derecho o Mayús+F10 Más acciones
+  Ctrl+clic o Mayús+flechas Seleccionar varios (acciones en lote)
+
+En Ajustes: Escape vuelve a la lista.</value>
+  </data>
+  <data name="Help_Title" xml:space="preserve">
+    <value>Atajos de teclado</value>
+  </data>
+  <data name="History_Archived" xml:space="preserve">
+    <value>Archivado</value>
+  </data>
+  <data name="History_Created" xml:space="preserve">
+    <value>Creado</value>
+  </data>
+  <data name="History_Deleted" xml:space="preserve">
+    <value>Borrado</value>
+  </data>
+  <data name="History_Dialog.CloseButtonText" xml:space="preserve">
+    <value>Cerrar</value>
+  </data>
+  <data name="History_Dialog.Title" xml:space="preserve">
+    <value>Historial</value>
+  </data>
+  <data name="History_Empty" xml:space="preserve">
+    <value>Sin eventos</value>
+  </data>
+  <data name="History_EntriesList.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Lista de eventos</value>
+  </data>
+  <data name="History_ItemLabel" xml:space="preserve">
+    <value>Eventos de: {0}</value>
+  </data>
+  <data name="History_Restored" xml:space="preserve">
+    <value>Restaurado</value>
+  </data>
+  <data name="History_Updated" xml:space="preserve">
+    <value>Modificado</value>
+  </data>
+  <data name="Hotkey_Alt" xml:space="preserve">
+    <value>Alt</value>
+  </data>
+  <data name="Hotkey_Ctrl" xml:space="preserve">
+    <value>Ctrl</value>
+  </data>
+  <data name="Hotkey_RegisterWarning" xml:space="preserve">
+    <value>Aviso: no se pudo registrar el atajo {0} (otra app lo usa).</value>
+  </data>
+  <data name="Hotkey_Shift" xml:space="preserve">
+    <value>Mayús</value>
+  </data>
+  <data name="Hotkey_Win" xml:space="preserve">
+    <value>Win</value>
+  </data>
+  <data name="Import_UnknownJsonFormat" xml:space="preserve">
+    <value>Formato JSON no reconocido.</value>
+  </data>
+  <data name="Item_BrokenLink" xml:space="preserve">
+    <value>Enlace roto</value>
+  </data>
+  <data name="Item_BrokenShort" xml:space="preserve">
+    <value>Roto</value>
+  </data>
+  <data name="Item_Favorite" xml:space="preserve">
+    <value>Favorito</value>
+  </data>
+  <data name="Item_NoCategory" xml:space="preserve">
+    <value>Sin categoría</value>
+  </data>
+  <data name="Item_TypePath" xml:space="preserve">
+    <value>Ruta</value>
+  </data>
+  <data name="Item_TypeUrl" xml:space="preserve">
+    <value>Enlace</value>
+  </data>
+  <data name="ItemTags_CreateButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Crear etiqueta</value>
+  </data>
+  <data name="ItemTags_CreateButton.Content" xml:space="preserve">
+    <value>Crear</value>
+  </data>
+  <data name="ItemTags_CreateError" xml:space="preserve">
+    <value>No se pudo crear: {0}</value>
+  </data>
+  <data name="ItemTags_Dialog.CloseButtonText" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="ItemTags_Dialog.PrimaryButtonText" xml:space="preserve">
+    <value>Guardar</value>
+  </data>
+  <data name="ItemTags_Dialog.Title" xml:space="preserve">
+    <value>Etiquetas</value>
+  </data>
+  <data name="ItemTags_ItemLabel" xml:space="preserve">
+    <value>Etiquetas para: {0}</value>
+  </data>
+  <data name="ItemTags_NewTagBox.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Nueva etiqueta</value>
+  </data>
+  <data name="ItemTags_NewTagBox.PlaceholderText" xml:space="preserve">
+    <value>Nueva etiqueta…</value>
+  </data>
+  <data name="ItemTags_SaveError" xml:space="preserve">
+    <value>Error al guardar: {0}</value>
+  </data>
+  <data name="ItemTags_TagsList.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Etiquetas disponibles</value>
+  </data>
+  <data name="JumpList_AddDescription" xml:space="preserve">
+    <value>Guarda un enlace nuevo.</value>
+  </data>
+  <data name="JumpList_AddTitle" xml:space="preserve">
+    <value>Añadir enlace</value>
+  </data>
+  <data name="JumpList_ClipboardDescription" xml:space="preserve">
+    <value>Guarda el enlace o la ruta del portapapeles.</value>
+  </data>
+  <data name="JumpList_ClipboardTitle" xml:space="preserve">
+    <value>Guardar portapapeles</value>
+  </data>
+  <data name="JumpList_SearchDescription" xml:space="preserve">
+    <value>Abre la búsqueda de enlaces.</value>
+  </data>
+  <data name="JumpList_SearchTitle" xml:space="preserve">
+    <value>Buscar</value>
+  </data>
+  <data name="Layer_AddError" xml:space="preserve">
+    <value>Error al añadir: {0}</value>
+  </data>
+  <data name="Layer_BrowserUrlUnreadable" xml:space="preserve">
+    <value>No se pudo leer la URL del navegador.</value>
+  </data>
+  <data name="Layer_CapturedValueInvalid" xml:space="preserve">
+    <value>El valor capturado no es una URL ni ruta válida.</value>
+  </data>
+  <data name="Layer_ClipboardEmpty" xml:space="preserve">
+    <value>El portapapeles está vacío.</value>
+  </data>
+  <data name="Layer_ClipboardNoText" xml:space="preserve">
+    <value>El portapapeles no contiene texto.</value>
+  </data>
+  <data name="Layer_ClipboardNotTarget" xml:space="preserve">
+    <value>El portapapeles no contiene una URL ni ruta.</value>
+  </data>
+  <data name="Layer_ClipboardOpenError" xml:space="preserve">
+    <value>No se pudo abrir el portapapeles: {0}</value>
+  </data>
+  <data name="Layer_ClipboardReadError" xml:space="preserve">
+    <value>No se pudo leer el portapapeles: {0}</value>
+  </data>
+  <data name="Layer_Dialog.CloseButtonText" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="Layer_Dialog.Title" xml:space="preserve">
+    <value>Capa de comandos</value>
+  </data>
+  <data name="Layer_KeyA.Text" xml:space="preserve">
+    <value>A — Abrir enlace del portapapeles</value>
+  </data>
+  <data name="Layer_KeyF.Text" xml:space="preserve">
+    <value>F — Mostrar el gestor y buscar</value>
+  </data>
+  <data name="Layer_KeyG.Text" xml:space="preserve">
+    <value>G — Mostrar el gestor</value>
+  </data>
+  <data name="Layer_KeyH.Text" xml:space="preserve">
+    <value>H — Ayuda</value>
+  </data>
+  <data name="Layer_KeyL.Text" xml:space="preserve">
+    <value>L — Capturar enlace del navegador</value>
+  </data>
+  <data name="Layer_KeyP.Text" xml:space="preserve">
+    <value>P — Guardar enlace del portapapeles</value>
+  </data>
+  <data name="Layer_KeyR.Text" xml:space="preserve">
+    <value>R — Capturar ruta del Explorador</value>
+  </data>
+  <data name="Layer_NoExplorerWindow" xml:space="preserve">
+    <value>Sin ventana del Explorador detrás de la capa.</value>
+  </data>
+  <data name="Layer_NotificationQueued" xml:space="preserve">
+    <value>Enlace en cola</value>
+  </data>
+  <data name="Layer_NotificationSaved" xml:space="preserve">
+    <value>Enlace guardado</value>
+  </data>
+  <data name="Layer_Prompt.Text" xml:space="preserve">
+    <value>Pulsa una tecla:</value>
+  </data>
+  <data name="Login_AccountCreated" xml:space="preserve">
+    <value>Cuenta creada. Revisa tu correo para confirmarla y luego inicia sesión.</value>
+  </data>
+  <data name="Login_BrowserOpenError" xml:space="preserve">
+    <value>No se pudo abrir el navegador: {0}</value>
+  </data>
+  <data name="Login_BusyRing.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Procesando</value>
+  </data>
+  <data name="Login_ConnectError" xml:space="preserve">
+    <value>Error conectando: {0}</value>
+  </data>
+  <data name="Login_Connecting" xml:space="preserve">
+    <value>Conectando con Supabase…</value>
+  </data>
+  <data name="Login_DiscordButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Iniciar sesión con Discord</value>
+  </data>
+  <data name="Login_DiscordButton.Content" xml:space="preserve">
+    <value>Continuar con Discord</value>
+  </data>
+  <data name="Login_EmailBox.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Correo electrónico</value>
+  </data>
+  <data name="Login_EmailBox.Header" xml:space="preserve">
+    <value>Correo electrónico</value>
+  </data>
+  <data name="Login_EmailBox.PlaceholderText" xml:space="preserve">
+    <value>tu@correo.com</value>
+  </data>
+  <data name="Login_EmailRequiredForReset" xml:space="preserve">
+    <value>Escribe tu correo arriba antes de pedir el restablecimiento.</value>
+  </data>
+  <data name="Login_ForgotButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Enviar correo para restablecer la contraseña</value>
+  </data>
+  <data name="Login_ForgotButton.Content" xml:space="preserve">
+    <value>¿Olvidaste la contraseña?</value>
+  </data>
+  <data name="Login_GitHubButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Iniciar sesión con GitHub</value>
+  </data>
+  <data name="Login_GitHubButton.Content" xml:space="preserve">
+    <value>Continuar con GitHub</value>
+  </data>
+  <data name="Login_InvalidEmail" xml:space="preserve">
+    <value>Introduce un correo válido.</value>
+  </data>
+  <data name="Login_ModeLabel.Text" xml:space="preserve">
+    <value>Modo</value>
+  </data>
+  <data name="Login_OAuthIncomplete" xml:space="preserve">
+    <value>No se completó el inicio con {0}.</value>
+  </data>
+  <data name="Login_OpeningProvider" xml:space="preserve">
+    <value>Abriendo {0} en el navegador…</value>
+  </data>
+  <data name="Login_OtherMethodsExpander.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Otros métodos de inicio de sesión</value>
+  </data>
+  <data name="Login_OtherMethodsExpander.Header" xml:space="preserve">
+    <value>Otros métodos de inicio de sesión</value>
+  </data>
+  <data name="Login_OtherMethodsNote.Text" xml:space="preserve">
+    <value>Se abrirá el navegador para iniciar sesión y volver a la app.</value>
+  </data>
+  <data name="Login_PasswordBox.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.HelpText" xml:space="preserve">
+    <value>Mínimo 6 caracteres</value>
+  </data>
+  <data name="Login_PasswordBox.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Contraseña</value>
+  </data>
+  <data name="Login_PasswordBox.Header" xml:space="preserve">
+    <value>Contraseña</value>
+  </data>
+  <data name="Login_PasswordTooShort" xml:space="preserve">
+    <value>La contraseña tiene al menos 6 caracteres.</value>
+  </data>
+  <data name="Login_ResetEmailSent" xml:space="preserve">
+    <value>Te hemos enviado un correo a {0}.</value>
+  </data>
+  <data name="Login_SignInMode.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Modo: iniciar sesión con cuenta existente</value>
+  </data>
+  <data name="Login_SignInMode.Content" xml:space="preserve">
+    <value>Tengo cuenta</value>
+  </data>
+  <data name="Login_SignInPrompt" xml:space="preserve">
+    <value>Inicia sesión para sincronizar tus enlaces.</value>
+  </data>
+  <data name="Login_SignUpMode.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Modo: crear cuenta nueva</value>
+  </data>
+  <data name="Login_SignUpMode.Content" xml:space="preserve">
+    <value>Crear cuenta</value>
+  </data>
+  <data name="Login_SignUpWebButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Abrir lm.aelbak.dev para crear una cuenta</value>
+  </data>
+  <data name="Login_SignUpWebButton.Content" xml:space="preserve">
+    <value>Abrir creación de cuenta en la web</value>
+  </data>
+  <data name="Login_SignUpWebNote.Text" xml:space="preserve">
+    <value>Si prefieres confirmar el correo en el navegador.</value>
+  </data>
+  <data name="Login_SubmitButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Continuar con correo y contraseña</value>
+  </data>
+  <data name="Login_SubmitButton.Content" xml:space="preserve">
+    <value>Iniciar sesión</value>
+  </data>
+  <data name="Login_SubmitSignIn" xml:space="preserve">
+    <value>Iniciar sesión</value>
+  </data>
+  <data name="Login_SubmitSignUp" xml:space="preserve">
+    <value>Crear cuenta</value>
+  </data>
+  <data name="Login_SubtitleText.Text" xml:space="preserve">
+    <value>Inicia sesión para sincronizar tus enlaces.</value>
+  </data>
+  <data name="Login_SupabaseUnavailable" xml:space="preserve">
+    <value>Supabase no está disponible.</value>
+  </data>
+  <data name="Login_Title.Text" xml:space="preserve">
+    <value>LinkManager</value>
+  </data>
+  <data name="Login_WebSignUpOpened" xml:space="preserve">
+    <value>Abrimos la web para crear tu cuenta. Vuelve aquí cuando termines.</value>
+  </data>
+  <data name="Main_AddButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Añadir enlace</value>
+  </data>
+  <data name="Main_AddButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Añadir un enlace o ruta (Ctrl+N)</value>
+  </data>
+  <data name="Main_AddButton.Label" xml:space="preserve">
+    <value>Añadir enlace</value>
+  </data>
+  <data name="Main_Archived.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Ver elementos archivados y restaurarlos</value>
+  </data>
+  <data name="Main_Archived.Label" xml:space="preserve">
+    <value>Archivados…</value>
+  </data>
+  <data name="Main_BulkBarHidden" xml:space="preserve">
+    <value>Barra de acciones oculta.</value>
+  </data>
+  <data name="Main_BulkCollection.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Crear colección con los seleccionados</value>
+  </data>
+  <data name="Main_BulkCollection.Content" xml:space="preserve">
+    <value>Crear colección…</value>
+  </data>
+  <data name="Main_BulkCopied" xml:space="preserve">
+    <value>Copiadas {0} URL.</value>
+  </data>
+  <data name="Main_BulkCopy.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copiar las URL de los seleccionados</value>
+  </data>
+  <data name="Main_BulkCopy.Content" xml:space="preserve">
+    <value>Copiar</value>
+  </data>
+  <data name="Main_BulkCopyError" xml:space="preserve">
+    <value>Error al copiar: {0}</value>
+  </data>
+  <data name="Main_BulkDelete.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Borrar los seleccionados</value>
+  </data>
+  <data name="Main_BulkDelete.Content" xml:space="preserve">
+    <value>Borrar…</value>
+  </data>
+  <data name="Main_BulkDeleteButton" xml:space="preserve">
+    <value>Borrar</value>
+  </data>
+  <data name="Main_BulkDeleteConfirm" xml:space="preserve">
+    <value>¿Borrar {0} elementos? Podrás deshacerlo con Ctrl+Z.</value>
+  </data>
+  <data name="Main_BulkDeleted" xml:space="preserve">
+    <value>Borrados {0} de {1}. Ctrl+Z para deshacer.</value>
+  </data>
+  <data name="Main_BulkDeletedQueued" xml:space="preserve">
+    <value>Borrados {0}, {1} en cola sin conexión, de {2}.</value>
+  </data>
+  <data name="Main_BulkDeleteTitle" xml:space="preserve">
+    <value>Confirmar borrado múltiple</value>
+  </data>
+  <data name="Main_BulkOpen.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Abrir los seleccionados</value>
+  </data>
+  <data name="Main_BulkOpen.Content" xml:space="preserve">
+    <value>Abrir</value>
+  </data>
+  <data name="Main_BulkOpened" xml:space="preserve">
+    <value>Abiertos {0} de {1}.</value>
+  </data>
+  <data name="Main_BulkQueuedOnly" xml:space="preserve">
+    <value>Sin conexión, {0} borrados encolados de {1}.</value>
+  </data>
+  <data name="Main_BulkSelectedAnnounce" xml:space="preserve">
+    <value>{0} elementos seleccionados. Barra de acciones disponible.</value>
+  </data>
+  <data name="Main_BulkSelectedCount" xml:space="preserve">
+    <value>{0} seleccionados</value>
+  </data>
+  <data name="Main_CheckLinks.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Comprobar todos los enlaces en busca de rotos</value>
+  </data>
+  <data name="Main_CheckLinks.Label" xml:space="preserve">
+    <value>Comprobar enlaces rotos</value>
+  </data>
+  <data name="Main_DetailsText.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Detalles del elemento seleccionado</value>
+  </data>
+  <data name="Main_EmptyFiltered" xml:space="preserve">
+    <value>Ningún resultado para la búsqueda o los filtros actuales.</value>
+  </data>
+  <data name="Main_EmptyNone" xml:space="preserve">
+    <value>Aún no tienes enlaces. Pulsa «Añadir enlace» para empezar.</value>
+  </data>
+  <data name="Main_Export.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Exportar enlaces a JSON</value>
+  </data>
+  <data name="Main_Export.Label" xml:space="preserve">
+    <value>Exportar JSON…</value>
+  </data>
+  <data name="Main_FavoriteAdd" xml:space="preserve">
+    <value>Marcar como favorito</value>
+  </data>
+  <data name="Main_FavoriteMenuItem.Text" xml:space="preserve">
+    <value>Marcar como favorito</value>
+  </data>
+  <data name="Main_FavoriteRemove" xml:space="preserve">
+    <value>Quitar de favoritos</value>
+  </data>
+  <data name="Main_FilterBroken" xml:space="preserve">
+    <value>Solo rotos</value>
+  </data>
+  <data name="Main_FilterCategory" xml:space="preserve">
+    <value>Categoría: {0}</value>
+  </data>
+  <data name="Main_FilterFavorites" xml:space="preserve">
+    <value>Solo favoritos</value>
+  </data>
+  <data name="Main_Filters" xml:space="preserve">
+    <value>Filtros</value>
+  </data>
+  <data name="Main_FiltersActive" xml:space="preserve">
+    <value>Activos: {0}</value>
+  </data>
+  <data name="Main_FiltersButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Abrir filtros</value>
+  </data>
+  <data name="Main_FiltersButton.Content" xml:space="preserve">
+    <value>Filtros</value>
+  </data>
+  <data name="Main_FiltersCount" xml:space="preserve">
+    <value>Filtros ({0})</value>
+  </data>
+  <data name="Main_FilterTag" xml:space="preserve">
+    <value>Etiqueta: {0}</value>
+  </data>
+  <data name="Main_FilterTypePaths" xml:space="preserve">
+    <value>Tipo: rutas</value>
+  </data>
+  <data name="Main_FilterTypeUrls" xml:space="preserve">
+    <value>Tipo: enlaces</value>
+  </data>
+  <data name="Main_Import.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Importar JSON o SQLite</value>
+  </data>
+  <data name="Main_Import.Label" xml:space="preserve">
+    <value>Importar…</value>
+  </data>
+  <data name="Main_ItemsList.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Lista de enlaces guardados. Usa Ctrl o Mayús para seleccionar varios.</value>
+  </data>
+  <data name="Main_ManageCategories.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Gestionar categorías</value>
+  </data>
+  <data name="Main_ManageCategories.Label" xml:space="preserve">
+    <value>Gestionar categorías</value>
+  </data>
+  <data name="Main_ManageShared.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Ver y revocar enlaces y colecciones compartidos</value>
+  </data>
+  <data name="Main_ManageShared.Label" xml:space="preserve">
+    <value>Compartidos…</value>
+  </data>
+  <data name="Main_ManageTags.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Gestionar etiquetas</value>
+  </data>
+  <data name="Main_ManageTags.Label" xml:space="preserve">
+    <value>Gestionar etiquetas</value>
+  </data>
+  <data name="Main_MenuArchive.Text" xml:space="preserve">
+    <value>Archivar</value>
+  </data>
+  <data name="Main_MenuCheck.Text" xml:space="preserve">
+    <value>Comprobar si está roto</value>
+  </data>
+  <data name="Main_MenuCopy.KeyboardAcceleratorTextOverride" xml:space="preserve">
+    <value>Ctrl+C</value>
+  </data>
+  <data name="Main_MenuCopy.Text" xml:space="preserve">
+    <value>Copiar URL</value>
+  </data>
+  <data name="Main_MenuDelete.Text" xml:space="preserve">
+    <value>Borrar</value>
+  </data>
+  <data name="Main_MenuEdit.Text" xml:space="preserve">
+    <value>Editar…</value>
+  </data>
+  <data name="Main_MenuEmail.Text" xml:space="preserve">
+    <value>Enviar por email…</value>
+  </data>
+  <data name="Main_MenuHistory.Text" xml:space="preserve">
+    <value>Historial…</value>
+  </data>
+  <data name="Main_MenuOpen.Text" xml:space="preserve">
+    <value>Abrir</value>
+  </data>
+  <data name="Main_MenuPublicLink.Text" xml:space="preserve">
+    <value>Crear enlace público…</value>
+  </data>
+  <data name="Main_MenuShare.Text" xml:space="preserve">
+    <value>Compartir…</value>
+  </data>
+  <data name="Main_MenuTags.Text" xml:space="preserve">
+    <value>Etiquetas…</value>
+  </data>
+  <data name="Main_OpenWeb.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Abrir el cliente web</value>
+  </data>
+  <data name="Main_OpenWeb.Label" xml:space="preserve">
+    <value>Abrir versión web</value>
+  </data>
+  <data name="Main_Reload.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Recargar lista desde Supabase (F5)</value>
+  </data>
+  <data name="Main_Reload.Label" xml:space="preserve">
+    <value>Recargar</value>
+  </data>
+  <data name="Main_ReloadError" xml:space="preserve">
+    <value>Error recargando: {0}</value>
+  </data>
+  <data name="Main_Results_Many" xml:space="preserve">
+    <value>{0} resultados</value>
+  </data>
+  <data name="Main_Results_One" xml:space="preserve">
+    <value>1 resultado</value>
+  </data>
+  <data name="Main_SearchBox.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Buscar por título, URL o descripción</value>
+  </data>
+  <data name="Main_SearchBox.PlaceholderText" xml:space="preserve">
+    <value>Buscar por título, URL o descripción…</value>
+  </data>
+  <data name="Main_SettingsButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Abrir ajustes</value>
+  </data>
+  <data name="Main_SettingsButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Abrir ajustes</value>
+  </data>
+  <data name="Main_SettingsButton.Label" xml:space="preserve">
+    <value>Ajustes</value>
+  </data>
+  <data name="Main_ShareCollection.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Crear una colección pública con los enlaces visibles</value>
+  </data>
+  <data name="Main_ShareCollection.Label" xml:space="preserve">
+    <value>Crear colección pública…</value>
+  </data>
+  <data name="Main_Shortcuts.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Ver atajos de teclado</value>
+  </data>
+  <data name="Main_Shortcuts.Label" xml:space="preserve">
+    <value>Atajos de teclado</value>
+  </data>
+  <data name="Main_SignOut.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Cerrar sesión y volver al inicio</value>
+  </data>
+  <data name="Main_SignOut.Label" xml:space="preserve">
+    <value>Cerrar sesión</value>
+  </data>
+  <data name="Main_SortAlphaDesc" xml:space="preserve">
+    <value>Orden: Z–A</value>
+  </data>
+  <data name="Main_SortCategory" xml:space="preserve">
+    <value>Orden: por categoría</value>
+  </data>
+  <data name="Main_SortDateAsc" xml:space="preserve">
+    <value>Orden: más antiguos</value>
+  </data>
+  <data name="Main_SortDateDesc" xml:space="preserve">
+    <value>Orden: más recientes</value>
+  </data>
+  <data name="Main_SortUsageDesc" xml:space="preserve">
+    <value>Orden: más usados</value>
+  </data>
+  <data name="Main_StatusText.Text" xml:space="preserve">
+    <value>Listo.</value>
+  </data>
+  <data name="Main_UndoDeleteMany" xml:space="preserve">
+    <value>borrar {0} elementos</value>
+  </data>
+  <data name="Main_UndoDeleteOne" xml:space="preserve">
+    <value>borrar "{0}"</value>
+  </data>
+  <data name="Main_UndoDone" xml:space="preserve">
+    <value>Deshecho: {0}</value>
+  </data>
+  <data name="Main_UndoFailed" xml:space="preserve">
+    <value>No se pudo deshacer: {0}</value>
+  </data>
+  <data name="Main_Undoing" xml:space="preserve">
+    <value>Deshaciendo…</value>
+  </data>
+  <data name="Main_UndoNothing" xml:space="preserve">
+    <value>Nada que deshacer.</value>
+  </data>
+  <data name="ManageList_AddButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Añadir</value>
+  </data>
+  <data name="ManageList_AddButton.Content" xml:space="preserve">
+    <value>Añadir</value>
+  </data>
+  <data name="ManageList_ConfirmDeleteButton.Content" xml:space="preserve">
+    <value>Confirmar borrado</value>
+  </data>
+  <data name="ManageList_Count" xml:space="preserve">
+    <value>{0} elementos.</value>
+  </data>
+  <data name="ManageList_DeleteButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Borrar seleccionado</value>
+  </data>
+  <data name="ManageList_DeleteButton.Content" xml:space="preserve">
+    <value>Borrar</value>
+  </data>
+  <data name="ManageList_DeleteConfirm" xml:space="preserve">
+    <value>¿Borrar "{0}"? Los elementos vinculados se desasocian.</value>
+  </data>
+  <data name="ManageList_Dialog.CloseButtonText" xml:space="preserve">
+    <value>Cerrar</value>
+  </data>
+  <data name="ManageList_ItemsList.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Elementos existentes</value>
+  </data>
+  <data name="ManageList_NewNameBox.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Nombre del nuevo elemento</value>
+  </data>
+  <data name="ManageList_NewNameBox.PlaceholderText" xml:space="preserve">
+    <value>Añadir nuevo elemento…</value>
+  </data>
+  <data name="ManageList_RenameBox.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Renombrar seleccionado a</value>
+  </data>
+  <data name="ManageList_RenameBox.PlaceholderText" xml:space="preserve">
+    <value>Nuevo nombre…</value>
+  </data>
+  <data name="ManageList_RenameButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Guardar nuevo nombre</value>
+  </data>
+  <data name="ManageList_RenameButton.Content" xml:space="preserve">
+    <value>Guardar</value>
+  </data>
+  <data name="OAuth_Error" xml:space="preserve">
+    <value>Error de autenticación: {0}</value>
+  </data>
+  <data name="OAuth_HtmlLang" xml:space="preserve">
+    <value>es</value>
+  </data>
+  <data name="OAuth_NoSession" xml:space="preserve">
+    <value>no se recibió la sesión</value>
+  </data>
+  <data name="OAuth_SignedIn" xml:space="preserve">
+    <value>Sesión iniciada. Ya puedes cerrar esta pestaña y volver a LinkManager.</value>
+  </data>
+  <data name="Repo_CategoryNotCreated" xml:space="preserve">
+    <value>El servidor no devolvió la categoría creada (revisa RLS).</value>
+  </data>
+  <data name="Repo_DefaultCollectionName" xml:space="preserve">
+    <value>Colección de enlaces</value>
+  </data>
+  <data name="Repo_ItemGone" xml:space="preserve">
+    <value>Este elemento ya no existe (puede haberse borrado en otro dispositivo).</value>
+  </data>
+  <data name="Repo_ItemNotCreated" xml:space="preserve">
+    <value>El servidor no devolvió el item creado (revisa RLS).</value>
+  </data>
+  <data name="Repo_MaxLinks" xml:space="preserve">
+    <value>Máximo 200 enlaces por colección.</value>
+  </data>
+  <data name="Repo_NoSession" xml:space="preserve">
+    <value>Sin sesión activa.</value>
+  </data>
+  <data name="Repo_NoSessionShort" xml:space="preserve">
+    <value>Sin sesión</value>
+  </data>
+  <data name="Repo_NoToken" xml:space="preserve">
+    <value>Sin token</value>
+  </data>
+  <data name="Repo_SelectAtLeastOne" xml:space="preserve">
+    <value>Selecciona al menos un enlace.</value>
+  </data>
+  <data name="Repo_ShareLinkNotCreated" xml:space="preserve">
+    <value>El servidor no devolvió el enlace creado (revisa RLS / migración 0005).</value>
+  </data>
+  <data name="Repo_TagNotCreated" xml:space="preserve">
+    <value>El servidor no devolvió la etiqueta creada (revisa RLS).</value>
+  </data>
+  <data name="Settings_AccountHeading.Text" xml:space="preserve">
+    <value>Cuenta</value>
+  </data>
+  <data name="Settings_AccountLink.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Gestionar cuenta y contraseña en aelbak.dev</value>
+  </data>
+  <data name="Settings_AccountLink.Content" xml:space="preserve">
+    <value>Gestionar cuenta y contraseña en aelbak.dev</value>
+  </data>
+  <data name="Settings_ActionArchive" xml:space="preserve">
+    <value>Archivar</value>
+  </data>
+  <data name="Settings_ActionCopy" xml:space="preserve">
+    <value>Copiar URL</value>
+  </data>
+  <data name="Settings_ActionEdit" xml:space="preserve">
+    <value>Editar elemento</value>
+  </data>
+  <data name="Settings_ActionEmail" xml:space="preserve">
+    <value>Enviar por email</value>
+  </data>
+  <data name="Settings_ActionHistory" xml:space="preserve">
+    <value>Ver historial</value>
+  </data>
+  <data name="Settings_ActionPublink" xml:space="preserve">
+    <value>Crear enlace público</value>
+  </data>
+  <data name="Settings_ActionsExpander.Header" xml:space="preserve">
+    <value>Acciones visibles en el menú contextual</value>
+  </data>
+  <data name="Settings_ActionShare" xml:space="preserve">
+    <value>Compartir</value>
+  </data>
+  <data name="Settings_ActionTags" xml:space="preserve">
+    <value>Editar etiquetas</value>
+  </data>
+  <data name="Settings_AdvancedHeading.Text" xml:space="preserve">
+    <value>Avanzado</value>
+  </data>
+  <data name="Settings_AppearanceHeading.Text" xml:space="preserve">
+    <value>Apariencia</value>
+  </data>
+  <data name="Settings_BackButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Volver a la lista</value>
+  </data>
+  <data name="Settings_BackButton.Content" xml:space="preserve">
+    <value>Volver</value>
+  </data>
+  <data name="Settings_CheckUpdatesButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Buscar actualizaciones ahora</value>
+  </data>
+  <data name="Settings_CheckUpdatesButton.Content" xml:space="preserve">
+    <value>Buscar actualizaciones</value>
+  </data>
+  <data name="Settings_DangerExpander.Header" xml:space="preserve">
+    <value>Zona de peligro</value>
+  </data>
+  <data name="Settings_DangerNote.Text" xml:space="preserve">
+    <value>Eliminar tu cuenta borra de forma permanente tu cuenta y todos tus datos (enlaces, categorías, etiquetas, ajustes y enlaces compartidos). No se puede deshacer.</value>
+  </data>
+  <data name="Settings_DeleteAccountButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Eliminar mi cuenta de forma permanente</value>
+  </data>
+  <data name="Settings_DeleteAccountButton.Content" xml:space="preserve">
+    <value>Eliminar cuenta</value>
+  </data>
+  <data name="Settings_DeleteDialogBody" xml:space="preserve">
+    <value>Se borrarán de forma permanente tu cuenta y todos tus datos (enlaces, categorías, etiquetas, ajustes y enlaces compartidos). Esta acción no se puede deshacer.</value>
+  </data>
+  <data name="Settings_DeleteDialogConfirm" xml:space="preserve">
+    <value>Eliminar cuenta</value>
+  </data>
+  <data name="Settings_DeleteDialogTitle" xml:space="preserve">
+    <value>¿Eliminar tu cuenta?</value>
+  </data>
+  <data name="Settings_DeleteError" xml:space="preserve">
+    <value>Error al eliminar: {0}</value>
+  </data>
+  <data name="Settings_DeleteFailed" xml:space="preserve">
+    <value>No se pudo eliminar la cuenta ({0}).</value>
+  </data>
+  <data name="Settings_Deleting" xml:space="preserve">
+    <value>Eliminando tu cuenta…</value>
+  </data>
+  <data name="Settings_DeviceHeading.Text" xml:space="preserve">
+    <value>Este equipo</value>
+  </data>
+  <data name="Settings_DisplayNameBox.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.HelpText" xml:space="preserve">
+    <value>Aparece en la web. No se muestra tu email.</value>
+  </data>
+  <data name="Settings_DisplayNameBox.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Nombre público</value>
+  </data>
+  <data name="Settings_DisplayNameBox.Header" xml:space="preserve">
+    <value>Nombre público</value>
+  </data>
+  <data name="Settings_HeadingText.Text" xml:space="preserve">
+    <value>Ajustes</value>
+  </data>
+  <data name="Settings_HistoryExpander.Header" xml:space="preserve">
+    <value>Historial</value>
+  </data>
+  <data name="Settings_HistoryToggle.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.HelpText" xml:space="preserve">
+    <value>Registra cada creación, modificación o borrado.</value>
+  </data>
+  <data name="Settings_HistoryToggle.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Activar historial</value>
+  </data>
+  <data name="Settings_HistoryToggle.Header" xml:space="preserve">
+    <value>Habilitar historial por elemento</value>
+  </data>
+  <data name="Settings_HistoryToggle.OffContent" xml:space="preserve">
+    <value>Desactivado</value>
+  </data>
+  <data name="Settings_HistoryToggle.OnContent" xml:space="preserve">
+    <value>Activado</value>
+  </data>
+  <data name="Settings_HotkeyCaptureButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.HelpText" xml:space="preserve">
+    <value>Actívalo y pulsa la nueva combinación con Ctrl, Mayús o Alt más una tecla.</value>
+  </data>
+  <data name="Settings_HotkeyCaptureButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Cambiar la combinación del atajo global</value>
+  </data>
+  <data name="Settings_HotkeyCapturing" xml:space="preserve">
+    <value>Pulsa la combinación…</value>
+  </data>
+  <data name="Settings_HotkeyChange" xml:space="preserve">
+    <value>Cambiar atajo (actual: {0})</value>
+  </data>
+  <data name="Settings_HotkeyNeedsModifier" xml:space="preserve">
+    <value>Usa al menos Ctrl, Mayús o Alt junto a la tecla.</value>
+  </data>
+  <data name="Settings_HotkeySet" xml:space="preserve">
+    <value>Atajo: {0}. Guarda para aplicarlo.</value>
+  </data>
+  <data name="Settings_HotkeyToggle.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Atajo global de teclado</value>
+  </data>
+  <data name="Settings_HotkeyToggle.Header" xml:space="preserve">
+    <value>Atajo global para abrir la ventana</value>
+  </data>
+  <data name="Settings_HotkeyToggle.OffContent" xml:space="preserve">
+    <value>Desactivado</value>
+  </data>
+  <data name="Settings_HotkeyToggle.OnContent" xml:space="preserve">
+    <value>Activado</value>
+  </data>
+  <data name="Settings_InvalidSession" xml:space="preserve">
+    <value>Sesión no válida.</value>
+  </data>
+  <data name="Settings_LinksHeading.Text" xml:space="preserve">
+    <value>Enlaces</value>
+  </data>
+  <data name="Settings_LoadError" xml:space="preserve">
+    <value>Error cargando: {0}</value>
+  </data>
+  <data name="Settings_Loading" xml:space="preserve">
+    <value>Cargando…</value>
+  </data>
+  <data name="Settings_MicaToggle.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Fondo translúcido Mica</value>
+  </data>
+  <data name="Settings_MicaToggle.Header" xml:space="preserve">
+    <value>Fondo translúcido Mica</value>
+  </data>
+  <data name="Settings_MicaToggle.OffContent" xml:space="preserve">
+    <value>Desactivado</value>
+  </data>
+  <data name="Settings_MicaToggle.OnContent" xml:space="preserve">
+    <value>Activado</value>
+  </data>
+  <data name="Settings_NotificationsToggle.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.HelpText" xml:space="preserve">
+    <value>Avisa al descargar actualizaciones, al sincronizar la cola sin conexión y al guardar enlaces desde la bandeja.</value>
+  </data>
+  <data name="Settings_NotificationsToggle.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Mostrar notificaciones del sistema</value>
+  </data>
+  <data name="Settings_NotificationsToggle.Header" xml:space="preserve">
+    <value>Mostrar notificaciones del sistema</value>
+  </data>
+  <data name="Settings_NotificationsToggle.OffContent" xml:space="preserve">
+    <value>Desactivado</value>
+  </data>
+  <data name="Settings_NotificationsToggle.OnContent" xml:space="preserve">
+    <value>Activado</value>
+  </data>
+  <data name="Settings_PrivacyLink.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Abrir la política de privacidad</value>
+  </data>
+  <data name="Settings_PrivacyLink.Content" xml:space="preserve">
+    <value>Política de privacidad</value>
+  </data>
+  <data name="Settings_ProfileExpander.Header" xml:space="preserve">
+    <value>Perfil</value>
+  </data>
+  <data name="Settings_SaveButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Guardar todos los ajustes</value>
+  </data>
+  <data name="Settings_SaveButton.Content" xml:space="preserve">
+    <value>Guardar</value>
+  </data>
+  <data name="Settings_Saved" xml:space="preserve">
+    <value>Ajustes guardados.</value>
+  </data>
+  <data name="Settings_SaveError" xml:space="preserve">
+    <value>Error al guardar: {0}</value>
+  </data>
+  <data name="Settings_Saving" xml:space="preserve">
+    <value>Guardando…</value>
+  </data>
+  <data name="Settings_ShareCategoriesToggle.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Mostrar la categoría en enlaces públicos</value>
+  </data>
+  <data name="Settings_ShareCategoriesToggle.Header" xml:space="preserve">
+    <value>Mostrar la categoría en mis enlaces públicos</value>
+  </data>
+  <data name="Settings_ShareCategoriesToggle.OffContent" xml:space="preserve">
+    <value>Desactivado</value>
+  </data>
+  <data name="Settings_ShareCategoriesToggle.OnContent" xml:space="preserve">
+    <value>Activado</value>
+  </data>
+  <data name="Settings_ShareTagsToggle.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Mostrar las etiquetas en enlaces públicos</value>
+  </data>
+  <data name="Settings_ShareTagsToggle.Header" xml:space="preserve">
+    <value>Mostrar las etiquetas en mis enlaces públicos</value>
+  </data>
+  <data name="Settings_ShareTagsToggle.OffContent" xml:space="preserve">
+    <value>Desactivado</value>
+  </data>
+  <data name="Settings_ShareTagsToggle.OnContent" xml:space="preserve">
+    <value>Activado</value>
+  </data>
+  <data name="Settings_SharingExpander.Header" xml:space="preserve">
+    <value>Privacidad al compartir</value>
+  </data>
+  <data name="Settings_SharingNote.Text" xml:space="preserve">
+    <value>Desactivado por defecto. Si lo activas, quien abra tus enlaces públicos verá la categoría y/o las etiquetas que les asignaste.</value>
+  </data>
+  <data name="Settings_StartupToggle.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Abrir al iniciar Windows</value>
+  </data>
+  <data name="Settings_StartupToggle.Header" xml:space="preserve">
+    <value>Abrir LinkManager al iniciar Windows</value>
+  </data>
+  <data name="Settings_StartupToggle.OffContent" xml:space="preserve">
+    <value>Desactivado</value>
+  </data>
+  <data name="Settings_StartupToggle.OnContent" xml:space="preserve">
+    <value>Activado</value>
+  </data>
+  <data name="Settings_SystemExpander.Header" xml:space="preserve">
+    <value>Ventana y sistema</value>
+  </data>
+  <data name="Settings_ThemeDark.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Tema oscuro</value>
+  </data>
+  <data name="Settings_ThemeDark.Content" xml:space="preserve">
+    <value>Oscuro</value>
+  </data>
+  <data name="Settings_ThemeExpander.Header" xml:space="preserve">
+    <value>Tema</value>
+  </data>
+  <data name="Settings_ThemeLight.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Tema claro</value>
+  </data>
+  <data name="Settings_ThemeLight.Content" xml:space="preserve">
+    <value>Claro</value>
+  </data>
+  <data name="Settings_ThemeRadios.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Tema de la aplicación</value>
+  </data>
+  <data name="Settings_ThemeRadios.Header" xml:space="preserve">
+    <value>Tema de la aplicación</value>
+  </data>
+  <data name="Settings_ThemeSystem.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Seguir el tema de Windows</value>
+  </data>
+  <data name="Settings_ThemeSystem.Content" xml:space="preserve">
+    <value>Seguir a Windows</value>
+  </data>
+  <data name="Settings_TrayToggle.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.HelpText" xml:space="preserve">
+    <value>Si está activado, cerrar la ventana solo la oculta. Para salir usa el menú de la bandeja → Salir.</value>
+  </data>
+  <data name="Settings_TrayToggle.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Minimizar a la bandeja al cerrar</value>
+  </data>
+  <data name="Settings_TrayToggle.Header" xml:space="preserve">
+    <value>Al cerrar, minimizar a la bandeja del sistema</value>
+  </data>
+  <data name="Settings_TrayToggle.OffContent" xml:space="preserve">
+    <value>Desactivado</value>
+  </data>
+  <data name="Settings_TrayToggle.OnContent" xml:space="preserve">
+    <value>Activado</value>
+  </data>
+  <data name="Settings_UpdateApplyFailed" xml:space="preserve">
+    <value>No se pudo aplicar la actualización. Inténtalo de nuevo.</value>
+  </data>
+  <data name="Settings_UpdateApplying" xml:space="preserve">
+    <value>Aplicando actualización…</value>
+  </data>
+  <data name="Settings_UpdateCheckFailed" xml:space="preserve">
+    <value>No se pudo comprobar. Revisa la conexión.</value>
+  </data>
+  <data name="Settings_UpdateChecking" xml:space="preserve">
+    <value>Buscando actualizaciones…</value>
+  </data>
+  <data name="Settings_UpdateDownloaded" xml:space="preserve">
+    <value>Descargada la versión {0}.</value>
+  </data>
+  <data name="Settings_UpdateLater" xml:space="preserve">
+    <value>Más tarde</value>
+  </data>
+  <data name="Settings_UpdateNotInstalled" xml:space="preserve">
+    <value>Las actualizaciones automáticas requieren instalar la app con el instalador (no la versión portable).</value>
+  </data>
+  <data name="Settings_UpdateReadyBody" xml:space="preserve">
+    <value>Se ha descargado la versión {0}. ¿Reiniciar ahora para aplicarla?</value>
+  </data>
+  <data name="Settings_UpdateReadyTitle" xml:space="preserve">
+    <value>Actualización lista</value>
+  </data>
+  <data name="Settings_UpdateRestart" xml:space="preserve">
+    <value>Reiniciar y actualizar</value>
+  </data>
+  <data name="Settings_UpdatesExpander.Header" xml:space="preserve">
+    <value>Actualizaciones</value>
+  </data>
+  <data name="Settings_UpdatesNote.Text" xml:space="preserve">
+    <value>LinkManager se actualiza solo en segundo plano. También puedes comprobarlo ahora.</value>
+  </data>
+  <data name="Settings_UpdateUpToDate" xml:space="preserve">
+    <value>Ya tienes la última versión.</value>
+  </data>
+  <data name="ShareCollection_CopyButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copiar URL al portapapeles</value>
+  </data>
+  <data name="ShareCollection_CopyButton.Content" xml:space="preserve">
+    <value>Copiar URL</value>
+  </data>
+  <data name="ShareCollection_Count" xml:space="preserve">
+    <value>{0} enlaces se incluirán.</value>
+  </data>
+  <data name="ShareCollection_Created" xml:space="preserve">
+    <value>Colección creada. Copia o abre la URL.</value>
+  </data>
+  <data name="ShareCollection_Dialog.CloseButtonText" xml:space="preserve">
+    <value>Cerrar</value>
+  </data>
+  <data name="ShareCollection_Dialog.PrimaryButtonText" xml:space="preserve">
+    <value>Generar</value>
+  </data>
+  <data name="ShareCollection_Dialog.Title" xml:space="preserve">
+    <value>Crear colección pública</value>
+  </data>
+  <data name="ShareCollection_ExpiresCombo.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Caducidad de la colección</value>
+  </data>
+  <data name="ShareCollection_ExpiresCombo.Header" xml:space="preserve">
+    <value>Caducidad</value>
+  </data>
+  <data name="ShareCollection_NameBox.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Nombre de la colección</value>
+  </data>
+  <data name="ShareCollection_NameBox.Header" xml:space="preserve">
+    <value>Nombre de la colección</value>
+  </data>
+  <data name="ShareCollection_NameBox.PlaceholderText" xml:space="preserve">
+    <value>Mis enlaces</value>
+  </data>
+  <data name="ShareCollection_OpenButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Abrir la colección en el navegador</value>
+  </data>
+  <data name="ShareCollection_OpenButton.Content" xml:space="preserve">
+    <value>Abrir en el navegador</value>
+  </data>
+  <data name="ShareCollection_ResultBox.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>URL pública generada</value>
+  </data>
+  <data name="ShareCollection_ResultBox.Header" xml:space="preserve">
+    <value>URL generada</value>
+  </data>
+  <data name="Shared_CollectionTitle" xml:space="preserve">
+    <value>Colección: {0}</value>
+  </data>
+  <data name="Shared_ConfirmRevokeButton.Content" xml:space="preserve">
+    <value>Confirmar revocación</value>
+  </data>
+  <data name="Shared_Copied" xml:space="preserve">
+    <value>Enlace copiado al portapapeles.</value>
+  </data>
+  <data name="Shared_CopyButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copiar la URL pública seleccionada</value>
+  </data>
+  <data name="Shared_CopyButton.Content" xml:space="preserve">
+    <value>Copiar enlace</value>
+  </data>
+  <data name="Shared_Count_Many" xml:space="preserve">
+    <value>{0} compartidos.</value>
+  </data>
+  <data name="Shared_Count_One" xml:space="preserve">
+    <value>1 compartido.</value>
+  </data>
+  <data name="Shared_Dialog.CloseButtonText" xml:space="preserve">
+    <value>Cerrar</value>
+  </data>
+  <data name="Shared_Dialog.Title" xml:space="preserve">
+    <value>Compartidos</value>
+  </data>
+  <data name="Shared_Expired" xml:space="preserve">
+    <value>caducado</value>
+  </data>
+  <data name="Shared_Expires" xml:space="preserve">
+    <value>caduca {0:d}</value>
+  </data>
+  <data name="Shared_LinkFallback" xml:space="preserve">
+    <value>(enlace)</value>
+  </data>
+  <data name="Shared_LinkTitle" xml:space="preserve">
+    <value>Enlace: {0}</value>
+  </data>
+  <data name="Shared_List.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Enlaces y colecciones compartidos</value>
+  </data>
+  <data name="Shared_NoExpiry" xml:space="preserve">
+    <value>sin caducidad</value>
+  </data>
+  <data name="Shared_RevokeButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Revocar el elemento compartido seleccionado</value>
+  </data>
+  <data name="Shared_RevokeButton.Content" xml:space="preserve">
+    <value>Revocar</value>
+  </data>
+  <data name="Shared_RevokeConfirm" xml:space="preserve">
+    <value>¿Revocar "{0}"? El enlace público dejará de funcionar.</value>
+  </data>
+  <data name="Shared_Revoked" xml:space="preserve">
+    <value>Revocado.</value>
+  </data>
+  <data name="Shared_Subtitle" xml:space="preserve">
+    <value>{0} vistas · {1}</value>
+  </data>
+  <data name="ShareLink_CopyButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copiar URL al portapapeles</value>
+  </data>
+  <data name="ShareLink_CopyButton.Content" xml:space="preserve">
+    <value>Copiar URL</value>
+  </data>
+  <data name="ShareLink_Dialog.CloseButtonText" xml:space="preserve">
+    <value>Cerrar</value>
+  </data>
+  <data name="ShareLink_Dialog.PrimaryButtonText" xml:space="preserve">
+    <value>Generar</value>
+  </data>
+  <data name="ShareLink_Dialog.Title" xml:space="preserve">
+    <value>Enlace público</value>
+  </data>
+  <data name="ShareLink_ExpiresCombo.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Caducidad del enlace</value>
+  </data>
+  <data name="ShareLink_ExpiresCombo.Header" xml:space="preserve">
+    <value>Caducidad</value>
+  </data>
+  <data name="ShareLink_Generated" xml:space="preserve">
+    <value>Enlace generado. Copia y compártelo.</value>
+  </data>
+  <data name="ShareLink_Item" xml:space="preserve">
+    <value>Item: {0}</value>
+  </data>
+  <data name="ShareLink_ResultBox.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>URL pública generada</value>
+  </data>
+  <data name="ShareLink_ResultBox.Header" xml:space="preserve">
+    <value>URL generada</value>
+  </data>
+  <data name="Startup_ApplyingUpdate" xml:space="preserve">
+    <value>Aplicando actualización…</value>
+  </data>
+  <data name="Startup_ApplyUpdateFailed" xml:space="preserve">
+    <value>No se pudo aplicar la actualización. Inténtalo desde Ajustes.</value>
+  </data>
+  <data name="Startup_CacheUnreadable" xml:space="preserve">
+    <value>Caché ilegible: {0}</value>
+  </data>
+  <data name="Startup_ForcedUpdateBody" xml:space="preserve">
+    <value>{0}
+
+No se pudo descargar la actualización automáticamente. Comprueba tu conexión y reinicia la app, o actualiza desde Ajustes.</value>
+  </data>
+  <data name="Startup_ForcedUpdateDefaultMessage" xml:space="preserve">
+    <value>Hay una versión nueva obligatoria.</value>
+  </data>
+  <data name="Startup_ForcedUpdateDownloading" xml:space="preserve">
+    <value>Actualización obligatoria. Descargando…</value>
+  </data>
+  <data name="Startup_ForcedUpdateRetry" xml:space="preserve">
+    <value>Reintentar</value>
+  </data>
+  <data name="Startup_ForcedUpdateTitle" xml:space="preserve">
+    <value>Actualización necesaria</value>
+  </data>
+  <data name="Startup_ItemCountWithUser" xml:space="preserve">
+    <value>{0} elementos · {1}</value>
+  </data>
+  <data name="Startup_Loading" xml:space="preserve">
+    <value>Cargando…</value>
+  </data>
+  <data name="Startup_OfflineShowingCache" xml:space="preserve">
+    <value>Sin conexión: {0}. Mostrando caché.</value>
+  </data>
+  <data name="Startup_SessionExpired" xml:space="preserve">
+    <value>Tu sesión ha caducado. Vuelve a iniciar sesión.</value>
+  </data>
+  <data name="Startup_SessionExpiredReconnecting" xml:space="preserve">
+    <value>Sesión caducada. Reconectando…</value>
+  </data>
+  <data name="Startup_UpdateAvailableBody" xml:space="preserve">
+    <value>Se ha descargado la versión {0}. ¿Reiniciar ahora para aplicarla?</value>
+  </data>
+  <data name="Startup_UpdateAvailableLater" xml:space="preserve">
+    <value>Más tarde</value>
+  </data>
+  <data name="Startup_UpdateAvailableRestart" xml:space="preserve">
+    <value>Reiniciar y actualizar</value>
+  </data>
+  <data name="Startup_UpdateAvailableTitle" xml:space="preserve">
+    <value>Actualización disponible</value>
+  </data>
+  <data name="Startup_UpdatePending" xml:space="preserve">
+    <value>Actualización pendiente. La app se actualizará al recuperar conexión.</value>
+  </data>
+  <data name="State_DroppedMany" xml:space="preserve">
+    <value>{0} cambios pendientes fueron rechazados por el servidor y se descartaron.</value>
+  </data>
+  <data name="State_DroppedOne" xml:space="preserve">
+    <value>1 cambio pendiente fue rechazado por el servidor y se descartó.</value>
+  </data>
+  <data name="State_DroppedTitle" xml:space="preserve">
+    <value>Cambios pendientes descartados</value>
+  </data>
+  <data name="State_SyncedMany" xml:space="preserve">
+    <value>Se aplicaron {0} cambios que estaban pendientes.</value>
+  </data>
+  <data name="State_SyncedOne" xml:space="preserve">
+    <value>Se aplicó 1 cambio que estaba pendiente.</value>
+  </data>
+  <data name="State_SyncedTitle" xml:space="preserve">
+    <value>Cola sincronizada</value>
+  </data>
+  <data name="Tray_AddLink.Text" xml:space="preserve">
+    <value>Añadir enlace…</value>
+  </data>
+  <data name="Tray_Exit.Text" xml:space="preserve">
+    <value>Salir</value>
+  </data>
+  <data name="Tray_SaveClipboard.Text" xml:space="preserve">
+    <value>Guardar portapapeles</value>
+  </data>
+  <data name="Tray_Search.Text" xml:space="preserve">
+    <value>Buscar</value>
+  </data>
+  <data name="Tray_Show.Text" xml:space="preserve">
+    <value>Mostrar LinkManager</value>
+  </data>
+  <data name="Tray_ToolTip" xml:space="preserve">
+    <value>LinkManager ({0} para abrir)</value>
+  </data>
+  <data name="Update_DownloadedBody" xml:space="preserve">
+    <value>LinkManager {0} está listo. Reinicia para aplicarlo.</value>
+  </data>
+  <data name="Update_DownloadedTitle" xml:space="preserve">
+    <value>Actualización descargada</value>
+  </data>
+  <data name="Web_HttpError" xml:space="preserve">
+    <value>Error {0}: {1}</value>
+  </data>
+  <data name="Window_AppTitleBar.Title" xml:space="preserve">
+    <value>LinkManager</value>
+  </data>
+  <data name="Window_Title" xml:space="preserve">
+    <value>LinkManager</value>
+  </data>
+</root>

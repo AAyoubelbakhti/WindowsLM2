@@ -35,7 +35,7 @@ public static class WebApi
         if (resp.IsSuccessStatusCode)
             return null;
         var body = await resp.Content.ReadAsStringAsync();
-        return $"Error {(int)resp.StatusCode}: {body}";
+        return Strings.Format("Web_HttpError", (int)resp.StatusCode, body);
     }
 
     public static async Task<int> DeleteAccountAsync(string bearer)

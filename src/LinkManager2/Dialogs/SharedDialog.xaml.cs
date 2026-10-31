@@ -39,7 +39,7 @@ public sealed partial class SharedDialog : ContentDialog
         RevokeButton.IsEnabled = on;
         RevokeConfirmText.Text = Selected is null
             ? string.Empty
-            : $"¿Revocar \"{Selected.Title}\"? El enlace público dejará de funcionar.";
+            : Strings.Format("Shared_RevokeConfirm", Selected.Title);
     }
 
     private async Task ReloadAsync()
@@ -51,13 +51,19 @@ public sealed partial class SharedDialog : ContentDialog
             _entries.Clear();
             foreach (var l in links)
             {
-                var name = _itemTitles.TryGetValue(l.ItemId, out var t) ? t : "(enlace)";
+                var name = _itemTitles.TryGetValue(l.ItemId, out var t)
+                    ? t
+                    : Strings.Get("Shared_LinkFallback");
                 _entries.Add(
                     new ShareEntry(
                         IsCollection: false,
                         Token: l.Token,
-                        Title: $"Enlace: {name}",
-                        Subtitle: $"{l.ViewCount} vistas · {ExpiryLabel(l.ExpiresAt)}",
+                        Title: Strings.Format("Shared_LinkTitle", name),
+                        Subtitle: Strings.Format(
+                            "Shared_Subtitle",
+                            l.ViewCount,
+                            ExpiryLabel(l.ExpiresAt)
+                        ),
                         Url: $"{WebBase}/s/{l.Token}"
                     )
                 );
@@ -68,8 +74,12 @@ public sealed partial class SharedDialog : ContentDialog
                     new ShareEntry(
                         IsCollection: true,
                         Token: c.Token,
-                        Title: $"Colección: {c.Name}",
-                        Subtitle: $"{c.ViewCount} vistas · {ExpiryLabel(c.ExpiresAt)}",
+                        Title: Strings.Format("Shared_CollectionTitle", c.Name),
+                        Subtitle: Strings.Format(
+                            "Shared_Subtitle",
+                            c.ViewCount,
+                            ExpiryLabel(c.ExpiresAt)
+                        ),
                         Url: $"{WebBase}/c/{c.Token}"
                     )
                 );
@@ -77,7 +87,9 @@ public sealed partial class SharedDialog : ContentDialog
             ItemsList.SelectedItem = null;
             Status(
                 InfoBarSeverity.Informational,
-                _entries.Count == 1 ? "1 compartido." : $"{_entries.Count} compartidos."
+                _entries.Count == 1
+                    ? Strings.Get("Shared_Count_One")
+                    : Strings.Format("Shared_Count_Many", _entries.Count)
             );
         }
         catch (Exception ex)
@@ -93,7 +105,7 @@ public sealed partial class SharedDialog : ContentDialog
         try
         {
             ItemActions.Copy(entry.Url);
-            Status(InfoBarSeverity.Success, "Enlace copiado al portapapeles.");
+            Status(InfoBarSeverity.Success, Strings.Get("Shared_Copied"));
         }
         catch (Exception ex)
         {
@@ -112,7 +124,7 @@ public sealed partial class SharedDialog : ContentDialog
                 await _repo.RevokeShareCollectionAsync(entry.Token);
             else
                 await _repo.RevokeShareLinkAsync(entry.Token);
-            Status(InfoBarSeverity.Success, "Revocado.");
+            Status(InfoBarSeverity.Success, Strings.Get("Shared_Revoked"));
             await ReloadAsync();
         }
         catch (Exception ex)
@@ -124,10 +136,10 @@ public sealed partial class SharedDialog : ContentDialog
     private static string ExpiryLabel(DateTime? expiresAt)
     {
         if (expiresAt is null)
-            return "sin caducidad";
+            return Strings.Get("Shared_NoExpiry");
         return expiresAt.Value <= DateTime.UtcNow
-            ? "caducado"
-            : $"caduca {expiresAt.Value.ToLocalTime():d}";
+            ? Strings.Get("Shared_Expired")
+            : Strings.Format("Shared_Expires", expiresAt.Value.ToLocalTime());
     }
 
     private void Status(InfoBarSeverity severity, string msg)

@@ -17,7 +17,7 @@ public sealed class AuthService
     {
         var session = await _client.Auth.SignIn(email, password);
         if (session is null)
-            throw new InvalidOperationException("Supabase devolvió sesión vacía.");
+            throw new InvalidOperationException(Strings.Get("Auth_EmptySession"));
     }
 
     public Task SignUpWithEmailAsync(string email, string password) =>
@@ -67,22 +67,22 @@ public sealed class AuthService
     public static string DescribeError(Exception ex)
     {
         if (ex is OperationCanceledException)
-            return "Operación cancelada.";
+            return Strings.Get("Auth_Cancelled");
         var msg = ex.Message ?? string.Empty;
         if (
             msg.Contains("invalid", StringComparison.OrdinalIgnoreCase)
             || msg.Contains("credential", StringComparison.OrdinalIgnoreCase)
         )
-            return "Credenciales inválidas. Revisa el correo y la contraseña.";
+            return Strings.Get("Auth_InvalidCredentials");
         if (
             msg.Contains("already registered", StringComparison.OrdinalIgnoreCase)
             || msg.Contains("already been registered", StringComparison.OrdinalIgnoreCase)
         )
-            return "Ese correo ya tiene cuenta. Inicia sesión.";
+            return Strings.Get("Auth_AlreadyRegistered");
         if (msg.Contains("rate", StringComparison.OrdinalIgnoreCase))
-            return "Demasiados intentos. Espera unos minutos.";
+            return Strings.Get("Auth_RateLimited");
         if (msg.Contains("not confirmed", StringComparison.OrdinalIgnoreCase))
-            return "Confirma tu correo antes de iniciar sesión.";
+            return Strings.Get("Auth_NotConfirmed");
         return msg.Length > 0 ? msg : ex.GetType().Name;
     }
 }

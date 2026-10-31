@@ -29,72 +29,56 @@
                     HorizontalAlignment="Stretch"
                     IsOpen="False"
                     OverflowButtonVisibility="Visible">
-            <AppBarButton x:Name="AddButton" Icon="Add" Label="Añadir enlace"
-                          ToolTipService.ToolTip="Añadir un enlace o ruta (Ctrl+N)"
-                          AutomationProperties.Name="Añadir enlace"
+            <AppBarButton x:Name="AddButton" x:Uid="Main_AddButton" Icon="Add"
                           Click="OnAddClick">
                 <AppBarButton.KeyboardAccelerators>
                     <KeyboardAccelerator Key="N" Modifiers="Control" />
                 </AppBarButton.KeyboardAccelerators>
             </AppBarButton>
-            <AppBarButton x:Name="SettingsButton" Icon="Setting" Label="Ajustes"
-                          ToolTipService.ToolTip="Abrir ajustes"
-                          AutomationProperties.Name="Abrir ajustes"
+            <AppBarButton x:Name="SettingsButton" x:Uid="Main_SettingsButton" Icon="Setting"
                           Click="OnSettingsClick" />
 
             <CommandBar.SecondaryCommands>
-                <AppBarButton Label="Gestionar categorías" Click="OnManageCategoriesClick"
-                              AutomationProperties.Name="Gestionar categorías">
+                <AppBarButton x:Uid="Main_ManageCategories" Click="OnManageCategoriesClick">
                     <AppBarButton.Icon><FontIcon Glyph="&#xE8FD;" /></AppBarButton.Icon>
                 </AppBarButton>
-                <AppBarButton Label="Gestionar etiquetas" Click="OnManageTagsClick"
-                              AutomationProperties.Name="Gestionar etiquetas">
+                <AppBarButton x:Uid="Main_ManageTags" Click="OnManageTagsClick">
                     <AppBarButton.Icon><FontIcon Glyph="&#xE8EC;" /></AppBarButton.Icon>
                 </AppBarButton>
                 <AppBarSeparator />
-                <AppBarButton Label="Importar…" Click="OnImportClick"
-                              AutomationProperties.Name="Importar JSON o SQLite">
+                <AppBarButton x:Uid="Main_Import" Click="OnImportClick">
                     <AppBarButton.Icon><FontIcon Glyph="&#xE8B5;" /></AppBarButton.Icon>
                 </AppBarButton>
-                <AppBarButton Label="Exportar JSON…" Click="OnExportClick"
-                              AutomationProperties.Name="Exportar enlaces a JSON">
+                <AppBarButton x:Uid="Main_Export" Click="OnExportClick">
                     <AppBarButton.Icon><FontIcon Glyph="&#xE74E;" /></AppBarButton.Icon>
                 </AppBarButton>
-                <AppBarButton Label="Crear colección pública…" Click="OnShareCollectionClick"
-                              AutomationProperties.Name="Crear una colección pública con los enlaces visibles">
+                <AppBarButton x:Uid="Main_ShareCollection" Click="OnShareCollectionClick">
                     <AppBarButton.Icon><FontIcon Glyph="&#xE71D;" /></AppBarButton.Icon>
                 </AppBarButton>
-                <AppBarButton Label="Compartidos…" Click="OnManageSharedClick"
-                              AutomationProperties.Name="Ver y revocar enlaces y colecciones compartidos">
+                <AppBarButton x:Uid="Main_ManageShared" Click="OnManageSharedClick">
                     <AppBarButton.Icon><FontIcon Glyph="&#xE72D;" /></AppBarButton.Icon>
                 </AppBarButton>
-                <AppBarButton Label="Archivados…" Click="OnArchivedClick"
-                              AutomationProperties.Name="Ver elementos archivados y restaurarlos">
+                <AppBarButton x:Uid="Main_Archived" Click="OnArchivedClick">
                     <AppBarButton.Icon><FontIcon Glyph="&#xE7B8;" /></AppBarButton.Icon>
                 </AppBarButton>
-                <AppBarButton Label="Comprobar enlaces rotos" Click="OnCheckLinksClick"
-                              AutomationProperties.Name="Comprobar todos los enlaces en busca de rotos">
+                <AppBarButton x:Uid="Main_CheckLinks" Click="OnCheckLinksClick">
                     <AppBarButton.Icon><FontIcon Glyph="&#xE945;" /></AppBarButton.Icon>
                 </AppBarButton>
-                <AppBarButton Label="Recargar" Click="OnReloadClick"
-                              AutomationProperties.Name="Recargar lista desde Supabase (F5)">
+                <AppBarButton x:Uid="Main_Reload" Click="OnReloadClick">
                     <AppBarButton.Icon><SymbolIcon Symbol="Refresh" /></AppBarButton.Icon>
                     <AppBarButton.KeyboardAccelerators>
                         <KeyboardAccelerator Key="F5" />
                     </AppBarButton.KeyboardAccelerators>
                 </AppBarButton>
                 <AppBarSeparator />
-                <AppBarButton Label="Abrir versión web" Click="OnOpenWebClick"
-                              AutomationProperties.Name="Abrir el cliente web">
+                <AppBarButton x:Uid="Main_OpenWeb" Click="OnOpenWebClick">
                     <AppBarButton.Icon><FontIcon Glyph="&#xE774;" /></AppBarButton.Icon>
                 </AppBarButton>
-                <AppBarButton Label="Atajos de teclado" Click="OnHelpClick"
-                              AutomationProperties.Name="Ver atajos de teclado">
+                <AppBarButton x:Uid="Main_Shortcuts" Click="OnHelpClick">
                     <AppBarButton.Icon><FontIcon Glyph="&#xE897;" /></AppBarButton.Icon>
                 </AppBarButton>
                 <AppBarSeparator />
-                <AppBarButton Label="Cerrar sesión" Click="OnSignOutClick"
-                              AutomationProperties.Name="Cerrar sesión y volver al inicio">
+                <AppBarButton x:Uid="Main_SignOut" Click="OnSignOutClick">
                     <AppBarButton.Icon><FontIcon Glyph="&#xF3B1;" /></AppBarButton.Icon>
                 </AppBarButton>
             </CommandBar.SecondaryCommands>
@@ -106,17 +90,15 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <AutoSuggestBox x:Name="SearchBox"
+                            x:Uid="Main_SearchBox"
                             Grid.Column="0"
                             QueryIcon="Find"
-                            PlaceholderText="Buscar por título, URL o descripción…"
                             TextChanged="OnSearchChanged"
-                            SuggestionChosen="OnSuggestionChosen"
-                            AutomationProperties.Name="Buscar por título, URL o descripción" />
+                            SuggestionChosen="OnSuggestionChosen" />
             <Button x:Name="FiltersButton"
+                    x:Uid="Main_FiltersButton"
                     Grid.Column="1"
-                    Content="Filtros"
-                    Click="OnFiltersClick"
-                    AutomationProperties.Name="Abrir filtros">
+                    Click="OnFiltersClick">
                 <Button.KeyboardAccelerators>
                     <KeyboardAccelerator Key="L" Modifiers="Control" />
                 </Button.KeyboardAccelerators>
@@ -137,13 +119,13 @@
                 CornerRadius="8">
             <Grid>
             <ListView x:Name="ItemsList"
+                      x:Uid="Main_ItemsList"
                       SelectionMode="Extended"
                       ItemsSource="{x:Bind Visible}"
                       DoubleTapped="OnItemDoubleTapped"
                       KeyDown="OnListKeyDown"
                       RightTapped="OnListRightTapped"
-                      SelectionChanged="OnSelectionChanged"
-                      AutomationProperties.Name="Lista de enlaces guardados. Usa Ctrl o Mayús para seleccionar varios.">
+                      SelectionChanged="OnSelectionChanged">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -165,35 +147,34 @@
                 </ListView.ItemTemplate>
                 <ListView.ContextFlyout>
                     <MenuFlyout x:Name="ItemContextMenu" Opening="OnContextMenuOpening">
-                        <MenuFlyoutItem Text="Abrir" Click="OnOpenClick">
+                        <MenuFlyoutItem x:Uid="Main_MenuOpen" Click="OnOpenClick">
                             <MenuFlyoutItem.Icon><SymbolIcon Symbol="OpenFile" /></MenuFlyoutItem.Icon>
                             <MenuFlyoutItem.KeyboardAccelerators>
                                 <KeyboardAccelerator Key="Enter" />
                             </MenuFlyoutItem.KeyboardAccelerators>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem Text="Copiar URL" Tag="copy" Click="OnCopyClick"
-                                        KeyboardAcceleratorTextOverride="Ctrl+C">
+                        <MenuFlyoutItem x:Uid="Main_MenuCopy" Tag="copy" Click="OnCopyClick">
                             <MenuFlyoutItem.Icon><SymbolIcon Symbol="Copy" /></MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem Text="Compartir…" Tag="share" Click="OnShareClick" />
-                        <MenuFlyoutItem Text="Enviar por email…" Tag="email" Click="OnEmailClick" />
+                        <MenuFlyoutItem x:Uid="Main_MenuShare" Tag="share" Click="OnShareClick" />
+                        <MenuFlyoutItem x:Uid="Main_MenuEmail" Tag="email" Click="OnEmailClick" />
                         <MenuFlyoutSeparator />
-                        <MenuFlyoutItem Text="Editar…" Tag="edit" Click="OnEditClick">
+                        <MenuFlyoutItem x:Uid="Main_MenuEdit" Tag="edit" Click="OnEditClick">
                             <MenuFlyoutItem.KeyboardAccelerators>
                                 <KeyboardAccelerator Key="E" Modifiers="Control" />
                             </MenuFlyoutItem.KeyboardAccelerators>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem Text="Etiquetas…" Tag="tags" Click="OnEditTagsClick" />
-                        <MenuFlyoutItem Text="Historial…" Tag="history" Click="OnHistoryClick" />
-                        <MenuFlyoutItem Text="Crear enlace público…" Tag="publink" Click="OnShareLinkClick" />
-                        <MenuFlyoutItem Text="Comprobar si está roto" Tag="check" Click="OnCheckLinkClick" />
+                        <MenuFlyoutItem x:Uid="Main_MenuTags" Tag="tags" Click="OnEditTagsClick" />
+                        <MenuFlyoutItem x:Uid="Main_MenuHistory" Tag="history" Click="OnHistoryClick" />
+                        <MenuFlyoutItem x:Uid="Main_MenuPublicLink" Tag="publink" Click="OnShareLinkClick" />
+                        <MenuFlyoutItem x:Uid="Main_MenuCheck" Tag="check" Click="OnCheckLinkClick" />
                         <MenuFlyoutSeparator />
-                        <MenuFlyoutItem x:Name="FavoriteMenuItem" Text="Marcar como favorito" Click="OnFavoriteClick" />
+                        <MenuFlyoutItem x:Name="FavoriteMenuItem" x:Uid="Main_FavoriteMenuItem" Click="OnFavoriteClick" />
                         <MenuFlyoutSeparator />
-                        <MenuFlyoutItem Text="Archivar" Tag="archive" Click="OnArchiveClick">
+                        <MenuFlyoutItem x:Uid="Main_MenuArchive" Tag="archive" Click="OnArchiveClick">
                             <MenuFlyoutItem.Icon><SymbolIcon Symbol="MoveToFolder" /></MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem Text="Borrar" Click="OnDeleteClick">
+                        <MenuFlyoutItem x:Uid="Main_MenuDelete" Click="OnDeleteClick">
                             <MenuFlyoutItem.KeyboardAccelerators>
                                 <KeyboardAccelerator Key="Delete" />
                             </MenuFlyoutItem.KeyboardAccelerators>
@@ -226,26 +207,22 @@
             <TextBlock x:Name="BulkCountText"
                        VerticalAlignment="Center"
                        FontSize="12" />
-            <Button Content="Abrir" Click="OnBulkOpenClick"
-                    AutomationProperties.Name="Abrir los seleccionados" />
-            <Button Content="Copiar" Click="OnBulkCopyClick"
-                    AutomationProperties.Name="Copiar las URL de los seleccionados" />
-            <Button Content="Crear colección…" Click="OnBulkCollectionClick"
-                    AutomationProperties.Name="Crear colección con los seleccionados" />
-            <Button Content="Borrar…" Click="OnBulkDeleteClick"
-                    AutomationProperties.Name="Borrar los seleccionados" />
+            <Button x:Uid="Main_BulkOpen" Click="OnBulkOpenClick" />
+            <Button x:Uid="Main_BulkCopy" Click="OnBulkCopyClick" />
+            <Button x:Uid="Main_BulkCollection" Click="OnBulkCollectionClick" />
+            <Button x:Uid="Main_BulkDelete" Click="OnBulkDeleteClick" />
         </StackPanel>
 
         <TextBlock Grid.Row="5"
                    x:Name="DetailsText"
+                   x:Uid="Main_DetailsText"
                    Opacity="0.85"
                    FontSize="12"
-                   TextWrapping="Wrap"
-                   AutomationProperties.Name="Detalles del elemento seleccionado" />
+                   TextWrapping="Wrap" />
 
         <TextBlock Grid.Row="6"
                    x:Name="StatusText"
-                   Text="Listo."
+                   x:Uid="Main_StatusText"
                    Opacity="0.9"
                    FontSize="12"
                    AutomationProperties.LiveSetting="Polite" />

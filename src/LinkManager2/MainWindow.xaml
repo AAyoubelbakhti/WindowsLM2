@@ -7,7 +7,6 @@
     xmlns:local="using:LinkManager2"
     xmlns:tb="using:H.NotifyIcon"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="LinkManager"
     mc:Ignorable="d">
 
     <Grid x:Name="RootGrid">
@@ -18,8 +17,8 @@
         </Grid.RowDefinitions>
 
         <TitleBar x:Name="AppTitleBar"
+                  x:Uid="Window_AppTitleBar"
                   Grid.Row="0"
-                  Title="LinkManager"
                   IsBackButtonVisible="False">
             <TitleBar.IconSource>
                 <ImageIconSource ImageSource="Assets/AppIcon.ico" />
@@ -39,18 +38,17 @@
 
         <tb:TaskbarIcon x:Name="TrayIcon"
                         IconSource="ms-appx:///Assets/AppIcon.ico"
-                        ToolTipText="LinkManager (Ctrl+Shift+L para abrir)"
                         NoLeftClickDelay="True"
                         LeftClickCommand="{x:Bind ShowFromTrayCommand}"
                         Visibility="Collapsed">
             <tb:TaskbarIcon.ContextFlyout>
                 <MenuFlyout>
-                    <MenuFlyoutItem Text="Mostrar LinkManager" Command="{x:Bind ShowFromTrayCommand}" />
-                    <MenuFlyoutItem Text="Añadir enlace…" Command="{x:Bind AddLinkCommand}" />
-                    <MenuFlyoutItem Text="Guardar portapapeles" Command="{x:Bind SaveClipboardCommand}" />
-                    <MenuFlyoutItem Text="Buscar" Command="{x:Bind SearchCommand}" />
+                    <MenuFlyoutItem x:Uid="Tray_Show" Command="{x:Bind ShowFromTrayCommand}" />
+                    <MenuFlyoutItem x:Uid="Tray_AddLink" Command="{x:Bind AddLinkCommand}" />
+                    <MenuFlyoutItem x:Uid="Tray_SaveClipboard" Command="{x:Bind SaveClipboardCommand}" />
+                    <MenuFlyoutItem x:Uid="Tray_Search" Command="{x:Bind SearchCommand}" />
                     <MenuFlyoutSeparator />
-                    <MenuFlyoutItem Text="Salir" Command="{x:Bind ExitCommand}" />
+                    <MenuFlyoutItem x:Uid="Tray_Exit" Command="{x:Bind ExitCommand}" />
                 </MenuFlyout>
             </tb:TaskbarIcon.ContextFlyout>
         </tb:TaskbarIcon>

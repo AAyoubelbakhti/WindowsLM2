@@ -35,17 +35,14 @@ internal static class RealtimeSync
             try
             {
                 await SupabaseClientHolder.Client.Realtime.ConnectAsync().ConfigureAwait(false);
-                channel = SupabaseClientHolder.Client.Realtime.Channel(
-                    "realtime",
-                    "public",
-                    "items"
-                );
-                channel.AddPostgresChangeHandler(
-                    PostgresChangesOptions.ListenType.All,
+                channel = SupabaseClientHolder.Client.Realtime.Channel("items");
+                channel.OnPostgresChange(
                     (_, _) =>
                     {
                         _ = onChange();
-                    }
+                    },
+                    PostgresChangesOptions.ListenType.All,
+                    new PostgresChangesFilter { Table = "items" }
                 );
                 await channel.Subscribe().ConfigureAwait(false);
                 _channel = channel;

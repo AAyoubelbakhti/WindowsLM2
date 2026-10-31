@@ -6,8 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Title="Archivados"
-    CloseButtonText="Cerrar">
+    x:Uid="Archived_Dialog">
     <Grid Width="460" Height="500" RowSpacing="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -17,9 +16,9 @@
 
         <ListView Grid.Row="0"
                   x:Name="ItemsList"
+                  x:Uid="Archived_ItemsList"
                   SelectionMode="Single"
-                  SelectionChanged="OnSelectionChanged"
-                  AutomationProperties.Name="Elementos archivados">
+                  SelectionChanged="OnSelectionChanged">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
@@ -38,21 +37,19 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <Button x:Name="RestoreButton"
+                    x:Uid="Archived_RestoreButton"
                     Grid.Column="1"
                     IsEnabled="False"
-                    Content="Restaurar"
-                    Click="OnRestoreClick"
-                    AutomationProperties.Name="Restaurar el elemento seleccionado" />
+                    Click="OnRestoreClick" />
             <Button x:Name="DeleteButton"
+                    x:Uid="Archived_DeleteButton"
                     Grid.Column="2"
-                    IsEnabled="False"
-                    Content="Borrar"
-                    AutomationProperties.Name="Borrar definitivamente el elemento seleccionado">
+                    IsEnabled="False">
                 <Button.Flyout>
                     <Flyout x:Name="DeleteFlyout">
                         <StackPanel Spacing="8" MaxWidth="260">
                             <TextBlock x:Name="DeleteConfirmText" TextWrapping="Wrap" />
-                            <Button Content="Confirmar borrado"
+                            <Button x:Uid="Archived_ConfirmDeleteButton"
                                     Style="{StaticResource AccentButtonStyle}"
                                     Click="OnDeleteConfirmClick"
                                     HorizontalAlignment="Stretch" />

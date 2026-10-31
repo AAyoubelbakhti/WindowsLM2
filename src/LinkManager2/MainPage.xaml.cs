@@ -125,8 +125,8 @@ public sealed partial class MainPage : Page
             return;
         var filtering = _filters.ActiveCount > 0 || !string.IsNullOrWhiteSpace(_filters.Search);
         EmptyStateText.Text = filtering
-            ? "Ningún resultado para la búsqueda o los filtros actuales."
-            : "Aún no tienes enlaces. Pulsa «Añadir enlace» para empezar.";
+            ? Strings.Get("Main_EmptyFiltered")
+            : Strings.Get("Main_EmptyNone");
     }
 
     public async Task RefreshAfterExternalChangeAsync()
@@ -138,7 +138,7 @@ public sealed partial class MainPage : Page
         }
         catch (Exception ex)
         {
-            SetStatus($"Error recargando: {ex.Message}");
+            SetStatus(Strings.Format("Main_ReloadError", ex.Message));
         }
     }
 

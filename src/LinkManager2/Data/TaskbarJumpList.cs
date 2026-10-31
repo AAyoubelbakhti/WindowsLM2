@@ -26,14 +26,26 @@ public static class TaskbarJumpList
             list.BeginList(out _, typeof(IObjectArray).GUID, out _);
 
             tasks = (IObjectCollection)new EnumerableObjectCollection();
-            AddTask(tasks, exe, Startup.AddArg, "Añadir enlace", "Guarda un enlace nuevo.");
-            AddTask(tasks, exe, Startup.SearchArg, "Buscar", "Abre la búsqueda de enlaces.");
+            AddTask(
+                tasks,
+                exe,
+                Startup.AddArg,
+                Strings.Get("JumpList_AddTitle"),
+                Strings.Get("JumpList_AddDescription")
+            );
+            AddTask(
+                tasks,
+                exe,
+                Startup.SearchArg,
+                Strings.Get("JumpList_SearchTitle"),
+                Strings.Get("JumpList_SearchDescription")
+            );
             AddTask(
                 tasks,
                 exe,
                 Startup.SaveClipboardArg,
-                "Guardar portapapeles",
-                "Guarda el enlace o la ruta del portapapeles."
+                Strings.Get("JumpList_ClipboardTitle"),
+                Strings.Get("JumpList_ClipboardDescription")
             );
 
             list.AddUserTasks((IObjectArray)tasks);

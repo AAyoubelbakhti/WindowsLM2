@@ -28,7 +28,9 @@ public sealed partial class MainPage : Page
     {
         DetailsText.Text = Selected?.Details ?? string.Empty;
         FavoriteMenuItem.Text =
-            Selected?.IsFavorite == true ? "Quitar de favoritos" : "Marcar como favorito";
+            Selected?.IsFavorite == true
+                ? Strings.Get("Main_FavoriteRemove")
+                : Strings.Get("Main_FavoriteAdd");
     }
 
     /// <summary>
@@ -41,15 +43,15 @@ public sealed partial class MainPage : Page
         if (count > 1)
         {
             BulkBar.Visibility = Visibility.Visible;
-            BulkCountText.Text = $"{count} seleccionados";
+            BulkCountText.Text = Strings.Format("Main_BulkSelectedCount", count);
             if (_lastSelectionCount <= 1)
-                SetStatus($"{count} elementos seleccionados. Barra de acciones disponible.");
+                SetStatus(Strings.Format("Main_BulkSelectedAnnounce", count));
         }
         else
         {
             BulkBar.Visibility = Visibility.Collapsed;
             if (_lastSelectionCount > 1)
-                SetStatus("Barra de acciones oculta.");
+                SetStatus(Strings.Get("Main_BulkBarHidden"));
         }
         _lastSelectionCount = count;
     }
@@ -71,7 +73,7 @@ public sealed partial class MainPage : Page
                 Diagnostics.Log("bulk-open", ex);
             }
         }
-        SetStatus($"Abiertos {opened} de {items.Count}.");
+        SetStatus(Strings.Format("Main_BulkOpened", opened, items.Count));
     }
 
     private void OnBulkCopyClick(object sender, RoutedEventArgs e)
@@ -82,11 +84,11 @@ public sealed partial class MainPage : Page
         try
         {
             ItemActions.Copy(string.Join(Environment.NewLine, items.Select(i => i.Value)));
-            SetStatus($"Copiadas {items.Count} URL.");
+            SetStatus(Strings.Format("Main_BulkCopied", items.Count));
         }
         catch (Exception ex)
         {
-            SetStatus($"Error al copiar: {ex.Message}");
+            SetStatus(Strings.Format("Main_BulkCopyError", ex.Message));
         }
     }
 
@@ -106,10 +108,10 @@ public sealed partial class MainPage : Page
             return;
         var ok = await DialogHelper.ConfirmAsync(
             XamlRoot,
-            "Confirmar borrado múltiple",
-            $"¿Borrar {items.Count} elementos? Podrás deshacerlo con Ctrl+Z.",
-            "Borrar",
-            "Cancelar"
+            Strings.Get("Main_BulkDeleteTitle"),
+            Strings.Format("Main_BulkDeleteConfirm", items.Count),
+            Strings.Get("Main_BulkDeleteButton"),
+            Strings.Get("Common_Cancel")
         );
         if (!ok)
             return;
@@ -135,8 +137,8 @@ public sealed partial class MainPage : Page
         {
             _lastUndo = new UndoAction(
                 deletedItems.Count == 1
-                    ? $"borrar \"{deletedItems[0].Title}\""
-                    : $"borrar {deletedItems.Count} elementos",
+                    ? Strings.Format("Main_UndoDeleteOne", deletedItems[0].Title)
+                    : Strings.Format("Main_UndoDeleteMany", deletedItems.Count),
                 async () =>
                 {
                     foreach (var it in deletedItems)
@@ -148,11 +150,16 @@ public sealed partial class MainPage : Page
         if (queuedCount > 0)
             SetStatus(
                 deletedItems.Count > 0
-                    ? $"Borrados {deletedItems.Count}, {queuedCount} en cola sin conexión, de {items.Count}."
-                    : $"Sin conexión, {queuedCount} borrados encolados de {items.Count}."
+                    ? Strings.Format(
+                        "Main_BulkDeletedQueued",
+                        deletedItems.Count,
+                        queuedCount,
+                        items.Count
+                    )
+                    : Strings.Format("Main_BulkQueuedOnly", queuedCount, items.Count)
             );
         else
-            SetStatus($"Borrados {deletedItems.Count} de {items.Count}. Ctrl+Z para deshacer.");
+            SetStatus(Strings.Format("Main_BulkDeleted", deletedItems.Count, items.Count));
     }
 
     private static bool IsDown(Windows.System.VirtualKey key) =>

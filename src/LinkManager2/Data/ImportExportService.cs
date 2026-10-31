@@ -30,7 +30,7 @@ public static class ImportExportService
         {
             var root = doc.RootElement;
             if (root.ValueKind != JsonValueKind.Object)
-                throw new FormatException("Formato JSON no reconocido.");
+                throw new FormatException(Strings.Get("Import_UnknownJsonFormat"));
             isExporterFormat =
                 root.TryGetProperty("items", out _) || root.TryGetProperty("categories", out _);
         }
@@ -40,7 +40,7 @@ public static class ImportExportService
 
         var legacy = LegacyImporter.ParseJson(text);
         if (legacy.Items.Count == 0 && legacy.Categories.Count == 0)
-            throw new FormatException("Formato JSON no reconocido.");
+            throw new FormatException(Strings.Get("Import_UnknownJsonFormat"));
         return legacy;
     }
 

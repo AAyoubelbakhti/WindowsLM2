@@ -12,7 +12,7 @@ public sealed partial class EmailShareDialog : ContentDialog
     {
         InitializeComponent();
         _itemId = itemId;
-        ItemLabel.Text = $"Item: {itemTitle}";
+        ItemLabel.Text = Strings.Format("EmailShare_ItemLabel", itemTitle);
     }
 
     private async void OnSendClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
@@ -24,15 +24,15 @@ public sealed partial class EmailShareDialog : ContentDialog
             var email = EmailBox.Text.Trim();
             if (email.Length == 0 || !email.Contains('@'))
             {
-                Status(InfoBarSeverity.Error, "Email inválido.");
+                Status(InfoBarSeverity.Error, Strings.Get("EmailShare_InvalidEmail"));
                 return;
             }
 
-            Status(InfoBarSeverity.Informational, "Enviando…");
+            Status(InfoBarSeverity.Informational, Strings.Get("EmailShare_Sending"));
 
             var token =
                 SupabaseClientHolder.Client.Auth.CurrentSession?.AccessToken
-                ?? throw new InvalidOperationException("Sin sesión.");
+                ?? throw new InvalidOperationException(Strings.Get("EmailShare_NoSession"));
 
             var error = await WebApi.SendEmailAsync(_itemId, email, MessageBox.Text.Trim(), token);
             if (error is null)

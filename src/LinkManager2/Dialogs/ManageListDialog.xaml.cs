@@ -49,7 +49,7 @@ public sealed partial class ManageListDialog : ContentDialog
         RenameBox.Text = entry?.Name ?? string.Empty;
         DeleteConfirmText.Text = entry is null
             ? string.Empty
-            : $"¿Borrar \"{entry.Value.Name}\"? Los elementos vinculados se desasocian.";
+            : Strings.Format("ManageList_DeleteConfirm", entry.Value.Name);
     }
 
     private async Task ReloadAsync()
@@ -61,7 +61,10 @@ public sealed partial class ManageListDialog : ContentDialog
             foreach (var e in entries)
                 _items.Add(e);
             ItemsList.SelectedItem = null;
-            Status(InfoBarSeverity.Informational, $"{entries.Count} elementos.");
+            Status(
+                InfoBarSeverity.Informational,
+                Strings.Format("ManageList_Count", entries.Count)
+            );
         }
         catch (Exception ex)
         {

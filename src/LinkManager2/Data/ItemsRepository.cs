@@ -45,7 +45,7 @@ public sealed class ItemsRepository
     {
         var userId =
             _client.Auth.CurrentUser?.Id
-            ?? throw new InvalidOperationException("Sin sesión activa.");
+            ?? throw new InvalidOperationException(Strings.Get("Repo_NoSession"));
         var item = new Item
         {
             UserId = userId,
@@ -58,9 +58,7 @@ public sealed class ItemsRepository
         };
         var response = await _client.From<Item>().Insert(item, cancellationToken: ct);
         if (response.Models.Count == 0)
-            throw new InvalidOperationException(
-                "El servidor no devolvió el item creado (revisa RLS)."
-            );
+            throw new InvalidOperationException(Strings.Get("Repo_ItemNotCreated"));
         return response.Models.First();
     }
 
@@ -87,9 +85,7 @@ public sealed class ItemsRepository
             )
             .Update(cancellationToken: ct);
         if (response.Models.Count == 0)
-            throw new InvalidOperationException(
-                "Este elemento ya no existe (puede haberse borrado en otro dispositivo)."
-            );
+            throw new InvalidOperationException(Strings.Get("Repo_ItemGone"));
         return response.Models.First();
     }
 
@@ -109,10 +105,10 @@ public sealed class ItemsRepository
         var supaKey = SupabaseClientHolder.AnonKey;
         var session =
             _client.Auth.CurrentSession?.AccessToken
-            ?? throw new InvalidOperationException("Sin sesión activa.");
+            ?? throw new InvalidOperationException(Strings.Get("Repo_NoSession"));
         var userId =
             _client.Auth.CurrentUser?.Id
-            ?? throw new InvalidOperationException("Sin sesión activa.");
+            ?? throw new InvalidOperationException(Strings.Get("Repo_NoSession"));
 
         var payload = new Dictionary<string, object?>
         {
@@ -133,9 +129,7 @@ public sealed class ItemsRepository
             ["link_http_code"] = item.LinkHttpCode,
         };
         if (item.CreatedAt.Year > 2000)
-            payload["created_at"] = DateTime
-                .SpecifyKind(item.CreatedAt, DateTimeKind.Utc)
-                .ToString("o");
+            payload["created_at"] = item.CreatedAt.ToUniversalTime().ToString("o");
 
         using var req = new HttpRequestMessage(HttpMethod.Post, $"{supaUrl}/rest/v1/items")
         {
@@ -171,9 +165,7 @@ public sealed class ItemsRepository
             .Set(x => x.IsFavorite, isFavorite)
             .Update(cancellationToken: ct);
         if (response.Models.Count == 0)
-            throw new InvalidOperationException(
-                "Este elemento ya no existe (puede haberse borrado en otro dispositivo)."
-            );
+            throw new InvalidOperationException(Strings.Get("Repo_ItemGone"));
         return response.Models.First();
     }
 
@@ -190,13 +182,11 @@ public sealed class ItemsRepository
     {
         var userId =
             _client.Auth.CurrentUser?.Id
-            ?? throw new InvalidOperationException("Sin sesión activa.");
+            ?? throw new InvalidOperationException(Strings.Get("Repo_NoSession"));
         var cat = new Category { Name = name.Trim(), UserId = userId };
         var response = await _client.From<Category>().Insert(cat, cancellationToken: ct);
         if (response.Models.Count == 0)
-            throw new InvalidOperationException(
-                "El servidor no devolvió la categoría creada (revisa RLS)."
-            );
+            throw new InvalidOperationException(Strings.Get("Repo_CategoryNotCreated"));
         return response.Models.First();
     }
 
@@ -227,13 +217,11 @@ public sealed class ItemsRepository
     {
         var userId =
             _client.Auth.CurrentUser?.Id
-            ?? throw new InvalidOperationException("Sin sesión activa.");
+            ?? throw new InvalidOperationException(Strings.Get("Repo_NoSession"));
         var tag = new Tag { Name = name.Trim(), UserId = userId };
         var response = await _client.From<Tag>().Insert(tag, cancellationToken: ct);
         if (response.Models.Count == 0)
-            throw new InvalidOperationException(
-                "El servidor no devolvió la etiqueta creada (revisa RLS)."
-            );
+            throw new InvalidOperationException(Strings.Get("Repo_TagNotCreated"));
         return response.Models.First();
     }
 
@@ -350,7 +338,7 @@ public sealed class ItemsRepository
     {
         var userId =
             _client.Auth.CurrentUser?.Id
-            ?? throw new InvalidOperationException("Sin sesión activa.");
+            ?? throw new InvalidOperationException(Strings.Get("Repo_NoSession"));
         var token = GenerateShareToken(12);
 
         var link = new ShareLink
@@ -367,9 +355,7 @@ public sealed class ItemsRepository
         };
         var response = await _client.From<ShareLink>().Insert(link, cancellationToken: ct);
         if (response.Models.Count == 0)
-            throw new InvalidOperationException(
-                "El servidor no devolvió el enlace creado (revisa RLS / migración 0005)."
-            );
+            throw new InvalidOperationException(Strings.Get("Repo_ShareLinkNotCreated"));
         return response.Models.First();
     }
 
@@ -381,18 +367,18 @@ public sealed class ItemsRepository
     )
     {
         if (itemIds.Count == 0)
-            throw new InvalidOperationException("Selecciona al menos un enlace.");
+            throw new InvalidOperationException(Strings.Get("Repo_SelectAtLeastOne"));
         if (itemIds.Count > 200)
-            throw new InvalidOperationException("Máximo 200 enlaces por colección.");
+            throw new InvalidOperationException(Strings.Get("Repo_MaxLinks"));
         var userId =
             _client.Auth.CurrentUser?.Id
-            ?? throw new InvalidOperationException("Sin sesión activa.");
+            ?? throw new InvalidOperationException(Strings.Get("Repo_NoSession"));
         var token = GenerateShareToken(12);
         var finalName = name.Trim();
         if (finalName.Length > 120)
             finalName = finalName[..120];
         if (finalName.Length == 0)
-            finalName = "Colección de enlaces";
+            finalName = Strings.Get("Repo_DefaultCollectionName");
 
         var collection = new ShareCollection
         {
@@ -486,7 +472,7 @@ public sealed class ItemsRepository
     {
         var userId =
             _client.Auth.CurrentUser?.Id
-            ?? throw new InvalidOperationException("Sin sesión activa.");
+            ?? throw new InvalidOperationException(Strings.Get("Repo_NoSession"));
         var device = new Device
         {
             Id = deviceId,
@@ -568,7 +554,7 @@ public sealed class ItemsRepository
     {
         var userId =
             SupabaseClientHolder.Client.Auth.CurrentUser?.Id
-            ?? throw new InvalidOperationException("Sin sesión");
+            ?? throw new InvalidOperationException(Strings.Get("Repo_NoSessionShort"));
         await _client
             .From<Profile>()
             .Filter("id", Operator.Equals, userId)
@@ -615,13 +601,13 @@ public sealed class ItemsRepository
         var json = JsonSerializer.Serialize(merged);
         var userId =
             SupabaseClientHolder.Client.Auth.CurrentUser?.Id
-            ?? throw new InvalidOperationException("Sin sesión");
+            ?? throw new InvalidOperationException(Strings.Get("Repo_NoSessionShort"));
 
         var supaUrl = SupabaseClientHolder.SupabaseUrl;
         var supaKey = SupabaseClientHolder.AnonKey;
         var session =
             _client.Auth.CurrentSession?.AccessToken
-            ?? throw new InvalidOperationException("Sin token");
+            ?? throw new InvalidOperationException(Strings.Get("Repo_NoToken"));
 
         var payload = new { user_id = userId, data = JsonDocument.Parse(json).RootElement };
         using var req = new HttpRequestMessage(

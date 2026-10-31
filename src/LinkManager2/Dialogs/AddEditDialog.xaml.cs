@@ -33,14 +33,14 @@ public sealed partial class AddEditDialog : ContentDialog
     )
     {
         InitializeComponent();
-        Title = initial is null ? "Añadir elemento" : "Editar elemento";
+        Title = Strings.Get(initial is null ? "AddEdit_TitleAdd" : "AddEdit_TitleEdit");
         _repo = repo;
 
         TitleBox.Text = initial?.Title ?? prefillTitle ?? string.Empty;
         ValueBox.Text = initial?.Value ?? prefillValue ?? string.Empty;
         DescriptionBox.Text = initial?.Description ?? string.Empty;
 
-        CategoryCombo.Items.Add(new CategoryOption(null, "Sin categoría"));
+        CategoryCombo.Items.Add(new CategoryOption(null, Strings.Get("AddEdit_NoCategory")));
         foreach (var c in categories)
             CategoryCombo.Items.Add(new CategoryOption(c.Id, c.Name));
         CategoryCombo.SelectedIndex = initial?.CategoryId is null
@@ -82,7 +82,7 @@ public sealed partial class AddEditDialog : ContentDialog
         }
         catch (Exception ex)
         {
-            ShowError($"No se pudo crear la categoría: {ex.Message}");
+            ShowError(Strings.Format("AddEdit_CategoryCreateFailed", ex.Message));
         }
     }
 
@@ -104,7 +104,7 @@ public sealed partial class AddEditDialog : ContentDialog
         }
         catch (Exception ex)
         {
-            ShowError($"No se pudo crear la etiqueta: {ex.Message}");
+            ShowError(Strings.Format("AddEdit_TagCreateFailed", ex.Message));
         }
     }
 
@@ -117,22 +117,22 @@ public sealed partial class AddEditDialog : ContentDialog
             var (ok, _) = Validation.DetectType(ItemValue);
             if (!ok)
             {
-                ShowError("El valor no es una URL ni una ruta válida.");
+                ShowError(Strings.Get("AddEdit_InvalidValue"));
                 ValueBox.Focus(FocusState.Programmatic);
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(ItemTitle))
             {
-                ShowError("Buscando título…");
+                ShowError(Strings.Get("AddEdit_SearchingTitle"));
                 await TryAutofillTitleAsync();
                 if (string.IsNullOrWhiteSpace(ItemTitle))
                 {
-                    ShowError("Escribe un título o usa una URL con OpenGraph.");
+                    ShowError(Strings.Get("AddEdit_TitleRequired"));
                     TitleBox.Focus(FocusState.Programmatic);
                     return;
                 }
-                ShowError("Título sugerido. Revisa y pulsa Guardar de nuevo.");
+                ShowError(Strings.Get("AddEdit_TitleSuggested"));
                 TitleBox.Focus(FocusState.Programmatic);
                 TitleBox.SelectAll();
                 return;

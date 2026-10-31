@@ -36,7 +36,7 @@ public sealed partial class ArchivedDialog : ContentDialog
         DeleteButton.IsEnabled = on;
         DeleteConfirmText.Text = Selected is null
             ? string.Empty
-            : $"¿Borrar definitivamente \"{Selected.Title}\"? No se puede deshacer.";
+            : Strings.Format("Archived_DeleteConfirm", Selected.Title);
     }
 
     private async Task ReloadAsync()
@@ -50,7 +50,9 @@ public sealed partial class ArchivedDialog : ContentDialog
             ItemsList.SelectedItem = null;
             Status(
                 InfoBarSeverity.Informational,
-                entries.Count == 1 ? "1 archivado." : $"{entries.Count} archivados."
+                entries.Count == 1
+                    ? Strings.Get("Archived_CountOne")
+                    : Strings.Format("Archived_CountMany", entries.Count)
             );
         }
         catch (Exception ex)
@@ -67,7 +69,7 @@ public sealed partial class ArchivedDialog : ContentDialog
         {
             await _repo.ArchiveAsync(item.Id, false);
             Changed = true;
-            Status(InfoBarSeverity.Success, $"Restaurado: {item.Title}");
+            Status(InfoBarSeverity.Success, Strings.Format("Archived_Restored", item.Title));
             await ReloadAsync();
         }
         catch (Exception ex)
@@ -85,7 +87,7 @@ public sealed partial class ArchivedDialog : ContentDialog
         {
             await _repo.DeleteAsync(item.Id);
             Changed = true;
-            Status(InfoBarSeverity.Success, $"Borrado: {item.Title}");
+            Status(InfoBarSeverity.Success, Strings.Format("Archived_Deleted", item.Title));
             await ReloadAsync();
         }
         catch (Exception ex)

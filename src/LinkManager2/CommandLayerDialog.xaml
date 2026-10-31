@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentDialog
     x:Class="LinkManager2.CommandLayerDialog"
+    x:Uid="Layer_Dialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Title="Capa de comandos"
-    CloseButtonText="Cancelar"
     DefaultButton="Close">
     <StackPanel Spacing="6">
-        <TextBlock Text="Pulsa una tecla:" />
-        <TextBlock Text="G — Mostrar el gestor" />
-        <TextBlock Text="F — Mostrar el gestor y buscar" />
-        <TextBlock Text="L — Capturar enlace del navegador" />
-        <TextBlock Text="R — Capturar ruta del Explorador" />
-        <TextBlock Text="A — Abrir enlace del portapapeles" />
-        <TextBlock Text="P — Guardar enlace del portapapeles" />
-        <TextBlock Text="H — Ayuda" />
+        <TextBlock x:Uid="Layer_Prompt" />
+        <TextBlock x:Uid="Layer_KeyG" />
+        <TextBlock x:Uid="Layer_KeyF" />
+        <TextBlock x:Uid="Layer_KeyL" />
+        <TextBlock x:Uid="Layer_KeyR" />
+        <TextBlock x:Uid="Layer_KeyA" />
+        <TextBlock x:Uid="Layer_KeyP" />
+        <TextBlock x:Uid="Layer_KeyH" />
     </StackPanel>
 </ContentDialog>

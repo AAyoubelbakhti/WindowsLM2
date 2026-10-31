@@ -45,7 +45,9 @@ public sealed partial class MainWindow : Window
         SaveClipboardCommand = new RelayCommand(() => _commandLayer.SaveClipboard());
         SearchCommand = new RelayCommand(() => _commandLayer.Search());
         InitializeComponent();
+        Title = Strings.Get("Window_Title");
         _prefs = LocalPreferences.Load();
+        UpdateTrayToolTip();
 
         ExtendsContentIntoTitleBar = true;
         SetTitleBar(AppTitleBar);
@@ -239,9 +241,19 @@ public sealed partial class MainWindow : Window
             _ => ElementTheme.Default,
         };
 
+    /// <summary>The tray tooltip names the configured global shortcut only while it is enabled.</summary>
+    private void UpdateTrayToolTip() =>
+        TrayIcon.ToolTipText = _prefs.GlobalHotkeyEnabled
+            ? Strings.Format(
+                "Tray_ToolTip",
+                GlobalHotkey.Describe(_prefs.HotkeyModifiers, _prefs.HotkeyVirtualKey)
+            )
+            : Strings.Get("Window_Title");
+
     public void ReloadPreferences()
     {
         _prefs = LocalPreferences.Load();
+        UpdateTrayToolTip();
         ApplyBackdrop();
         ApplyTheme();
         if (_prefs.GlobalHotkeyEnabled)
@@ -336,7 +348,7 @@ public sealed partial class MainWindow : Window
                     && sb.ToString().StartsWith("H.NotifyIcon", StringComparison.Ordinal)
                 )
                 {
-                    SetWindowText(hWnd, "LinkManager");
+                    SetWindowText(hWnd, Strings.Get("Window_Title"));
                 }
                 return true;
             },
@@ -353,7 +365,7 @@ public sealed partial class MainWindow : Window
         var combo = GlobalHotkey.Describe(_prefs.HotkeyModifiers, _prefs.HotkeyVirtualKey);
         HotkeyWarning = _hotkey.IsRegistered
             ? null
-            : $"Aviso: no se pudo registrar el atajo {combo} (otra app lo usa).";
+            : Strings.Format("Hotkey_RegisterWarning", combo);
     }
 
     private void UninstallHotkey()

@@ -43,21 +43,22 @@ public sealed class ItemViewModel : INotifyPropertyChanged
         {
             var parts = new System.Collections.Generic.List<string>();
             if (_item.IsFavorite)
-                parts.Add("Favorito");
+                parts.Add(Strings.Get("Item_Favorite"));
             if (IsBroken)
-                parts.Add("Enlace roto");
+                parts.Add(Strings.Get("Item_BrokenLink"));
             parts.Add(_item.Title);
             return string.Join(", ", parts);
         }
     }
 
-    public string TypeLabel => _item.Type == ItemTypes.Url ? "Enlace" : "Ruta";
+    public string TypeLabel =>
+        Strings.Get(_item.Type == ItemTypes.Url ? "Item_TypeUrl" : "Item_TypePath");
 
     public string Details
     {
         get
         {
-            var status = IsBroken ? " · Roto" : string.Empty;
+            var status = IsBroken ? " · " + Strings.Get("Item_BrokenShort") : string.Empty;
             return $"{TypeLabel} · {CategoryName} · {Value}{status}";
         }
     }
@@ -67,7 +68,7 @@ public sealed class ItemViewModel : INotifyPropertyChanged
     public ItemViewModel(Item item, string? categoryName)
     {
         _item = item;
-        CategoryName = categoryName ?? "Sin categoría";
+        CategoryName = categoryName ?? Strings.Get("Item_NoCategory");
         _shown = Shown();
     }
 
@@ -79,7 +80,7 @@ public sealed class ItemViewModel : INotifyPropertyChanged
     public void UpdateSource(Item item, string? categoryName)
     {
         _item = item;
-        CategoryName = categoryName ?? "Sin categoría";
+        CategoryName = categoryName ?? Strings.Get("Item_NoCategory");
         var shown = Shown();
         if (shown == _shown)
             return;

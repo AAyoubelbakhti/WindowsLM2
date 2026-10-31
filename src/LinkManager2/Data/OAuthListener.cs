@@ -110,8 +110,8 @@ internal static class OAuthListener
         await WriteHtmlAsync(
             ctx,
             ok
-                ? "Sesión iniciada. Ya puedes cerrar esta pestaña y volver a LinkManager."
-                : $"Error de autenticación: {error ?? "no se recibió la sesión"}"
+                ? Strings.Get("OAuth_SignedIn")
+                : Strings.Format("OAuth_Error", error ?? Strings.Get("OAuth_NoSession"))
         );
         listener.Stop();
 
@@ -172,7 +172,9 @@ internal static class OAuthListener
     {
         var html = $$"""
             <!doctype html>
-            <html lang="es"><head><meta charset="utf-8"><title>LinkManager</title>
+            <html lang="{{Strings.Get(
+                "OAuth_HtmlLang"
+            )}}"><head><meta charset="utf-8"><title>LinkManager</title>
             <style>body{font-family:system-ui;padding:32px;max-width:520px;margin:auto}
             h1{margin-top:0}p{font-size:16px;line-height:1.5}</style></head>
             <body>

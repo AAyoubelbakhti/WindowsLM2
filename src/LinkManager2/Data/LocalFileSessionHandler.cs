@@ -1,6 +1,6 @@
 using System.Security.Cryptography;
 using System.Text;
-using Newtonsoft.Json;
+using System.Text.Json;
 using Supabase.Gotrue;
 using Supabase.Gotrue.Interfaces;
 
@@ -30,7 +30,7 @@ internal sealed class LocalFileSessionHandler : IGotrueSessionPersistence<Sessio
     {
         try
         {
-            var json = JsonConvert.SerializeObject(session);
+            var json = JsonSerializer.Serialize(session);
             var cipher = ProtectedData.Protect(
                 Encoding.UTF8.GetBytes(json),
                 Entropy,
@@ -77,7 +77,7 @@ internal sealed class LocalFileSessionHandler : IGotrueSessionPersistence<Sessio
                 Entropy,
                 DataProtectionScope.CurrentUser
             );
-            return JsonConvert.DeserializeObject<Session>(Encoding.UTF8.GetString(plain));
+            return JsonSerializer.Deserialize<Session>(Encoding.UTF8.GetString(plain));
         }
         catch
         {
@@ -91,7 +91,7 @@ internal sealed class LocalFileSessionHandler : IGotrueSessionPersistence<Sessio
         {
             if (!File.Exists(LegacyPlainPath))
                 return null;
-            var session = JsonConvert.DeserializeObject<Session>(File.ReadAllText(LegacyPlainPath));
+            var session = JsonSerializer.Deserialize<Session>(File.ReadAllText(LegacyPlainPath));
             if (session != null)
                 SaveSession(session);
             else

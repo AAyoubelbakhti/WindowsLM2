@@ -17,12 +17,12 @@ public sealed partial class ShareLinkDialog : ContentDialog
         InitializeComponent();
         _repo = repo;
         _itemId = itemId;
-        ItemLabel.Text = $"Item: {itemTitle}";
+        ItemLabel.Text = Strings.Format("ShareLink_Item", itemTitle);
 
-        ExpiresCombo.Items.Add(new Expiry(null, "No caduca"));
-        ExpiresCombo.Items.Add(new Expiry(1, "1 día"));
-        ExpiresCombo.Items.Add(new Expiry(7, "7 días"));
-        ExpiresCombo.Items.Add(new Expiry(30, "30 días"));
+        ExpiresCombo.Items.Add(new Expiry(null, Strings.Get("Dialog_ExpiryNever")));
+        ExpiresCombo.Items.Add(new Expiry(1, Strings.Get("Dialog_ExpiryOneDay")));
+        ExpiresCombo.Items.Add(new Expiry(7, Strings.Get("Dialog_ExpirySevenDays")));
+        ExpiresCombo.Items.Add(new Expiry(30, Strings.Get("Dialog_ExpiryThirtyDays")));
         ExpiresCombo.SelectedIndex = 2;
     }
 
@@ -32,16 +32,19 @@ public sealed partial class ShareLinkDialog : ContentDialog
         var def = args.GetDeferral();
         try
         {
-            SetStatus(InfoBarSeverity.Informational, "Generando…");
+            SetStatus(InfoBarSeverity.Informational, Strings.Get("Dialog_Generating"));
             var exp = (Expiry)ExpiresCombo.SelectedItem!;
             var link = await _repo.CreateShareLinkAsync(_itemId, exp.Days);
             ResultBox.Text = $"{PublicBase}/s/{link.Token}";
             CopyButton.IsEnabled = true;
-            SetStatus(InfoBarSeverity.Success, "Enlace generado. Copia y compártelo.");
+            SetStatus(InfoBarSeverity.Success, Strings.Get("ShareLink_Generated"));
         }
         catch (Exception ex)
         {
-            SetStatus(InfoBarSeverity.Error, $"{ex.GetType().Name}: {ex.Message}");
+            SetStatus(
+                InfoBarSeverity.Error,
+                Strings.Format("Dialog_ErrorDetail", ex.GetType().Name, ex.Message)
+            );
         }
         finally
         {
@@ -54,7 +57,7 @@ public sealed partial class ShareLinkDialog : ContentDialog
         try
         {
             ItemActions.Copy(ResultBox.Text);
-            SetStatus(InfoBarSeverity.Success, "URL copiada al portapapeles.");
+            SetStatus(InfoBarSeverity.Success, Strings.Get("Dialog_UrlCopied"));
         }
         catch (Exception ex)
         {

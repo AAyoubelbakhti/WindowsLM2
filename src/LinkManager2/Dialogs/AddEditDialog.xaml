@@ -6,30 +6,23 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
+    x:Uid="AddEdit_Dialog"
     DefaultButton="Primary"
-    PrimaryButtonText="Guardar"
-    CloseButtonText="Cancelar"
     PrimaryButtonClick="OnSaveClick">
     <StackPanel Spacing="12" Width="440">
         <TextBox x:Name="TitleBox"
-                 Header="Título"
-                 AutomationProperties.Name="Título del elemento" />
+                 x:Uid="AddEdit_TitleBox" />
         <TextBox x:Name="ValueBox"
-                 Header="Valor (URL o ruta)"
-                 AutomationProperties.Name="Valor"
-                 AutomationProperties.HelpText="URL o ruta de archivo"
+                 x:Uid="AddEdit_ValueBox"
                  LostFocus="OnValueLostFocus" />
         <ComboBox x:Name="CategoryCombo"
-                  Header="Categoría"
-                  HorizontalAlignment="Stretch"
-                  AutomationProperties.Name="Categoría" />
+                  x:Uid="AddEdit_CategoryCombo"
+                  HorizontalAlignment="Stretch" />
         <TextBox x:Name="DescriptionBox"
-                 Header="Notas"
+                 x:Uid="AddEdit_DescriptionBox"
                  AcceptsReturn="True"
                  TextWrapping="Wrap"
-                 MaxHeight="120"
-                 AutomationProperties.Name="Notas"
-                 AutomationProperties.HelpText="Descripción o notas propias. Se pueden buscar." />
+                 MaxHeight="120" />
 
         <StackPanel x:Name="QuickCreatePanel" Spacing="8" Visibility="Collapsed">
             <Grid ColumnSpacing="8">
@@ -38,17 +31,14 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <TextBox x:Name="NewCategoryBox" Grid.Column="0"
-                         PlaceholderText="Nueva categoría"
-                         AutomationProperties.Name="Nueva categoría" />
+                         x:Uid="AddEdit_NewCategoryBox" />
                 <Button x:Name="CreateCategoryButton" Grid.Column="1"
-                        Content="Crear categoría" Click="OnCreateCategory"
-                        AutomationProperties.Name="Crear categoría" />
+                        x:Uid="AddEdit_CreateCategoryButton" Click="OnCreateCategory" />
             </Grid>
 
-            <TextBlock Text="Etiquetas" Opacity="0.7"
+            <TextBlock x:Uid="AddEdit_TagsHeading" Opacity="0.7"
                        AutomationProperties.HeadingLevel="Level2" />
-            <ListView x:Name="TagsList" SelectionMode="Multiple" MaxHeight="160"
-                      AutomationProperties.Name="Etiquetas disponibles">
+            <ListView x:Name="TagsList" x:Uid="AddEdit_TagsList" SelectionMode="Multiple" MaxHeight="160">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Name}" />
@@ -62,11 +52,9 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <TextBox x:Name="NewTagBox" Grid.Column="0"
-                         PlaceholderText="Nueva etiqueta…"
-                         AutomationProperties.Name="Nueva etiqueta" />
+                         x:Uid="AddEdit_NewTagBox" />
                 <Button x:Name="CreateTagButton" Grid.Column="1"
-                        Content="Crear etiqueta" Click="OnCreateTag"
-                        AutomationProperties.Name="Crear etiqueta" />
+                        x:Uid="AddEdit_CreateTagButton" Click="OnCreateTag" />
             </Grid>
         </StackPanel>
 

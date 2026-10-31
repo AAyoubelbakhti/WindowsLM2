@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    CloseButtonText="Cerrar">
+    x:Uid="ManageList_Dialog">
     <Grid Width="440" Height="500" RowSpacing="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -18,9 +18,9 @@
 
         <ListView Grid.Row="0"
                   x:Name="ItemsList"
+                  x:Uid="ManageList_ItemsList"
                   SelectionMode="Single"
-                  SelectionChanged="OnSelectionChanged"
-                  AutomationProperties.Name="Elementos existentes">
+                  SelectionChanged="OnSelectionChanged">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Name}" />
@@ -35,27 +35,24 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <TextBox x:Name="RenameBox"
+                     x:Uid="ManageList_RenameBox"
                      Grid.Column="0"
-                     IsEnabled="False"
-                     PlaceholderText="Nuevo nombre…"
-                     AutomationProperties.Name="Renombrar seleccionado a" />
+                     IsEnabled="False" />
             <Button x:Name="RenameButton"
+                    x:Uid="ManageList_RenameButton"
                     Grid.Column="1"
                     IsEnabled="False"
-                    Content="Guardar"
-                    Click="OnRenameClick"
-                    AutomationProperties.Name="Guardar nuevo nombre" />
+                    Click="OnRenameClick" />
             <Button x:Name="DeleteButton"
+                    x:Uid="ManageList_DeleteButton"
                     Grid.Column="2"
-                    IsEnabled="False"
-                    Content="Borrar"
-                    AutomationProperties.Name="Borrar seleccionado">
+                    IsEnabled="False">
                 <Button.Flyout>
                     <Flyout x:Name="DeleteFlyout">
                         <StackPanel Spacing="8" MaxWidth="260">
                             <TextBlock x:Name="DeleteConfirmText"
                                        TextWrapping="Wrap" />
-                            <Button Content="Confirmar borrado"
+                            <Button x:Uid="ManageList_ConfirmDeleteButton"
                                     Style="{StaticResource AccentButtonStyle}"
                                     Click="OnDeleteConfirmClick"
                                     HorizontalAlignment="Stretch" />
@@ -71,14 +68,12 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <TextBox x:Name="NewNameBox"
-                     Grid.Column="0"
-                     PlaceholderText="Añadir nuevo elemento…"
-                     AutomationProperties.Name="Nombre del nuevo elemento" />
+                     x:Uid="ManageList_NewNameBox"
+                     Grid.Column="0" />
             <Button x:Name="AddButton"
+                    x:Uid="ManageList_AddButton"
                     Grid.Column="1"
-                    Content="Añadir"
-                    Click="OnAddClick"
-                    AutomationProperties.Name="Añadir" />
+                    Click="OnAddClick" />
         </Grid>
 
         <InfoBar Grid.Row="3"

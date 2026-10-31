@@ -41,8 +41,8 @@ public static class UpdateService
             _pendingInfo = info;
             var version = info.TargetFullRelease.Version.ToString();
             Notifications.Show(
-                "Actualización descargada",
-                $"LinkManager {version} está listo. Reinicia para aplicarlo."
+                Strings.Get("Update_DownloadedTitle"),
+                Strings.Format("Update_DownloadedBody", version)
             );
             return (UpdateStatus.Downloaded, version);
         }

@@ -19,12 +19,12 @@ public sealed partial class ShareCollectionDialog : ContentDialog
         InitializeComponent();
         _repo = repo;
         _itemIds = itemIds;
-        CountLabel.Text = $"{itemIds.Count} enlaces se incluirán.";
+        CountLabel.Text = Strings.Format("ShareCollection_Count", itemIds.Count);
 
-        ExpiresCombo.Items.Add(new Expiry(null, "No caduca"));
-        ExpiresCombo.Items.Add(new Expiry(1, "1 día"));
-        ExpiresCombo.Items.Add(new Expiry(7, "7 días"));
-        ExpiresCombo.Items.Add(new Expiry(30, "30 días"));
+        ExpiresCombo.Items.Add(new Expiry(null, Strings.Get("Dialog_ExpiryNever")));
+        ExpiresCombo.Items.Add(new Expiry(1, Strings.Get("Dialog_ExpiryOneDay")));
+        ExpiresCombo.Items.Add(new Expiry(7, Strings.Get("Dialog_ExpirySevenDays")));
+        ExpiresCombo.Items.Add(new Expiry(30, Strings.Get("Dialog_ExpiryThirtyDays")));
         ExpiresCombo.SelectedIndex = 2;
     }
 
@@ -34,17 +34,20 @@ public sealed partial class ShareCollectionDialog : ContentDialog
         var def = args.GetDeferral();
         try
         {
-            SetStatus(InfoBarSeverity.Informational, "Generando…");
+            SetStatus(InfoBarSeverity.Informational, Strings.Get("Dialog_Generating"));
             var exp = (Expiry)ExpiresCombo.SelectedItem!;
             var token = await _repo.CreateShareCollectionAsync(NameBox.Text, _itemIds, exp.Days);
             ResultBox.Text = $"{PublicBase}/c/{token}";
             CopyButton.IsEnabled = true;
             OpenButton.IsEnabled = true;
-            SetStatus(InfoBarSeverity.Success, "Colección creada. Copia o abre la URL.");
+            SetStatus(InfoBarSeverity.Success, Strings.Get("ShareCollection_Created"));
         }
         catch (Exception ex)
         {
-            SetStatus(InfoBarSeverity.Error, $"{ex.GetType().Name}: {ex.Message}");
+            SetStatus(
+                InfoBarSeverity.Error,
+                Strings.Format("Dialog_ErrorDetail", ex.GetType().Name, ex.Message)
+            );
         }
         finally
         {
@@ -57,7 +60,7 @@ public sealed partial class ShareCollectionDialog : ContentDialog
         try
         {
             ItemActions.Copy(ResultBox.Text);
-            SetStatus(InfoBarSeverity.Success, "URL copiada al portapapeles.");
+            SetStatus(InfoBarSeverity.Success, Strings.Get("Dialog_UrlCopied"));
         }
         catch (Exception ex)
         {

@@ -25,7 +25,7 @@ public sealed partial class ItemTagsDialog : ContentDialog
         InitializeComponent();
         _repo = repo;
         _itemId = itemId;
-        ItemLabel.Text = $"Etiquetas para: {itemTitle}";
+        ItemLabel.Text = Strings.Format("ItemTags_ItemLabel", itemTitle);
 
         TagsList.ItemsSource = _tags;
         var current = new HashSet<string>(currentTagIds);
@@ -57,7 +57,7 @@ public sealed partial class ItemTagsDialog : ContentDialog
         }
         catch (Exception ex)
         {
-            ShowError($"No se pudo crear: {ex.Message}");
+            ShowError(Strings.Format("ItemTags_CreateError", ex.Message));
         }
     }
 
@@ -73,7 +73,7 @@ public sealed partial class ItemTagsDialog : ContentDialog
         }
         catch (Exception ex)
         {
-            ShowError($"Error al guardar: {ex.Message}");
+            ShowError(Strings.Format("ItemTags_SaveError", ex.Message));
         }
         finally
         {
