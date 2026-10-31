@@ -52,7 +52,7 @@
     <value>No se pudieron comprobar los enlaces.</value>
   </data>
   <data name="Actions_CheckLinksPending" xml:space="preserve">
-    <value>Comprobados {0}: {1} rotos. Quedan {2}, vuelve a comprobar.</value>
+    <value>Comprobados {0}: {1} rotos. Quedan {2}: hay que volver a comprobar.</value>
   </data>
   <data name="Actions_Copied" xml:space="preserve">
     <value>Copiado: {0}</value>
@@ -64,7 +64,7 @@
     <value>Borrar</value>
   </data>
   <data name="Actions_DeleteConfirmMessage" xml:space="preserve">
-    <value>¿Borrar el elemento "{0}"?</value>
+    <value>¿Borrar el elemento «{0}»?</value>
   </data>
   <data name="Actions_DeleteConfirmTitle" xml:space="preserve">
     <value>Confirmar borrado</value>
@@ -79,13 +79,13 @@
     <value>Sin conexión, borrado encolado: {0}.</value>
   </data>
   <data name="Actions_DuplicateCancelled" xml:space="preserve">
-    <value>Cancelado: ya tenías ese enlace.</value>
+    <value>Cancelado: esa dirección ya estaba guardada.</value>
   </data>
   <data name="Actions_DuplicateConfirm" xml:space="preserve">
     <value>Guardar igualmente</value>
   </data>
   <data name="Actions_DuplicateMessage" xml:space="preserve">
-    <value>Ya tienes este enlace guardado como "{0}". ¿Guardarlo de todos modos?</value>
+    <value>Esta dirección ya está guardada como «{0}». ¿Guardarla de todos modos?</value>
   </data>
   <data name="Actions_DuplicateTitle" xml:space="preserve">
     <value>Enlace duplicado</value>
@@ -97,7 +97,7 @@
     <value>Error exportando: {0}</value>
   </data>
   <data name="Actions_Favorited" xml:space="preserve">
-    <value>Favorito: {0}</value>
+    <value>Marcado como favorito: {0}</value>
   </data>
   <data name="Actions_FavoriteError" xml:space="preserve">
     <value>Error con favorito: {0}</value>
@@ -106,7 +106,7 @@
     <value>Sin conexión, favorito encolado: {0}.</value>
   </data>
   <data name="Actions_HistoryDisabledMessage" xml:space="preserve">
-    <value>Actívalo en Ajustes si quieres ver eventos.</value>
+    <value>Hay que activar Guardar el historial de cambios en Ajustes.</value>
   </data>
   <data name="Actions_HistoryDisabledTitle" xml:space="preserve">
     <value>Historial desactivado</value>
@@ -124,7 +124,7 @@
     <value>Importando…</value>
   </data>
   <data name="Actions_InvalidValue" xml:space="preserve">
-    <value>Valor inválido.</value>
+    <value>No parece una dirección web ni una ruta de archivo.</value>
   </data>
   <data name="Actions_ItemCount" xml:space="preserve">
     <value>{0} elementos.</value>
@@ -145,7 +145,7 @@
     <value>Etiquetas</value>
   </data>
   <data name="Actions_NoVisibleLinks" xml:space="preserve">
-    <value>No hay enlaces visibles para incluir. Ajusta los filtros.</value>
+    <value>No hay enlaces visibles para incluir: hay que cambiar la búsqueda o los filtros.</value>
   </data>
   <data name="Actions_OpenBrowserError" xml:space="preserve">
     <value>No se pudo abrir el navegador: {0}</value>
@@ -163,7 +163,7 @@
     <value>Recargando…</value>
   </data>
   <data name="Actions_ShareError" xml:space="preserve">
-    <value>Share UI falló: {0}</value>
+    <value>No se pudo abrir el panel de compartir: {0}</value>
   </data>
   <data name="Actions_ShareLaunched" xml:space="preserve">
     <value>Panel de compartir lanzado para {0}.</value>
@@ -175,10 +175,10 @@
     <value>Etiquetas actualizadas.</value>
   </data>
   <data name="Actions_UndoArchive" xml:space="preserve">
-    <value>archivar "{0}"</value>
+    <value>archivar «{0}»</value>
   </data>
   <data name="Actions_UndoDelete" xml:space="preserve">
-    <value>borrar "{0}"</value>
+    <value>borrar «{0}»</value>
   </data>
   <data name="Actions_Unfavorited" xml:space="preserve">
     <value>Quitado de favoritos: {0}</value>
@@ -229,7 +229,7 @@
     <value>Guardar</value>
   </data>
   <data name="AddEdit_InvalidValue" xml:space="preserve">
-    <value>El valor no es una URL ni una ruta válida.</value>
+    <value>No parece una dirección web ni una ruta de archivo.</value>
   </data>
   <data name="AddEdit_NewCategoryBox.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Nueva categoría</value>
@@ -271,10 +271,10 @@
     <value>Editar elemento</value>
   </data>
   <data name="AddEdit_TitleRequired" xml:space="preserve">
-    <value>Escribe un título o usa una URL con OpenGraph.</value>
+    <value>Hace falta un título o una URL con OpenGraph.</value>
   </data>
   <data name="AddEdit_TitleSuggested" xml:space="preserve">
-    <value>Título sugerido. Revisa y pulsa Guardar de nuevo.</value>
+    <value>Título sugerido. Hay que revisarlo y volver a pulsar Guardar.</value>
   </data>
   <data name="AddEdit_ValueBox.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.HelpText" xml:space="preserve">
     <value>URL o ruta de archivo</value>
@@ -285,8 +285,11 @@
   <data name="AddEdit_ValueBox.Header" xml:space="preserve">
     <value>Valor (URL o ruta)</value>
   </data>
+  <data name="App_LanguageTag" xml:space="preserve">
+    <value>es</value>
+  </data>
   <data name="App_MissingConfig" xml:space="preserve">
-    <value>Falta configuración de Supabase. Define LM_SUPABASE_URL y LM_SUPABASE_ANON_KEY o coloca appsettings.Local.json junto al ejecutable.</value>
+    <value>Falta la configuración de Supabase: hay que definir LM_SUPABASE_URL y LM_SUPABASE_ANON_KEY o poner appsettings.Local.json junto al ejecutable.</value>
   </data>
   <data name="App_SupabaseInitFailed" xml:space="preserve">
     <value>No se pudo iniciar Supabase: {0}</value>
@@ -307,7 +310,7 @@
     <value>Borrar</value>
   </data>
   <data name="Archived_DeleteConfirm" xml:space="preserve">
-    <value>¿Borrar definitivamente "{0}"? No se puede deshacer.</value>
+    <value>¿Borrar definitivamente «{0}»? No se puede deshacer.</value>
   </data>
   <data name="Archived_Deleted" xml:space="preserve">
     <value>Borrado: {0}</value>
@@ -331,7 +334,7 @@
     <value>Restaurado: {0}</value>
   </data>
   <data name="Auth_AlreadyRegistered" xml:space="preserve">
-    <value>Ese correo ya tiene cuenta. Inicia sesión.</value>
+    <value>Ya hay una cuenta con ese email. Para entrar, hay que elegir Tengo cuenta.</value>
   </data>
   <data name="Auth_Cancelled" xml:space="preserve">
     <value>Operación cancelada.</value>
@@ -340,13 +343,13 @@
     <value>Supabase devolvió sesión vacía.</value>
   </data>
   <data name="Auth_InvalidCredentials" xml:space="preserve">
-    <value>Credenciales inválidas. Revisa el correo y la contraseña.</value>
+    <value>El email o la contraseña no son correctos.</value>
   </data>
   <data name="Auth_NotConfirmed" xml:space="preserve">
-    <value>Confirma tu correo antes de iniciar sesión.</value>
+    <value>Falta confirmar el email: el enlace está en el correo de LinkManager.</value>
   </data>
   <data name="Auth_RateLimited" xml:space="preserve">
-    <value>Demasiados intentos. Espera unos minutos.</value>
+    <value>Demasiados intentos seguidos. Hay que esperar un momento y volver a probar.</value>
   </data>
   <data name="Common_Accept" xml:space="preserve">
     <value>Aceptar</value>
@@ -394,16 +397,16 @@
     <value>Email del destinatario</value>
   </data>
   <data name="EmailShare_EmailBox.Header" xml:space="preserve">
-    <value>Email destinatario</value>
+    <value>Email del destinatario</value>
   </data>
   <data name="EmailShare_EmailBox.PlaceholderText" xml:space="preserve">
     <value>destinatario@correo.com</value>
   </data>
   <data name="EmailShare_InvalidEmail" xml:space="preserve">
-    <value>Email inválido.</value>
+    <value>El email no es válido.</value>
   </data>
   <data name="EmailShare_ItemLabel" xml:space="preserve">
-    <value>Item: {0}</value>
+    <value>Elemento: {0}</value>
   </data>
   <data name="EmailShare_MessageBox.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Mensaje opcional</value>
@@ -463,25 +466,22 @@
     <value>Sí</value>
   </data>
   <data name="Filters_SortAlphaAsc" xml:space="preserve">
-    <value>Alfabéticamente (A–Z)</value>
+    <value>Alfabético (A–Z)</value>
   </data>
   <data name="Filters_SortAlphaDesc" xml:space="preserve">
-    <value>Alfabéticamente (Z–A)</value>
+    <value>Alfabético (Z–A)</value>
   </data>
   <data name="Filters_SortCategoryAsc" xml:space="preserve">
     <value>Por categoría</value>
-  </data>
-  <data name="Filters_SortCombo.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Orden de la lista</value>
   </data>
   <data name="Filters_SortCombo.Header" xml:space="preserve">
     <value>Ordenar por</value>
   </data>
   <data name="Filters_SortDateAsc" xml:space="preserve">
-    <value>Más antiguos primero</value>
+    <value>Más antiguos</value>
   </data>
   <data name="Filters_SortDateDesc" xml:space="preserve">
-    <value>Más recientes primero</value>
+    <value>Más recientes</value>
   </data>
   <data name="Filters_SortUsageDesc" xml:space="preserve">
     <value>Más usados</value>
@@ -547,7 +547,7 @@ En Ajustes: Escape vuelve a la lista.</value>
     <value>Sin eventos</value>
   </data>
   <data name="History_EntriesList.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Lista de eventos</value>
+    <value>Eventos</value>
   </data>
   <data name="History_ItemLabel" xml:space="preserve">
     <value>Eventos de: {0}</value>
@@ -706,10 +706,10 @@ En Ajustes: Escape vuelve a la lista.</value>
     <value>Enlace guardado</value>
   </data>
   <data name="Layer_Prompt.Text" xml:space="preserve">
-    <value>Pulsa una tecla:</value>
+    <value>Pulsar una tecla:</value>
   </data>
   <data name="Login_AccountCreated" xml:space="preserve">
-    <value>Cuenta creada. Revisa tu correo para confirmarla y luego inicia sesión.</value>
+    <value>Cuenta creada. Antes de entrar hay que confirmarla con el enlace del email.</value>
   </data>
   <data name="Login_BrowserOpenError" xml:space="preserve">
     <value>No se pudo abrir el navegador: {0}</value>
@@ -723,9 +723,6 @@ En Ajustes: Escape vuelve a la lista.</value>
   <data name="Login_Connecting" xml:space="preserve">
     <value>Conectando con Supabase…</value>
   </data>
-  <data name="Login_DiscordButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Iniciar sesión con Discord</value>
-  </data>
   <data name="Login_DiscordButton.Content" xml:space="preserve">
     <value>Continuar con Discord</value>
   </data>
@@ -736,31 +733,28 @@ En Ajustes: Escape vuelve a la lista.</value>
     <value>Correo electrónico</value>
   </data>
   <data name="Login_EmailBox.PlaceholderText" xml:space="preserve">
-    <value>tu@correo.com</value>
+    <value>nombre@correo.com</value>
   </data>
   <data name="Login_EmailRequiredForReset" xml:space="preserve">
-    <value>Escribe tu correo arriba antes de pedir el restablecimiento.</value>
+    <value>Para restablecer la contraseña, primero hay que escribir el correo.</value>
   </data>
   <data name="Login_ForgotButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Enviar correo para restablecer la contraseña</value>
+    <value>He olvidado la contraseña: enviar un correo para cambiarla</value>
   </data>
   <data name="Login_ForgotButton.Content" xml:space="preserve">
-    <value>¿Olvidaste la contraseña?</value>
-  </data>
-  <data name="Login_GitHubButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Iniciar sesión con GitHub</value>
+    <value>He olvidado la contraseña</value>
   </data>
   <data name="Login_GitHubButton.Content" xml:space="preserve">
     <value>Continuar con GitHub</value>
   </data>
   <data name="Login_InvalidEmail" xml:space="preserve">
-    <value>Introduce un correo válido.</value>
+    <value>El email no es válido.</value>
   </data>
   <data name="Login_ModeLabel.Text" xml:space="preserve">
     <value>Modo</value>
   </data>
   <data name="Login_OAuthIncomplete" xml:space="preserve">
-    <value>No se completó el inicio con {0}.</value>
+    <value>No se pudo completar el inicio de sesión con {0}. Hay que volver a intentarlo.</value>
   </data>
   <data name="Login_OpeningProvider" xml:space="preserve">
     <value>Abriendo {0} en el navegador…</value>
@@ -784,10 +778,10 @@ En Ajustes: Escape vuelve a la lista.</value>
     <value>Contraseña</value>
   </data>
   <data name="Login_PasswordTooShort" xml:space="preserve">
-    <value>La contraseña tiene al menos 6 caracteres.</value>
+    <value>La contraseña necesita al menos 6 caracteres.</value>
   </data>
   <data name="Login_ResetEmailSent" xml:space="preserve">
-    <value>Te hemos enviado un correo a {0}.</value>
+    <value>Se ha enviado un correo a {0}.</value>
   </data>
   <data name="Login_SignInMode.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Modo: iniciar sesión con cuenta existente</value>
@@ -796,7 +790,7 @@ En Ajustes: Escape vuelve a la lista.</value>
     <value>Tengo cuenta</value>
   </data>
   <data name="Login_SignInPrompt" xml:space="preserve">
-    <value>Inicia sesión para sincronizar tus enlaces.</value>
+    <value>Los enlaces se sincronizan al iniciar sesión.</value>
   </data>
   <data name="Login_SignUpMode.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Modo: crear cuenta nueva</value>
@@ -811,10 +805,7 @@ En Ajustes: Escape vuelve a la lista.</value>
     <value>Abrir creación de cuenta en la web</value>
   </data>
   <data name="Login_SignUpWebNote.Text" xml:space="preserve">
-    <value>Si prefieres confirmar el correo en el navegador.</value>
-  </data>
-  <data name="Login_SubmitButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Continuar con correo y contraseña</value>
+    <value>Por si se prefiere confirmar el correo en el navegador.</value>
   </data>
   <data name="Login_SubmitButton.Content" xml:space="preserve">
     <value>Iniciar sesión</value>
@@ -826,7 +817,7 @@ En Ajustes: Escape vuelve a la lista.</value>
     <value>Crear cuenta</value>
   </data>
   <data name="Login_SubtitleText.Text" xml:space="preserve">
-    <value>Inicia sesión para sincronizar tus enlaces.</value>
+    <value>Los enlaces se sincronizan al iniciar sesión.</value>
   </data>
   <data name="Login_SupabaseUnavailable" xml:space="preserve">
     <value>Supabase no está disponible.</value>
@@ -835,16 +826,16 @@ En Ajustes: Escape vuelve a la lista.</value>
     <value>LinkManager</value>
   </data>
   <data name="Login_WebSignUpOpened" xml:space="preserve">
-    <value>Abrimos la web para crear tu cuenta. Vuelve aquí cuando termines.</value>
+    <value>Se ha abierto la web para crear la cuenta. Al terminar, hay que volver aquí.</value>
   </data>
   <data name="Main_AddButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Añadir enlace</value>
+    <value>Añadir elemento</value>
   </data>
   <data name="Main_AddButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>Añadir un enlace o ruta (Ctrl+N)</value>
   </data>
   <data name="Main_AddButton.Label" xml:space="preserve">
-    <value>Añadir enlace</value>
+    <value>Añadir elemento</value>
   </data>
   <data name="Main_Archived.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Ver elementos archivados y restaurarlos</value>
@@ -883,7 +874,7 @@ En Ajustes: Escape vuelve a la lista.</value>
     <value>Borrar</value>
   </data>
   <data name="Main_BulkDeleteConfirm" xml:space="preserve">
-    <value>¿Borrar {0} elementos? Podrás deshacerlo con Ctrl+Z.</value>
+    <value>¿Borrar {0} elementos? Se puede deshacer con Ctrl+Z.</value>
   </data>
   <data name="Main_BulkDeleted" xml:space="preserve">
     <value>Borrados {0} de {1}. Ctrl+Z para deshacer.</value>
@@ -922,10 +913,10 @@ En Ajustes: Escape vuelve a la lista.</value>
     <value>Detalles del elemento seleccionado</value>
   </data>
   <data name="Main_EmptyFiltered" xml:space="preserve">
-    <value>Ningún resultado para la búsqueda o los filtros actuales.</value>
+    <value>Ningún resultado para la búsqueda o los filtros.</value>
   </data>
   <data name="Main_EmptyNone" xml:space="preserve">
-    <value>Aún no tienes enlaces. Pulsa «Añadir enlace» para empezar.</value>
+    <value>Aún no hay enlaces. Añadir elemento crea el primero.</value>
   </data>
   <data name="Main_Export.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Exportar enlaces a JSON</value>
@@ -982,7 +973,7 @@ En Ajustes: Escape vuelve a la lista.</value>
     <value>Importar…</value>
   </data>
   <data name="Main_ItemsList.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Lista de enlaces guardados. Usa Ctrl o Mayús para seleccionar varios.</value>
+    <value>Enlaces guardados. Con Ctrl o Mayús se seleccionan varios.</value>
   </data>
   <data name="Main_ManageCategories.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Gestionar categorías</value>
@@ -1006,7 +997,7 @@ En Ajustes: Escape vuelve a la lista.</value>
     <value>Archivar</value>
   </data>
   <data name="Main_MenuCheck.Text" xml:space="preserve">
-    <value>Comprobar si está roto</value>
+    <value>Comprobar si el enlace funciona</value>
   </data>
   <data name="Main_MenuCopy.KeyboardAcceleratorTextOverride" xml:space="preserve">
     <value>Ctrl+C</value>
@@ -1037,9 +1028,6 @@ En Ajustes: Escape vuelve a la lista.</value>
   </data>
   <data name="Main_MenuTags.Text" xml:space="preserve">
     <value>Etiquetas…</value>
-  </data>
-  <data name="Main_OpenWeb.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Abrir el cliente web</value>
   </data>
   <data name="Main_OpenWeb.Label" xml:space="preserve">
     <value>Abrir versión web</value>
@@ -1114,7 +1102,7 @@ En Ajustes: Escape vuelve a la lista.</value>
     <value>borrar {0} elementos</value>
   </data>
   <data name="Main_UndoDeleteOne" xml:space="preserve">
-    <value>borrar "{0}"</value>
+    <value>borrar «{0}»</value>
   </data>
   <data name="Main_UndoDone" xml:space="preserve">
     <value>Deshecho: {0}</value>
@@ -1147,7 +1135,7 @@ En Ajustes: Escape vuelve a la lista.</value>
     <value>Borrar</value>
   </data>
   <data name="ManageList_DeleteConfirm" xml:space="preserve">
-    <value>¿Borrar "{0}"? Los elementos vinculados se desasocian.</value>
+    <value>¿Borrar «{0}»? Sus enlaces no se borran.</value>
   </data>
   <data name="ManageList_Dialog.CloseButtonText" xml:space="preserve">
     <value>Cerrar</value>
@@ -1183,10 +1171,10 @@ En Ajustes: Escape vuelve a la lista.</value>
     <value>no se recibió la sesión</value>
   </data>
   <data name="OAuth_SignedIn" xml:space="preserve">
-    <value>Sesión iniciada. Ya puedes cerrar esta pestaña y volver a LinkManager.</value>
+    <value>Sesión iniciada. Ya se puede cerrar esta pestaña y volver a LinkManager.</value>
   </data>
   <data name="Repo_CategoryNotCreated" xml:space="preserve">
-    <value>El servidor no devolvió la categoría creada (revisa RLS).</value>
+    <value>El servidor no devolvió la categoría creada (hay que revisar RLS).</value>
   </data>
   <data name="Repo_DefaultCollectionName" xml:space="preserve">
     <value>Colección de enlaces</value>
@@ -1195,10 +1183,10 @@ En Ajustes: Escape vuelve a la lista.</value>
     <value>Este elemento ya no existe (puede haberse borrado en otro dispositivo).</value>
   </data>
   <data name="Repo_ItemNotCreated" xml:space="preserve">
-    <value>El servidor no devolvió el item creado (revisa RLS).</value>
+    <value>El servidor no devolvió el elemento creado (hay que revisar RLS).</value>
   </data>
   <data name="Repo_MaxLinks" xml:space="preserve">
-    <value>Máximo 200 enlaces por colección.</value>
+    <value>Una colección admite como mucho 200 enlaces.</value>
   </data>
   <data name="Repo_NoSession" xml:space="preserve">
     <value>Sin sesión activa.</value>
@@ -1210,13 +1198,13 @@ En Ajustes: Escape vuelve a la lista.</value>
     <value>Sin token</value>
   </data>
   <data name="Repo_SelectAtLeastOne" xml:space="preserve">
-    <value>Selecciona al menos un enlace.</value>
+    <value>Falta elegir al menos un enlace.</value>
   </data>
   <data name="Repo_ShareLinkNotCreated" xml:space="preserve">
-    <value>El servidor no devolvió el enlace creado (revisa RLS / migración 0005).</value>
+    <value>El servidor no devolvió el enlace creado (hay que revisar RLS / migración 0005).</value>
   </data>
   <data name="Repo_TagNotCreated" xml:space="preserve">
-    <value>El servidor no devolvió la etiqueta creada (revisa RLS).</value>
+    <value>El servidor no devolvió la etiqueta creada (hay que revisar RLS).</value>
   </data>
   <data name="Settings_AccountHeading.Text" xml:space="preserve">
     <value>Cuenta</value>
@@ -1276,7 +1264,7 @@ En Ajustes: Escape vuelve a la lista.</value>
     <value>Zona de peligro</value>
   </data>
   <data name="Settings_DangerNote.Text" xml:space="preserve">
-    <value>Eliminar tu cuenta borra de forma permanente tu cuenta y todos tus datos (enlaces, categorías, etiquetas, ajustes y enlaces compartidos). No se puede deshacer.</value>
+    <value>Eliminar cuenta borra para siempre la cuenta y todos sus datos (enlaces, categorías, etiquetas, ajustes y enlaces compartidos). No se puede deshacer.</value>
   </data>
   <data name="Settings_DeleteAccountButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Eliminar mi cuenta de forma permanente</value>
@@ -1285,13 +1273,13 @@ En Ajustes: Escape vuelve a la lista.</value>
     <value>Eliminar cuenta</value>
   </data>
   <data name="Settings_DeleteDialogBody" xml:space="preserve">
-    <value>Se borrarán de forma permanente tu cuenta y todos tus datos (enlaces, categorías, etiquetas, ajustes y enlaces compartidos). Esta acción no se puede deshacer.</value>
+    <value>Se borrarán para siempre la cuenta, los enlaces, las categorías, las etiquetas, los ajustes y los enlaces compartidos. No se puede deshacer.</value>
   </data>
   <data name="Settings_DeleteDialogConfirm" xml:space="preserve">
     <value>Eliminar cuenta</value>
   </data>
   <data name="Settings_DeleteDialogTitle" xml:space="preserve">
-    <value>¿Eliminar tu cuenta?</value>
+    <value>¿Eliminar la cuenta?</value>
   </data>
   <data name="Settings_DeleteError" xml:space="preserve">
     <value>Error al eliminar: {0}</value>
@@ -1300,19 +1288,19 @@ En Ajustes: Escape vuelve a la lista.</value>
     <value>No se pudo eliminar la cuenta ({0}).</value>
   </data>
   <data name="Settings_Deleting" xml:space="preserve">
-    <value>Eliminando tu cuenta…</value>
+    <value>Eliminando la cuenta…</value>
   </data>
   <data name="Settings_DeviceHeading.Text" xml:space="preserve">
     <value>Este equipo</value>
   </data>
   <data name="Settings_DisplayNameBox.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.HelpText" xml:space="preserve">
-    <value>Aparece en la web. No se muestra tu email.</value>
+    <value>Es el nombre con el que saluda la web de LinkManager. No sale en lo que se comparte.</value>
   </data>
   <data name="Settings_DisplayNameBox.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Nombre público</value>
+    <value>Nombre</value>
   </data>
   <data name="Settings_DisplayNameBox.Header" xml:space="preserve">
-    <value>Nombre público</value>
+    <value>Nombre</value>
   </data>
   <data name="Settings_HeadingText.Text" xml:space="preserve">
     <value>Ajustes</value>
@@ -1324,10 +1312,10 @@ En Ajustes: Escape vuelve a la lista.</value>
     <value>Registra cada creación, modificación o borrado.</value>
   </data>
   <data name="Settings_HistoryToggle.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Activar historial</value>
+    <value>Guardar el historial de cambios</value>
   </data>
   <data name="Settings_HistoryToggle.Header" xml:space="preserve">
-    <value>Habilitar historial por elemento</value>
+    <value>Guardar el historial de cambios</value>
   </data>
   <data name="Settings_HistoryToggle.OffContent" xml:space="preserve">
     <value>Desactivado</value>
@@ -1336,22 +1324,22 @@ En Ajustes: Escape vuelve a la lista.</value>
     <value>Activado</value>
   </data>
   <data name="Settings_HotkeyCaptureButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.HelpText" xml:space="preserve">
-    <value>Actívalo y pulsa la nueva combinación con Ctrl, Mayús o Alt más una tecla.</value>
+    <value>Tras activarlo, hay que pulsar la nueva combinación: Ctrl, Mayús o Alt más una tecla.</value>
   </data>
   <data name="Settings_HotkeyCaptureButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Cambiar la combinación del atajo global</value>
   </data>
   <data name="Settings_HotkeyCapturing" xml:space="preserve">
-    <value>Pulsa la combinación…</value>
+    <value>Pulsar la combinación…</value>
   </data>
   <data name="Settings_HotkeyChange" xml:space="preserve">
     <value>Cambiar atajo (actual: {0})</value>
   </data>
   <data name="Settings_HotkeyNeedsModifier" xml:space="preserve">
-    <value>Usa al menos Ctrl, Mayús o Alt junto a la tecla.</value>
+    <value>Hace falta al menos Ctrl, Mayús o Alt junto a la tecla.</value>
   </data>
   <data name="Settings_HotkeySet" xml:space="preserve">
-    <value>Atajo: {0}. Guarda para aplicarlo.</value>
+    <value>Atajo: {0}. Se aplica al guardar.</value>
   </data>
   <data name="Settings_HotkeyToggle.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Atajo global de teclado</value>
@@ -1367,6 +1355,36 @@ En Ajustes: Escape vuelve a la lista.</value>
   </data>
   <data name="Settings_InvalidSession" xml:space="preserve">
     <value>Sesión no válida.</value>
+  </data>
+  <data name="Settings_LanguageEnglish.Content" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="Settings_LanguageExpander.Header" xml:space="preserve">
+    <value>Idioma</value>
+  </data>
+  <data name="Settings_LanguageRadios.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Idioma de la aplicación</value>
+  </data>
+  <data name="Settings_LanguageRadios.Header" xml:space="preserve">
+    <value>Idioma de la aplicación</value>
+  </data>
+  <data name="Settings_LanguageRestartBar.Message" xml:space="preserve">
+    <value>El idioma cambia al reiniciar la app.</value>
+  </data>
+  <data name="Settings_LanguageRestartButton.Content" xml:space="preserve">
+    <value>Guardar y reiniciar</value>
+  </data>
+  <data name="Settings_LanguageRestartFailed" xml:space="preserve">
+    <value>No se pudo reiniciar la app. El idioma cambiará la próxima vez que se abra.</value>
+  </data>
+  <data name="Settings_LanguageSpanish.Content" xml:space="preserve">
+    <value>Español</value>
+  </data>
+  <data name="Settings_LanguageSystem.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Seguir el idioma de Windows</value>
+  </data>
+  <data name="Settings_LanguageSystem.Content" xml:space="preserve">
+    <value>Seguir el idioma de Windows</value>
   </data>
   <data name="Settings_LinksHeading.Text" xml:space="preserve">
     <value>Enlaces</value>
@@ -1429,10 +1447,10 @@ En Ajustes: Escape vuelve a la lista.</value>
     <value>Guardando…</value>
   </data>
   <data name="Settings_ShareCategoriesToggle.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Mostrar la categoría en enlaces públicos</value>
+    <value>Mostrar la categoría en los enlaces públicos</value>
   </data>
   <data name="Settings_ShareCategoriesToggle.Header" xml:space="preserve">
-    <value>Mostrar la categoría en mis enlaces públicos</value>
+    <value>Mostrar la categoría en los enlaces públicos</value>
   </data>
   <data name="Settings_ShareCategoriesToggle.OffContent" xml:space="preserve">
     <value>Desactivado</value>
@@ -1441,10 +1459,10 @@ En Ajustes: Escape vuelve a la lista.</value>
     <value>Activado</value>
   </data>
   <data name="Settings_ShareTagsToggle.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Mostrar las etiquetas en enlaces públicos</value>
+    <value>Mostrar las etiquetas en los enlaces públicos</value>
   </data>
   <data name="Settings_ShareTagsToggle.Header" xml:space="preserve">
-    <value>Mostrar las etiquetas en mis enlaces públicos</value>
+    <value>Mostrar las etiquetas en los enlaces públicos</value>
   </data>
   <data name="Settings_ShareTagsToggle.OffContent" xml:space="preserve">
     <value>Desactivado</value>
@@ -1456,7 +1474,7 @@ En Ajustes: Escape vuelve a la lista.</value>
     <value>Privacidad al compartir</value>
   </data>
   <data name="Settings_SharingNote.Text" xml:space="preserve">
-    <value>Desactivado por defecto. Si lo activas, quien abra tus enlaces públicos verá la categoría y/o las etiquetas que les asignaste.</value>
+    <value>Quien abre lo compartido ve el título, la dirección y las notas. La categoría y las etiquetas solo se ven si se activan más abajo.</value>
   </data>
   <data name="Settings_StartupToggle.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Abrir al iniciar Windows</value>
@@ -1498,10 +1516,10 @@ En Ajustes: Escape vuelve a la lista.</value>
     <value>Seguir el tema de Windows</value>
   </data>
   <data name="Settings_ThemeSystem.Content" xml:space="preserve">
-    <value>Seguir a Windows</value>
+    <value>Seguir el tema de Windows</value>
   </data>
   <data name="Settings_TrayToggle.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.HelpText" xml:space="preserve">
-    <value>Si está activado, cerrar la ventana solo la oculta. Para salir usa el menú de la bandeja → Salir.</value>
+    <value>Si está activado, cerrar la ventana solo la oculta. Para salir, hay que usar Salir en el menú de la bandeja.</value>
   </data>
   <data name="Settings_TrayToggle.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Minimizar a la bandeja al cerrar</value>
@@ -1516,13 +1534,13 @@ En Ajustes: Escape vuelve a la lista.</value>
     <value>Activado</value>
   </data>
   <data name="Settings_UpdateApplyFailed" xml:space="preserve">
-    <value>No se pudo aplicar la actualización. Inténtalo de nuevo.</value>
+    <value>No se pudo aplicar la actualización. Hay que volver a intentarlo.</value>
   </data>
   <data name="Settings_UpdateApplying" xml:space="preserve">
     <value>Aplicando actualización…</value>
   </data>
   <data name="Settings_UpdateCheckFailed" xml:space="preserve">
-    <value>No se pudo comprobar. Revisa la conexión.</value>
+    <value>No se pudo comprobar si hay actualizaciones. Hay que revisar la conexión.</value>
   </data>
   <data name="Settings_UpdateChecking" xml:space="preserve">
     <value>Buscando actualizaciones…</value>
@@ -1549,10 +1567,10 @@ En Ajustes: Escape vuelve a la lista.</value>
     <value>Actualizaciones</value>
   </data>
   <data name="Settings_UpdatesNote.Text" xml:space="preserve">
-    <value>LinkManager se actualiza solo en segundo plano. También puedes comprobarlo ahora.</value>
+    <value>LinkManager se actualiza solo en segundo plano. También se puede comprobar ahora.</value>
   </data>
   <data name="Settings_UpdateUpToDate" xml:space="preserve">
-    <value>Ya tienes la última versión.</value>
+    <value>Ya está instalada la última versión.</value>
   </data>
   <data name="ShareCollection_CopyButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Copiar URL al portapapeles</value>
@@ -1561,10 +1579,10 @@ En Ajustes: Escape vuelve a la lista.</value>
     <value>Copiar URL</value>
   </data>
   <data name="ShareCollection_Count" xml:space="preserve">
-    <value>{0} enlaces se incluirán.</value>
+    <value>Incluirá {0} enlaces.</value>
   </data>
   <data name="ShareCollection_Created" xml:space="preserve">
-    <value>Colección creada. Copia o abre la URL.</value>
+    <value>Colección creada. Ya se puede copiar o abrir la URL.</value>
   </data>
   <data name="ShareCollection_Dialog.CloseButtonText" xml:space="preserve">
     <value>Cerrar</value>
@@ -1633,10 +1651,10 @@ En Ajustes: Escape vuelve a la lista.</value>
     <value>caducado</value>
   </data>
   <data name="Shared_Expires" xml:space="preserve">
-    <value>caduca {0:d}</value>
+    <value>caduca el {0:d}</value>
   </data>
   <data name="Shared_LinkFallback" xml:space="preserve">
-    <value>(enlace)</value>
+    <value>(sin título)</value>
   </data>
   <data name="Shared_LinkTitle" xml:space="preserve">
     <value>Enlace: {0}</value>
@@ -1654,7 +1672,7 @@ En Ajustes: Escape vuelve a la lista.</value>
     <value>Revocar</value>
   </data>
   <data name="Shared_RevokeConfirm" xml:space="preserve">
-    <value>¿Revocar "{0}"? El enlace público dejará de funcionar.</value>
+    <value>¿Revocar «{0}»? La dirección dejará de funcionar para todos los que la tengan.</value>
   </data>
   <data name="Shared_Revoked" xml:space="preserve">
     <value>Revocado.</value>
@@ -1684,10 +1702,10 @@ En Ajustes: Escape vuelve a la lista.</value>
     <value>Caducidad</value>
   </data>
   <data name="ShareLink_Generated" xml:space="preserve">
-    <value>Enlace generado. Copia y compártelo.</value>
+    <value>Enlace generado. Ya se puede copiar y compartir.</value>
   </data>
   <data name="ShareLink_Item" xml:space="preserve">
-    <value>Item: {0}</value>
+    <value>Elemento: {0}</value>
   </data>
   <data name="ShareLink_ResultBox.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>URL pública generada</value>
@@ -1699,7 +1717,7 @@ En Ajustes: Escape vuelve a la lista.</value>
     <value>Aplicando actualización…</value>
   </data>
   <data name="Startup_ApplyUpdateFailed" xml:space="preserve">
-    <value>No se pudo aplicar la actualización. Inténtalo desde Ajustes.</value>
+    <value>No se pudo aplicar la actualización. Hay que volver a intentarlo desde Ajustes.</value>
   </data>
   <data name="Startup_CacheUnreadable" xml:space="preserve">
     <value>Caché ilegible: {0}</value>
@@ -1707,10 +1725,10 @@ En Ajustes: Escape vuelve a la lista.</value>
   <data name="Startup_ForcedUpdateBody" xml:space="preserve">
     <value>{0}
 
-No se pudo descargar la actualización automáticamente. Comprueba tu conexión y reinicia la app, o actualiza desde Ajustes.</value>
+No se pudo descargar la actualización automáticamente. Hay que comprobar la conexión y reiniciar la app, o actualizar desde Ajustes.</value>
   </data>
   <data name="Startup_ForcedUpdateDefaultMessage" xml:space="preserve">
-    <value>Hay una versión nueva obligatoria.</value>
+    <value>Hay una versión nueva. Para continuar, hay que actualizar la app.</value>
   </data>
   <data name="Startup_ForcedUpdateDownloading" xml:space="preserve">
     <value>Actualización obligatoria. Descargando…</value>
@@ -1728,10 +1746,10 @@ No se pudo descargar la actualización automáticamente. Comprueba tu conexión 
     <value>Cargando…</value>
   </data>
   <data name="Startup_OfflineShowingCache" xml:space="preserve">
-    <value>Sin conexión: {0}. Mostrando caché.</value>
+    <value>Sin conexión: {0}. Se muestran los últimos datos guardados en este equipo.</value>
   </data>
   <data name="Startup_SessionExpired" xml:space="preserve">
-    <value>Tu sesión ha caducado. Vuelve a iniciar sesión.</value>
+    <value>La sesión ha caducado. Hay que volver a iniciar sesión.</value>
   </data>
   <data name="Startup_SessionExpiredReconnecting" xml:space="preserve">
     <value>Sesión caducada. Reconectando…</value>
@@ -1788,7 +1806,7 @@ No se pudo descargar la actualización automáticamente. Comprueba tu conexión 
     <value>LinkManager ({0} para abrir)</value>
   </data>
   <data name="Update_DownloadedBody" xml:space="preserve">
-    <value>LinkManager {0} está listo. Reinicia para aplicarlo.</value>
+    <value>LinkManager {0} está listo. Se aplicará al reiniciar.</value>
   </data>
   <data name="Update_DownloadedTitle" xml:space="preserve">
     <value>Actualización descargada</value>

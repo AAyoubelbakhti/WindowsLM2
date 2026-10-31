@@ -27,6 +27,7 @@ public sealed partial class MainWindow : Window
     private readonly CommandLayerController _commandLayer;
     private GlobalHotkey? _hotkey;
     private bool _exitRequested;
+    private bool _restartRequested;
     private bool _tornDown;
     private bool _hooksInstalled;
     private LocalPreferences _prefs;
@@ -403,7 +404,21 @@ public sealed partial class MainWindow : Window
             SupabaseClientHolder.Shutdown();
         }
         catch { }
+        if (_restartRequested)
+            AppLanguage.ReleaseInstanceKey();
         Environment.Exit(0);
+    }
+
+    /// <summary>Opens the app again and closes this instance, so a new UI language takes effect. False, and
+    /// nothing closes, when the new instance could not start.</summary>
+    public bool Restart()
+    {
+        if (!AppLanguage.StartAfterThisOne())
+            return false;
+        _restartRequested = true;
+        _exitRequested = true;
+        TearDownAndExit();
+        return true;
     }
 
     private void OnAppWindowClosing(

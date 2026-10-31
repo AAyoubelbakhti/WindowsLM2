@@ -10,7 +10,15 @@ public static class WebApi
 {
     private const string Base = "https://lm.aelbak.dev";
 
-    private static readonly HttpClient _http = new() { Timeout = TimeSpan.FromSeconds(20) };
+    private static readonly HttpClient _http = CreateClient();
+
+    /// <summary>The client for the web API, which asks for its messages in the language of the app's texts.</summary>
+    private static HttpClient CreateClient()
+    {
+        var http = new HttpClient { Timeout = TimeSpan.FromSeconds(20) };
+        http.DefaultRequestHeaders.AcceptLanguage.TryParseAdd(Strings.Get("App_LanguageTag"));
+        return http;
+    }
 
     public static async Task<string?> SendEmailAsync(
         string itemId,

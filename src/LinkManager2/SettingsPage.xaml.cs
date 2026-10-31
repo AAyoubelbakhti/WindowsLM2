@@ -27,10 +27,12 @@ public sealed partial class SettingsPage : Page
     private uint _hotkeyModifiers;
     private uint _hotkeyVirtualKey;
     private bool _loaded;
+    private bool _languageShown;
 
     public SettingsPage()
     {
         InitializeComponent();
+        ShowLanguage(AppLanguage.Normalize(LocalPreferences.Load().Language));
         foreach (var (key, labelKey) in ActionKeys)
         {
             var label = Strings.Get(labelKey);
@@ -183,7 +185,47 @@ public sealed partial class SettingsPage : Page
         ((App)Application.Current).Window?.ApplyTheme();
     }
 
-    private async void OnSave(object sender, RoutedEventArgs e)
+    /// <summary>Selects the radio of the saved UI language and says whether a restart is pending to apply it.</summary>
+    private void ShowLanguage(string language)
+    {
+        foreach (var item in LanguageRadios.Items)
+            if (item is RadioButton rb && (string)rb.Tag == language)
+                LanguageRadios.SelectedItem = rb;
+        if (LanguageRadios.SelectedItem is null)
+            LanguageRadios.SelectedIndex = 0;
+        LanguageRestartBar.IsOpen = language != AppLanguage.AtStart;
+        _languageShown = true;
+    }
+
+    /// <summary>Saves the chosen UI language at once, as the theme does; it takes effect on the next start.</summary>
+    private void OnLanguageChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (
+            !_languageShown
+            || LanguageRadios.SelectedItem is not RadioButton rb
+            || rb.Tag is not string language
+        )
+            return;
+
+        var prefs = LocalPreferences.Load();
+        prefs.Language = language;
+        prefs.Save();
+        LanguageRestartBar.IsOpen = language != AppLanguage.AtStart;
+    }
+
+    /// <summary>Saves the page first, when it could load, so a restart for the new language loses no change.</summary>
+    private async void OnRestartForLanguage(object sender, RoutedEventArgs e)
+    {
+        if (_loaded && !await SaveAsync())
+            return;
+        if (((App)Application.Current).Window?.Restart() != true)
+            Status(InfoBarSeverity.Error, Strings.Get("Settings_LanguageRestartFailed"));
+    }
+
+    private async void OnSave(object sender, RoutedEventArgs e) => await SaveAsync();
+
+    /// <summary>Saves the account settings and this device's preferences, saying how it went in the status bar.</summary>
+    private async Task<bool> SaveAsync()
     {
         Status(InfoBarSeverity.Informational, Strings.Get("Settings_Saving"));
         try
@@ -220,10 +262,12 @@ public sealed partial class SettingsPage : Page
             ((App)Application.Current).Window?.ReloadPreferences();
 
             Status(InfoBarSeverity.Success, Strings.Get("Settings_Saved"));
+            return true;
         }
         catch (Exception ex)
         {
             Status(InfoBarSeverity.Error, Strings.Format("Settings_SaveError", ex.Message));
+            return false;
         }
     }
 

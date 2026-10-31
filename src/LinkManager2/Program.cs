@@ -14,6 +14,7 @@ public static class Program
     static void Main(string[] args)
     {
         VelopackApp.Build().Run();
+        AppLanguage.WaitForPrevious(args);
 
         var keyInstance = AppInstance.FindOrRegisterForKey("linkmanager");
         if (!keyInstance.IsCurrent)
@@ -23,15 +24,19 @@ public static class Program
         }
 
         keyInstance.Activated += App.OnActivatedFromOtherInstance;
+        AppLanguage.Apply();
 
         WinRT.ComWrappersSupport.InitializeComWrappers();
-        Microsoft.UI.Xaml.Application.Start((p) =>
-        {
-            var context = new Microsoft.UI.Dispatching.DispatcherQueueSynchronizationContext(
-                Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread());
-            System.Threading.SynchronizationContext.SetSynchronizationContext(context);
-            _ = new App();
-        });
+        Microsoft.UI.Xaml.Application.Start(
+            (p) =>
+            {
+                var context = new Microsoft.UI.Dispatching.DispatcherQueueSynchronizationContext(
+                    Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread()
+                );
+                System.Threading.SynchronizationContext.SetSynchronizationContext(context);
+                _ = new App();
+            }
+        );
     }
 
     /// <summary>
@@ -43,21 +48,47 @@ public static class Program
     private static void RedirectToPrimary(AppInstance primary)
     {
         Microsoft.Windows.AppLifecycle.AppActivationArguments eventArgs;
-        try { eventArgs = AppInstance.GetCurrent().GetActivatedEventArgs(); }
-        catch (Exception ex) { Diagnostics.Log("redirect activation args", ex); return; }
+        try
+        {
+            eventArgs = AppInstance.GetCurrent().GetActivatedEventArgs();
+        }
+        catch (Exception ex)
+        {
+            Diagnostics.Log("redirect activation args", ex);
+            return;
+        }
 
         using var redirected = new ManualResetEvent(false);
         _ = Task.Run(() =>
         {
-            try { primary.RedirectActivationToAsync(eventArgs).AsTask().Wait(); }
-            catch (Exception ex) { Diagnostics.Log("redirect activation", ex); }
-            finally { redirected.Set(); }
+            try
+            {
+                primary.RedirectActivationToAsync(eventArgs).AsTask().Wait();
+            }
+            catch (Exception ex)
+            {
+                Diagnostics.Log("redirect activation", ex);
+            }
+            finally
+            {
+                redirected.Set();
+            }
         });
-        _ = CoWaitForMultipleObjects(0, 0xFFFFFFFF, 1,
-            new[] { redirected.SafeWaitHandle.DangerousGetHandle() }, out _);
+        _ = CoWaitForMultipleObjects(
+            0,
+            0xFFFFFFFF,
+            1,
+            new[] { redirected.SafeWaitHandle.DangerousGetHandle() },
+            out _
+        );
     }
 
     [DllImport("ole32.dll")]
     private static extern uint CoWaitForMultipleObjects(
-        uint dwFlags, uint dwMilliseconds, ulong nHandles, IntPtr[] pHandles, out uint dwIndex);
+        uint dwFlags,
+        uint dwMilliseconds,
+        ulong nHandles,
+        IntPtr[] pHandles,
+        out uint dwIndex
+    );
 }

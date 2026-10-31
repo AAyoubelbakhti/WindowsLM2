@@ -11,6 +11,9 @@ public sealed class LocalPreferences
 
     /// <summary>Preferred UI theme: "system" (follow Windows), "light", or "dark".</summary>
     public string Theme { get; set; } = "system";
+
+    /// <summary>Preferred UI language: "" (follow Windows), "es-ES" or "en-US". It applies from the next start.</summary>
+    public string Language { get; set; } = "";
     public uint HotkeyModifiers { get; set; } = 0x0002 | 0x0004;
     public uint HotkeyVirtualKey { get; set; } = 0x4C;
     public int? WindowX { get; set; }
@@ -24,7 +27,8 @@ public sealed class LocalPreferences
         {
             var dir = System.IO.Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "LinkManager");
+                "LinkManager"
+            );
             Directory.CreateDirectory(dir);
             return System.IO.Path.Combine(dir, "preferences.json");
         }
@@ -36,7 +40,8 @@ public sealed class LocalPreferences
     {
         var dir = System.IO.Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "LinkManager");
+            "LinkManager"
+        );
         Directory.CreateDirectory(dir);
         var file = System.IO.Path.Combine(dir, "device_id");
         try
@@ -44,13 +49,18 @@ public sealed class LocalPreferences
             if (File.Exists(file))
             {
                 var existing = File.ReadAllText(file).Trim();
-                if (!string.IsNullOrWhiteSpace(existing)) return existing;
+                if (!string.IsNullOrWhiteSpace(existing))
+                    return existing;
             }
         }
-        catch {  }
+        catch { }
 
         var id = Guid.NewGuid().ToString();
-        try { File.WriteAllText(file, id); } catch {  }
+        try
+        {
+            File.WriteAllText(file, id);
+        }
+        catch { }
         return id;
     }
 
@@ -58,7 +68,8 @@ public sealed class LocalPreferences
     {
         try
         {
-            if (!File.Exists(Path)) return new LocalPreferences();
+            if (!File.Exists(Path))
+                return new LocalPreferences();
             var text = File.ReadAllText(Path);
             return JsonSerializer.Deserialize<LocalPreferences>(text) ?? new LocalPreferences();
         }
@@ -72,9 +83,15 @@ public sealed class LocalPreferences
     {
         try
         {
-            var text = JsonSerializer.Serialize(this, new JsonSerializerOptions { WriteIndented = true });
+            var text = JsonSerializer.Serialize(
+                this,
+                new JsonSerializerOptions { WriteIndented = true }
+            );
             File.WriteAllText(Path, text);
         }
-        catch (Exception ex) { Diagnostics.Log("preferences save", ex); }
+        catch (Exception ex)
+        {
+            Diagnostics.Log("preferences save", ex);
+        }
     }
 }

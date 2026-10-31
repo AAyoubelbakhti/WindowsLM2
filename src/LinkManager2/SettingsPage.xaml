@@ -46,6 +46,25 @@
                     <RadioButton x:Uid="Settings_ThemeDark" Tag="dark" />
                 </RadioButtons>
             </Expander>
+            <Expander x:Uid="Settings_LanguageExpander" IsExpanded="True" HorizontalAlignment="Stretch">
+                <StackPanel Spacing="8">
+                    <RadioButtons x:Name="LanguageRadios"
+                                  x:Uid="Settings_LanguageRadios"
+                                  SelectionChanged="OnLanguageChanged">
+                        <RadioButton x:Uid="Settings_LanguageSystem" Tag="" />
+                        <RadioButton x:Uid="Settings_LanguageSpanish" Tag="es-ES" Language="es-ES" />
+                        <RadioButton x:Uid="Settings_LanguageEnglish" Tag="en-US" Language="en-US" />
+                    </RadioButtons>
+                    <InfoBar x:Name="LanguageRestartBar"
+                             x:Uid="Settings_LanguageRestartBar"
+                             Severity="Informational"
+                             IsClosable="False">
+                        <InfoBar.ActionButton>
+                            <Button x:Uid="Settings_LanguageRestartButton" Click="OnRestartForLanguage" />
+                        </InfoBar.ActionButton>
+                    </InfoBar>
+                </StackPanel>
+            </Expander>
 
             <TextBlock x:Uid="Settings_LinksHeading" FontSize="18" FontWeight="SemiBold"
                        AutomationProperties.HeadingLevel="Level2" />
