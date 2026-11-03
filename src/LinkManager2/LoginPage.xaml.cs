@@ -103,7 +103,7 @@ public sealed partial class LoginPage : Page
         {
             if (SignUpMode.IsChecked == true)
             {
-                var leaks = await LeakedPasswords.TimesLeakedAsync(pass);
+                var leaks = await LeakedPasswords.TimesLeakedAsync(pass, SupabaseClientHolder.SupabaseUrl);
                 if (leaks > 0)
                 {
                     PasswordBox.Focus(FocusState.Programmatic);

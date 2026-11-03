@@ -10,19 +10,26 @@ public class LeakedPasswordsTests
     private const string Prefix = "5BAA6";
     private const string Rest = "1E4C9B93F3F0682250B6CF8331B7EE68FD8";
     private const string OtherRest = "0000000000000000000000000000000000A";
+    private const string SupabaseUrl = "https://fixture.invalid";
 
     private sealed class FakeService(Func<CancellationToken, Task<HttpResponseMessage>> answer)
         : HttpMessageHandler
     {
         public List<HttpRequestMessage> Requests { get; } = [];
+        public List<string?> Bodies { get; } = [];
 
-        protected override Task<HttpResponseMessage> SendAsync(
+        protected override async Task<HttpResponseMessage> SendAsync(
             HttpRequestMessage request,
             CancellationToken cancellationToken
         )
         {
             Requests.Add(request);
-            return answer(cancellationToken);
+            Bodies.Add(
+                request.Content is null
+                    ? null
+                    : await request.Content.ReadAsStringAsync(cancellationToken)
+            );
+            return await answer(cancellationToken);
         }
     }
 
@@ -45,7 +52,7 @@ public class LeakedPasswordsTests
         );
 
     private static Task<long> TimesLeaked(FakeService service, string password = "password") =>
-        LeakedPasswords.TimesLeakedAsync(password, new HttpClient(service));
+        LeakedPasswords.TimesLeakedAsync(password, SupabaseUrl, new HttpClient(service));
 
     private static async Task AssertLetThroughAtTheLimit(FakeService service)
     {
@@ -77,19 +84,17 @@ public class LeakedPasswordsTests
         Assert.Equal(0, await TimesLeaked(Answering($"{OtherRest}:3\r\n{Rest}:0\r\n")));
 
     [Fact]
-    public async Task AsksWithPaddingAndOnlyTheStartOfTheHash()
+    public async Task SendsOnlyTheStartOfTheHashToTheFunction()
     {
         var service = Answering("");
         await TimesLeaked(service);
         var request = Assert.Single(service.Requests);
-        Assert.Equal(HttpMethod.Get, request.Method);
+        Assert.Equal(HttpMethod.Post, request.Method);
         Assert.Equal(
-            $"https://api.pwnedpasswords.com/range/{Prefix}",
+            $"{SupabaseUrl}/functions/v1/password-range",
             request.RequestUri?.ToString()
         );
-        Assert.Equal("true", Assert.Single(request.Headers.GetValues("Add-Padding")));
-        Assert.Equal("LinkManager", request.Headers.UserAgent.ToString());
-        Assert.Null(request.Content);
+        Assert.Equal(Prefix, Assert.Single(service.Bodies));
         Assert.Null(request.Headers.Authorization);
         Assert.False(request.Headers.Contains("Cookie"));
     }
@@ -99,10 +104,7 @@ public class LeakedPasswordsTests
     {
         var service = Answering("");
         await TimesLeaked(service, "contraseña");
-        Assert.Equal(
-            "https://api.pwnedpasswords.com/range/8C31B",
-            Assert.Single(service.Requests).RequestUri?.ToString()
-        );
+        Assert.Equal("8C31B", Assert.Single(service.Bodies));
     }
 
     [Theory]
