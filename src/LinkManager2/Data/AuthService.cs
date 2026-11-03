@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Supabase.Gotrue;
 
@@ -6,6 +7,8 @@ namespace LinkManager2.Data;
 
 public sealed class AuthService
 {
+    private const string Site = "linkmanager-windows";
+
     private readonly Supabase.Client _client = SupabaseClientHolder.Client;
 
     public Session? CurrentSession => _client.Auth.CurrentSession;
@@ -18,18 +21,65 @@ public sealed class AuthService
         var session = await _client.Auth.SignIn(email, password);
         if (session is null)
             throw new InvalidOperationException(Strings.Get("Auth_EmptySession"));
+        _ = NoteLoginAsync();
     }
 
-    public Task SignUpWithEmailAsync(string email, string password) =>
-        _client.Auth.SignUp(email, password);
+    public async Task SignUpWithEmailAsync(string email, string password)
+    {
+        await _client.Auth.SignUp(email, password);
+        if (IsAuthenticated)
+            _ = NoteLoginAsync();
+    }
 
     public Task SignOutAsync() => _client.Auth.SignOut();
 
     public Task SendPasswordResetEmailAsync(string email) =>
         _client.Auth.ResetPasswordForEmail(email);
 
-    public Task SetSessionFromTokensAsync(string accessToken, string refreshToken) =>
-        _client.Auth.SetSession(accessToken, refreshToken);
+    public async Task SetSessionFromTokensAsync(string accessToken, string refreshToken)
+    {
+        await _client.Auth.SetSession(accessToken, refreshToken);
+        _ = NoteLoginAsync();
+    }
+
+    /// <summary>
+    /// Tells the server that the session just started comes from this app, so the admin panel can tell it from the
+    /// other ways in and close its sessions. Callers do not wait for it: a slow or failed note must not hold a sign-in.
+    /// </summary>
+    private async Task NoteLoginAsync()
+    {
+        try
+        {
+            await _client.Rpc(
+                "note_login",
+                new Dictionary<string, object>
+                {
+                    ["p_site"] = Site,
+                    ["p_user_agent"] = $"LinkManager Windows {App.Version}",
+                }
+            );
+        }
+        catch (Exception ex)
+        {
+            Diagnostics.Log("note-login", ex);
+        }
+    }
+
+    /// <summary>Tells the server that the app is in use today by this account. A failure only costs the note.</summary>
+    public async Task NoteVisitAsync()
+    {
+        try
+        {
+            await _client.Rpc(
+                "note_site_visit",
+                new Dictionary<string, object> { ["p_site"] = Site }
+            );
+        }
+        catch (Exception ex)
+        {
+            Diagnostics.Log("note-visit", ex);
+        }
+    }
 
     public async Task<bool> TryRefreshSessionAsync()
     {

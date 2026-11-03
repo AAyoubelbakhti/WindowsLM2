@@ -85,6 +85,7 @@ public sealed class AppState
         if (_deviceRegistered)
             return;
         _deviceRegistered = true;
+        _ = Auth.NoteVisitAsync();
         try
         {
             var name = Environment.MachineName;
