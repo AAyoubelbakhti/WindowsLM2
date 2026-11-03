@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using LinkManager2.Data;
@@ -87,14 +88,14 @@ public sealed partial class LoginPage : Page
         var pass = PasswordBox.Password;
         if (!IsValidEmail(email))
         {
-            ShowError(Strings.Get("Login_InvalidEmail"));
             EmailBox.Focus(FocusState.Programmatic);
+            ShowError(Strings.Get("Login_InvalidEmail"));
             return;
         }
         if (pass.Length < 6)
         {
-            ShowError(Strings.Get("Login_PasswordTooShort"));
             PasswordBox.Focus(FocusState.Programmatic);
+            ShowError(Strings.Get("Login_PasswordTooShort"));
             return;
         }
 
@@ -102,6 +103,13 @@ public sealed partial class LoginPage : Page
         {
             if (SignUpMode.IsChecked == true)
             {
+                var leaks = await LeakedPasswords.TimesLeakedAsync(pass);
+                if (leaks > 0)
+                {
+                    PasswordBox.Focus(FocusState.Programmatic);
+                    ShowError(LeakedPasswordMessage(leaks));
+                    return;
+                }
                 await App.State.Auth.SignUpWithEmailAsync(email, pass);
                 if (!App.State.Auth.IsAuthenticated)
                 {
@@ -117,6 +125,16 @@ public sealed partial class LoginPage : Page
             GoToMain();
         });
     }
+
+    /// <summary>The refusal of a password seen that many times in known leaks, with the count as the language of the
+    /// app writes it.</summary>
+    private static string LeakedPasswordMessage(long times) =>
+        times == 1
+            ? Strings.Get("Login_PasswordLeaked_One")
+            : Strings.Format(
+                "Login_PasswordLeaked_Many",
+                times.ToString("N0", new CultureInfo(Strings.Get("App_LanguageTag")))
+            );
 
     private async void OnForgotPassword(object sender, RoutedEventArgs e)
     {

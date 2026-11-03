@@ -777,6 +777,12 @@ In Settings: Escape goes back to the list.</value>
   <data name="Login_PasswordBox.Header" xml:space="preserve">
     <value>Password</value>
   </data>
+  <data name="Login_PasswordLeaked_Many" xml:space="preserve">
+    <value>That password has appeared {0} times in known leaks. Choose another one.</value>
+  </data>
+  <data name="Login_PasswordLeaked_One" xml:space="preserve">
+    <value>That password has appeared 1 time in known leaks. Choose another one.</value>
+  </data>
   <data name="Login_PasswordTooShort" xml:space="preserve">
     <value>The password needs at least 6 characters.</value>
   </data>

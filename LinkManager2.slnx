@@ -2,4 +2,7 @@
   <Folder Name="/src/">
     <Project Path="src/LinkManager2/LinkManager2.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/LinkManager2.Tests/LinkManager2.Tests.csproj" />
+  </Folder>
 </Solution>

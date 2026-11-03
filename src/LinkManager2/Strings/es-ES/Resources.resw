@@ -777,6 +777,12 @@ En Ajustes: Escape vuelve a la lista.</value>
   <data name="Login_PasswordBox.Header" xml:space="preserve">
     <value>Contraseña</value>
   </data>
+  <data name="Login_PasswordLeaked_Many" xml:space="preserve">
+    <value>Esa contraseña ha aparecido {0} veces en filtraciones conocidas. Hay que elegir otra.</value>
+  </data>
+  <data name="Login_PasswordLeaked_One" xml:space="preserve">
+    <value>Esa contraseña ha aparecido 1 vez en filtraciones conocidas. Hay que elegir otra.</value>
+  </data>
   <data name="Login_PasswordTooShort" xml:space="preserve">
     <value>La contraseña necesita al menos 6 caracteres.</value>
   </data>

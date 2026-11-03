@@ -21,3 +21,6 @@ jobs:
 
       - name: Build
         run: dotnet build src/LinkManager2/LinkManager2.csproj -c Debug --no-restore
+
+      - name: Test
+        run: dotnet test --project tests/LinkManager2.Tests/LinkManager2.Tests.csproj -c Debug
