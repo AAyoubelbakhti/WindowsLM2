@@ -1,4 +1,8 @@
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using LinkManager2.Data;
 
 namespace LinkManager2;
@@ -11,16 +15,27 @@ internal static class AppLanguage
 {
     private const string AfterArg = "--after";
     private const int WaitForPreviousMs = 15000;
-    private static readonly string[] Supported = { "es-ES", "en-US" };
+    private const string LanguagesMetadataKey = "AppLanguages";
+    private const uint MuiLanguageName = 0x8;
+
+    private static readonly string[] Supported = typeof(AppLanguage)
+        .Assembly.GetCustomAttributes<AssemblyMetadataAttribute>()
+        .Single(metadata => metadata.Key == LanguagesMetadataKey)
+        .Value!.Split(';');
 
     /// <summary>The preference applied when this process started: "" follows Windows.</summary>
     public static string AtStart { get; private set; } = "";
+
+    /// <summary>The languages this build carries, as the project listed them from Strings/&lt;tag&gt;/Resources.resw.</summary>
+    public static IReadOnlyList<(string Tag, string Name)> Offered =>
+        LanguageNames.Autonyms(Supported);
 
     /// <summary>The saved preference as one of the app's languages, or "" (follow Windows) for anything else.</summary>
     public static string Normalize(string? language) =>
         language is not null && Array.IndexOf(Supported, language) >= 0 ? language : "";
 
-    /// <summary>Applies the saved UI language to resource lookups; call it before the first window.</summary>
+    /// <summary>Applies the saved UI language to resource lookups and to the texts WinUI brings for its controls,
+    /// which come from .mui folders named with a region; call it before the first window.</summary>
     public static void Apply()
     {
         AtStart = Normalize(LocalPreferences.Load().Language);
@@ -29,12 +44,22 @@ internal static class AppLanguage
         try
         {
             Microsoft.Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = AtStart;
+            var region = CultureInfo.CreateSpecificCulture(AtStart).Name;
+            if (!SetProcessPreferredUILanguages(MuiLanguageName, region + '\0', out _))
+                throw new Win32Exception();
         }
         catch (Exception ex)
         {
             Diagnostics.Log("language override", ex);
         }
     }
+
+    [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+    private static extern bool SetProcessPreferredUILanguages(
+        uint flags,
+        string languages,
+        out uint count
+    );
 
     /// <summary>Starts a new instance that waits for this one to close, so it opens in the saved language as the
     /// primary instance. False when it could not start, and then this one should keep running.</summary>

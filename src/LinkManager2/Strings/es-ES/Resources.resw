@@ -1362,9 +1362,6 @@ En Ajustes: Escape vuelve a la lista.</value>
   <data name="Settings_InvalidSession" xml:space="preserve">
     <value>Sesión no válida.</value>
   </data>
-  <data name="Settings_LanguageEnglish.Content" xml:space="preserve">
-    <value>English</value>
-  </data>
   <data name="Settings_LanguageExpander.Header" xml:space="preserve">
     <value>Idioma</value>
   </data>
@@ -1382,9 +1379,6 @@ En Ajustes: Escape vuelve a la lista.</value>
   </data>
   <data name="Settings_LanguageRestartFailed" xml:space="preserve">
     <value>No se pudo reiniciar la app. El idioma cambiará la próxima vez que se abra.</value>
-  </data>
-  <data name="Settings_LanguageSpanish.Content" xml:space="preserve">
-    <value>Español</value>
   </data>
   <data name="Settings_LanguageSystem.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Seguir el idioma de Windows</value>
@@ -1825,5 +1819,8 @@ No se pudo descargar la actualización automáticamente. Hay que comprobar la co
   </data>
   <data name="Window_Title" xml:space="preserve">
     <value>LinkManager</value>
+  </data>
+  <data name="translator_credits" xml:space="preserve">
+    <value></value>
   </data>
 </root>

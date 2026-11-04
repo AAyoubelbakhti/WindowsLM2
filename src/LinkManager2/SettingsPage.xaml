@@ -52,8 +52,6 @@
                                   x:Uid="Settings_LanguageRadios"
                                   SelectionChanged="OnLanguageChanged">
                         <RadioButton x:Uid="Settings_LanguageSystem" Tag="" />
-                        <RadioButton x:Uid="Settings_LanguageSpanish" Tag="es-ES" Language="es-ES" />
-                        <RadioButton x:Uid="Settings_LanguageEnglish" Tag="en-US" Language="en-US" />
                     </RadioButtons>
                     <InfoBar x:Name="LanguageRestartBar"
                              x:Uid="Settings_LanguageRestartBar"

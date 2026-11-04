@@ -32,6 +32,8 @@ public sealed partial class SettingsPage : Page
     public SettingsPage()
     {
         InitializeComponent();
+        foreach (var (tag, name) in AppLanguage.Offered)
+            LanguageRadios.Items.Add(new RadioButton { Content = name, Tag = tag, Language = tag });
         ShowLanguage(AppLanguage.Normalize(LocalPreferences.Load().Language));
         foreach (var (key, labelKey) in ActionKeys)
         {

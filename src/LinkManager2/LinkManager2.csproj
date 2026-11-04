@@ -18,6 +18,16 @@
     <DefineConstants>$(DefineConstants);DISABLE_XAML_GENERATED_MAIN</DefineConstants>
   </PropertyGroup>
 
+  <!-- One language per Strings/<tag>/Resources.resw: the app reads this list to offer them, and it sets SatelliteResourceLanguages. Unescape keeps the semicolons as separators. -->
+  <PropertyGroup>
+    <AppLanguageFiles>$([System.IO.Directory]::GetFiles('$(MSBuildProjectDirectory)\Strings', 'Resources.resw', 'System.IO.SearchOption.AllDirectories'))</AppLanguageFiles>
+    <AppLanguages>$([MSBuild]::Unescape($([System.Text.RegularExpressions.Regex]::Replace('$(AppLanguageFiles)', '[^;]*\\([^\\]+)\\Resources\.resw', '$1'))))</AppLanguages>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AssemblyMetadata Include="AppLanguages" Value="$(AppLanguages)" />
+  </ItemGroup>
+
   <ItemGroup>
     <Content Include="Assets\**\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -82,7 +92,8 @@
     <WindowsPackageType>None</WindowsPackageType>
     <SelfContained>true</SelfContained>
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
-    <SatelliteResourceLanguages>en;es</SatelliteResourceLanguages>
+    <!-- Each tag and its bare language, because the SDK matches satellite folders exactly: pt-BR needs pt-BR, es-ES needs es. -->
+    <SatelliteResourceLanguages>$(AppLanguages);$([MSBuild]::Unescape($([System.Text.RegularExpressions.Regex]::Replace('$(AppLanguages)', '-[^;]+', ''))))</SatelliteResourceLanguages>
     <DebugType>none</DebugType>
   </PropertyGroup>
 

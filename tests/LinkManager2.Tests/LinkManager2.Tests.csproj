@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\..\src\LinkManager2\Data\LanguageNames.cs" Link="LanguageNames.cs" />
     <Compile Include="..\..\src\LinkManager2\Data\LeakedPasswords.cs" Link="LeakedPasswords.cs" />
   </ItemGroup>
 

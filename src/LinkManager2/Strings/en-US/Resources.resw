@@ -1362,9 +1362,6 @@ In Settings: Escape goes back to the list.</value>
   <data name="Settings_InvalidSession" xml:space="preserve">
     <value>Session not valid.</value>
   </data>
-  <data name="Settings_LanguageEnglish.Content" xml:space="preserve">
-    <value>English</value>
-  </data>
   <data name="Settings_LanguageExpander.Header" xml:space="preserve">
     <value>Language</value>
   </data>
@@ -1382,9 +1379,6 @@ In Settings: Escape goes back to the list.</value>
   </data>
   <data name="Settings_LanguageRestartFailed" xml:space="preserve">
     <value>The app could not restart. The language will change the next time it opens.</value>
-  </data>
-  <data name="Settings_LanguageSpanish.Content" xml:space="preserve">
-    <value>Español</value>
   </data>
   <data name="Settings_LanguageSystem.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Windows default language</value>
@@ -1825,5 +1819,8 @@ The update could not be downloaded automatically. Check the connection and resta
   </data>
   <data name="Window_Title" xml:space="preserve">
     <value>LinkManager</value>
+  </data>
+  <data name="translator_credits" xml:space="preserve">
+    <value></value>
   </data>
 </root>
