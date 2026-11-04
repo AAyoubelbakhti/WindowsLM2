@@ -46,6 +46,7 @@ public sealed partial class MainWindow : Window
         SaveClipboardCommand = new RelayCommand(() => _commandLayer.SaveClipboard());
         SearchCommand = new RelayCommand(() => _commandLayer.Search());
         InitializeComponent();
+        RootGrid.FlowDirection = AppLanguage.Direction;
         Title = Strings.Get("Window_Title");
         _prefs = LocalPreferences.Load();
         UpdateTrayToolTip();

@@ -1212,6 +1212,15 @@ En Ajustes: Escape vuelve a la lista.</value>
   <data name="Repo_TagNotCreated" xml:space="preserve">
     <value>El servidor no devolvió la etiqueta creada (hay que revisar RLS).</value>
   </data>
+  <data name="Settings_AboutHeading.Text" xml:space="preserve">
+    <value>Acerca de</value>
+  </data>
+  <data name="Settings_AboutTranslation" xml:space="preserve">
+    <value>Traducción: {0}</value>
+  </data>
+  <data name="Settings_AboutVersion" xml:space="preserve">
+    <value>LinkManager {0}</value>
+  </data>
   <data name="Settings_AccountHeading.Text" xml:space="preserve">
     <value>Cuenta</value>
   </data>

@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using LinkManager2.Data;
+using Microsoft.UI.Xaml;
 
 namespace LinkManager2;
 
@@ -29,6 +30,26 @@ internal static class AppLanguage
     /// <summary>The languages this build carries, as the project listed them from Strings/&lt;tag&gt;/Resources.resw.</summary>
     public static IReadOnlyList<(string Tag, string Name)> Offered =>
         LanguageNames.Autonyms(Supported);
+
+    /// <summary>The direction of the language the texts came out in, chosen or following Windows. A bad tag in a
+    /// text file gives left to right, so it cannot keep the window from opening.</summary>
+    public static FlowDirection Direction
+    {
+        get
+        {
+            try
+            {
+                return CultureInfo.GetCultureInfo(Strings.Get("App_LanguageTag")).TextInfo.IsRightToLeft
+                    ? FlowDirection.RightToLeft
+                    : FlowDirection.LeftToRight;
+            }
+            catch (CultureNotFoundException ex)
+            {
+                Diagnostics.Log("language direction", ex);
+                return FlowDirection.LeftToRight;
+            }
+        }
+    }
 
     /// <summary>The saved preference as one of the app's languages, or "" (follow Windows) for anything else.</summary>
     public static string Normalize(string? language) =>

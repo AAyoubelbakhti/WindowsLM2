@@ -35,6 +35,7 @@ public sealed partial class SettingsPage : Page
         foreach (var (tag, name) in AppLanguage.Offered)
             LanguageRadios.Items.Add(new RadioButton { Content = name, Tag = tag, Language = tag });
         ShowLanguage(AppLanguage.Normalize(LocalPreferences.Load().Language));
+        ShowAbout();
         foreach (var (key, labelKey) in ActionKeys)
         {
             var label = Strings.Get(labelKey);
@@ -197,6 +198,17 @@ public sealed partial class SettingsPage : Page
             LanguageRadios.SelectedIndex = 0;
         LanguageRestartBar.IsOpen = language != AppLanguage.AtStart;
         _languageShown = true;
+    }
+
+    /// <summary>Fills the about section: the version and, when this language credits anyone, its translators.</summary>
+    private void ShowAbout()
+    {
+        AboutVersionText.Text = Strings.Format("Settings_AboutVersion", App.Version);
+        var translators = Strings.Get("translator_credits");
+        if (translators.Length == 0)
+            return;
+        AboutTranslationText.Text = Strings.Format("Settings_AboutTranslation", translators);
+        AboutTranslationText.Visibility = Visibility.Visible;
     }
 
     /// <summary>Saves the chosen UI language at once, as the theme does; it takes effect on the next start.</summary>

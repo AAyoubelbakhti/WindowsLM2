@@ -142,6 +142,12 @@
                             Click="OnDeleteAccount" />
                 </StackPanel>
             </Expander>
+
+            <TextBlock x:Uid="Settings_AboutHeading" FontSize="18" FontWeight="SemiBold"
+                       AutomationProperties.HeadingLevel="Level2" />
+            <TextBlock x:Name="AboutVersionText" IsTabStop="True" />
+            <TextBlock x:Name="AboutTranslationText" IsTabStop="True"
+                       TextWrapping="Wrap" Visibility="Collapsed" />
         </StackPanel>
     </ScrollViewer>
 </Page>

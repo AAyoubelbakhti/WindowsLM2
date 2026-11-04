@@ -27,6 +27,7 @@ internal static class DialogHelper
         _open = true;
         try
         {
+            dialog.FlowDirection = AppLanguage.Direction;
             return (true, await dialog.ShowAsync());
         }
         finally

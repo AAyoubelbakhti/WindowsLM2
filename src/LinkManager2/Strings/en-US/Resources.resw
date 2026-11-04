@@ -1212,6 +1212,15 @@ In Settings: Escape goes back to the list.</value>
   <data name="Repo_TagNotCreated" xml:space="preserve">
     <value>The server did not return the created tag (check RLS).</value>
   </data>
+  <data name="Settings_AboutHeading.Text" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="Settings_AboutTranslation" xml:space="preserve">
+    <value>Translation: {0}</value>
+  </data>
+  <data name="Settings_AboutVersion" xml:space="preserve">
+    <value>LinkManager {0}</value>
+  </data>
   <data name="Settings_AccountHeading.Text" xml:space="preserve">
     <value>Account</value>
   </data>
