@@ -42,12 +42,21 @@
     <FrameworkReference Include="Microsoft.WindowsDesktop.App.WPF" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <WinAppSdkVersion>2.6.5</WinAppSdkVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <UnusedWinAppSdkComponent Include="AI;Search;Widgets" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.14" />
     <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.5" />
     <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="10.0.14" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2957" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="2.6.5" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="$(WinAppSdkVersion)" />
+    <PackageReference Include="@(UnusedWinAppSdkComponent->'Microsoft.WindowsAppSDK.%(Identity)')" Version="$(WinAppSdkVersion)" Publish="false" />
     <PackageReference Include="Microsoft.Windows.AI.MachineLearning" Version="2.4.89" Publish="false" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools.WinApp" Version="0.7.1">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -76,4 +85,18 @@
     <SatelliteResourceLanguages>en;es</SatelliteResourceLanguages>
     <DebugType>none</DebugType>
   </PropertyGroup>
+
+  <!-- Keeps the publish folder to what the app loads: no .winmd metadata, no WinUI strings for languages outside SatelliteResourceLanguages and no payload of the unused SDK components. -->
+  <Target Name="TrimWindowsAppSdkPayload" AfterTargets="ComputeResolvedFilesToPublishList" Condition="'$(WindowsAppSDKSelfContained)' == 'true'">
+    <PropertyGroup>
+      <UnusedComponentFolder>(?i)[\\/]microsoft\.windowsappsdk\.(@(UnusedWinAppSdkComponent, '|'))[\\/]</UnusedComponentFolder>
+      <KeptMuiFolder>(?i)^($(SatelliteResourceLanguages.Replace(';', '|')))(-[^\\]+)?\\</KeptMuiFolder>
+    </PropertyGroup>
+    <ItemGroup>
+      <TrimmedPayloadFile Include="@(ResolvedFileToPublish)" Condition="'%(Extension)' == '.winmd'" />
+      <TrimmedPayloadFile Include="@(ResolvedFileToPublish)" Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('%(FullPath)', '$(UnusedComponentFolder)'))" />
+      <TrimmedPayloadFile Include="@(ResolvedFileToPublish)" Condition="'$(SatelliteResourceLanguages)' != '' and '%(Extension)' == '.mui' and !$([System.Text.RegularExpressions.Regex]::IsMatch('%(RelativePath)', '$(KeptMuiFolder)'))" />
+      <ResolvedFileToPublish Remove="@(TrimmedPayloadFile)" />
+    </ItemGroup>
+  </Target>
 </Project>
