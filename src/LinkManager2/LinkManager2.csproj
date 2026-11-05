@@ -110,4 +110,8 @@
       <ResolvedFileToPublish Remove="@(TrimmedPayloadFile)" />
     </ItemGroup>
   </Target>
+  <!-- The made-up languages of aelbak-platform/packages/translations only ever go in a test build. -->
+  <Target Name="NoMadeUpLanguage" BeforeTargets="BeforeBuild" Condition="'$(Configuration)' == 'Release' and (Exists('Strings\qps-Ploc') or Exists('Strings\ar-XB'))">
+    <Error Text="Strings has a made-up language, which only goes in a test build: delete it" />
+  </Target>
 </Project>
