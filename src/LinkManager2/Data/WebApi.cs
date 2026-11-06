@@ -42,8 +42,31 @@ public static class WebApi
         var resp = await _http.SendAsync(req);
         if (resp.IsSuccessStatusCode)
             return null;
-        var body = await resp.Content.ReadAsStringAsync();
-        return Strings.Format("Web_HttpError", (int)resp.StatusCode, body);
+        var reason = MessageOf(await resp.Content.ReadAsStringAsync());
+        return string.IsNullOrWhiteSpace(reason)
+            ? Strings.Format("Web_HttpErrorCode", (int)resp.StatusCode)
+            : Strings.Format("Web_HttpError", (int)resp.StatusCode, reason);
+    }
+
+    /// <summary>
+    /// The message of an error answer of the web API, which comes as {"error": "..."} in the language asked for: the
+    /// whole body would be read aloud as JSON.
+    /// </summary>
+    private static string? MessageOf(string body)
+    {
+        try
+        {
+            using var doc = System.Text.Json.JsonDocument.Parse(body);
+            return doc.RootElement.ValueKind == System.Text.Json.JsonValueKind.Object
+                && doc.RootElement.TryGetProperty("error", out var error)
+                && error.ValueKind == System.Text.Json.JsonValueKind.String
+                ? error.GetString()
+                : null;
+        }
+        catch (System.Text.Json.JsonException)
+        {
+            return null;
+        }
     }
 
     public static async Task<int> DeleteAccountAsync(string bearer)

@@ -1823,6 +1823,9 @@ The update could not be downloaded automatically. Check the connection and resta
   <data name="Web_HttpError" xml:space="preserve">
     <value>Error {0}: {1}</value>
   </data>
+  <data name="Web_HttpErrorCode" xml:space="preserve">
+    <value>Error {0}</value>
+  </data>
   <data name="Window_AppTitleBar.Title" xml:space="preserve">
     <value>LinkManager</value>
   </data>
