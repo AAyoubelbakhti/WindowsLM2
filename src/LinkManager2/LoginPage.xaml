@@ -17,12 +17,12 @@
                         Padding="24">
 
                 <StackPanel Spacing="4">
-                    <TextBlock x:Uid="Login_Title"
+                    <TextBlock local:Text.Uid="Login_Title"
                                FontSize="28"
                                FontWeight="SemiBold"
                                AutomationProperties.HeadingLevel="Level1" />
                     <TextBlock x:Name="SubtitleText"
-                               x:Uid="Login_SubtitleText"
+                               local:Text.Uid="Login_SubtitleText"
                                Opacity="0.7"
                                TextWrapping="Wrap" />
                 </StackPanel>
@@ -40,26 +40,26 @@
                          AutomationProperties.LiveSetting="Polite" />
 
                 <StackPanel Spacing="6">
-                    <TextBlock x:Uid="Login_ModeLabel" Opacity="0.7" FontSize="12" />
+                    <TextBlock local:Text.Uid="Login_ModeLabel" Opacity="0.7" FontSize="12" />
                     <StackPanel Orientation="Horizontal" Spacing="8">
                         <RadioButton x:Name="SignInMode"
-                                     x:Uid="Login_SignInMode"
+                                     local:Text.Uid="Login_SignInMode"
                                      IsChecked="True"
                                      GroupName="AuthMode"
                                      Checked="OnModeChanged" />
                         <RadioButton x:Name="SignUpMode"
-                                     x:Uid="Login_SignUpMode"
+                                     local:Text.Uid="Login_SignUpMode"
                                      GroupName="AuthMode"
                                      Checked="OnModeChanged" />
                     </StackPanel>
                 </StackPanel>
 
                 <TextBox x:Name="EmailBox"
-                         x:Uid="Login_EmailBox"
+                         local:Text.Uid="Login_EmailBox"
                          InputScope="EmailSmtpAddress" />
 
                 <PasswordBox x:Name="PasswordBox"
-                             x:Uid="Login_PasswordBox" />
+                             local:Text.Uid="Login_PasswordBox" />
 
                 <Grid ColumnSpacing="8">
                     <Grid.ColumnDefinitions>
@@ -67,13 +67,13 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <Button x:Name="SubmitButton"
-                            x:Uid="Login_SubmitButton"
+                            local:Text.Uid="Login_SubmitButton"
                             Grid.Column="0"
                             Style="{StaticResource AccentButtonStyle}"
                             HorizontalAlignment="Stretch"
                             Click="OnSubmit" />
                     <ProgressRing x:Name="BusyRing"
-                                  x:Uid="Login_BusyRing"
+                                  local:Text.Uid="Login_BusyRing"
                                   Grid.Column="1"
                                   Width="20" Height="20"
                                   IsActive="False"
@@ -82,26 +82,26 @@
                 </Grid>
 
                 <HyperlinkButton x:Name="ForgotButton"
-                                 x:Uid="Login_ForgotButton"
+                                 local:Text.Uid="Login_ForgotButton"
                                  Padding="0,4"
                                  Click="OnForgotPassword" />
 
                 <Expander x:Name="OtherMethodsExpander"
-                          x:Uid="Login_OtherMethodsExpander"
+                          local:Text.Uid="Login_OtherMethodsExpander"
                           HorizontalAlignment="Stretch"
                           HorizontalContentAlignment="Stretch">
                     <StackPanel Spacing="10">
-                        <TextBlock x:Uid="Login_OtherMethodsNote"
+                        <TextBlock local:Text.Uid="Login_OtherMethodsNote"
                                    TextWrapping="Wrap"
                                    Opacity="0.7"
                                    FontSize="12" />
                         <Button x:Name="GitHubButton"
-                                x:Uid="Login_GitHubButton"
+                                local:Text.Uid="Login_GitHubButton"
                                 HorizontalAlignment="Stretch"
                                 HorizontalContentAlignment="Center"
                                 Click="OnGitHubSignIn" />
                         <Button x:Name="DiscordButton"
-                                x:Uid="Login_DiscordButton"
+                                local:Text.Uid="Login_DiscordButton"
                                 HorizontalAlignment="Stretch"
                                 HorizontalContentAlignment="Center"
                                 Click="OnDiscordSignIn" />
@@ -110,11 +110,11 @@
 
                 <StackPanel Spacing="2" Margin="0,8,0,0">
                     <HyperlinkButton x:Name="SignUpWebButton"
-                                     x:Uid="Login_SignUpWebButton"
+                                     local:Text.Uid="Login_SignUpWebButton"
                                      HorizontalAlignment="Center"
                                      Padding="0,4"
                                      Click="OnSignUpWeb" />
-                    <TextBlock x:Uid="Login_SignUpWebNote"
+                    <TextBlock local:Text.Uid="Login_SignUpWebNote"
                                TextWrapping="Wrap"
                                Opacity="0.55"
                                FontSize="12"

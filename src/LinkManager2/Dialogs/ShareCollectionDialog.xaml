@@ -3,23 +3,24 @@
     x:Class="LinkManager2.Dialogs.ShareCollectionDialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:LinkManager2"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    x:Uid="ShareCollection_Dialog"
+    local:Text.Uid="ShareCollection_Dialog"
     DefaultButton="Primary"
     PrimaryButtonClick="OnGenerateClick">
     <StackPanel Spacing="12" Width="460">
         <TextBlock x:Name="CountLabel" Opacity="0.75" TextWrapping="Wrap" />
-        <TextBox x:Name="NameBox" x:Uid="ShareCollection_NameBox" />
-        <ComboBox x:Name="ExpiresCombo" x:Uid="ShareCollection_ExpiresCombo" HorizontalAlignment="Stretch" />
+        <TextBox x:Name="NameBox" local:Text.Uid="ShareCollection_NameBox" />
+        <ComboBox x:Name="ExpiresCombo" local:Text.Uid="ShareCollection_ExpiresCombo" HorizontalAlignment="Stretch" />
         <TextBox x:Name="ResultBox"
-                 x:Uid="ShareCollection_ResultBox"
+                 local:Text.Uid="ShareCollection_ResultBox"
                  IsReadOnly="True"
                  FontFamily="{StaticResource AppMonoFont}" />
         <StackPanel Orientation="Horizontal" Spacing="8">
-            <Button x:Name="CopyButton" x:Uid="ShareCollection_CopyButton" IsEnabled="False" Click="OnCopyClick" />
-            <Button x:Name="OpenButton" x:Uid="ShareCollection_OpenButton" IsEnabled="False" Click="OnOpenClick" />
+            <Button x:Name="CopyButton" local:Text.Uid="ShareCollection_CopyButton" IsEnabled="False" Click="OnCopyClick" />
+            <Button x:Name="OpenButton" local:Text.Uid="ShareCollection_OpenButton" IsEnabled="False" Click="OnOpenClick" />
         </StackPanel>
         <InfoBar x:Name="StatusBar" IsOpen="False" IsClosable="False" />
     </StackPanel>

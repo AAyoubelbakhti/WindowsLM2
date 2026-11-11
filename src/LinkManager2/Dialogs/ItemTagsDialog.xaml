@@ -3,10 +3,11 @@
     x:Class="LinkManager2.Dialogs.ItemTagsDialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:LinkManager2"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    x:Uid="ItemTags_Dialog"
+    local:Text.Uid="ItemTags_Dialog"
     DefaultButton="Primary"
     PrimaryButtonClick="OnSaveClick">
     <Grid Width="440" Height="420" RowSpacing="10">
@@ -24,7 +25,7 @@
 
         <ListView Grid.Row="1"
                   x:Name="TagsList"
-                  x:Uid="ItemTags_TagsList"
+                  local:Text.Uid="ItemTags_TagsList"
                   SelectionMode="Multiple">
             <ListView.ItemTemplate>
                 <DataTemplate>
@@ -39,10 +40,10 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <TextBox x:Name="NewTagBox"
-                     x:Uid="ItemTags_NewTagBox"
+                     local:Text.Uid="ItemTags_NewTagBox"
                      Grid.Column="0" />
             <Button x:Name="CreateButton"
-                    x:Uid="ItemTags_CreateButton"
+                    local:Text.Uid="ItemTags_CreateButton"
                     Grid.Column="1"
                     Click="OnCreateClick" />
         </Grid>

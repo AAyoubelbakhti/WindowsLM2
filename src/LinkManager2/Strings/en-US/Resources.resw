@@ -1104,6 +1104,9 @@ In Settings: Escape goes back to the list.</value>
   <data name="Main_StatusText.Text" xml:space="preserve">
     <value>Ready.</value>
   </data>
+  <data name="Main_TranslationRemovedOnUpdate" xml:space="preserve">
+    <value>The loaded translation was removed when the app was updated. It has to be loaded again.</value>
+  </data>
   <data name="Main_UndoDeleteMany" xml:space="preserve">
     <value>delete {0} items</value>
   </data>
@@ -1214,6 +1217,12 @@ In Settings: Escape goes back to the list.</value>
   </data>
   <data name="Settings_AboutHeading.Text" xml:space="preserve">
     <value>About</value>
+  </data>
+  <data name="Settings_AboutTranslate.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Help translate LinkManager</value>
+  </data>
+  <data name="Settings_AboutTranslate.Content" xml:space="preserve">
+    <value>Help translate</value>
   </data>
   <data name="Settings_AboutTranslation" xml:space="preserve">
     <value>Translation: {0}</value>
@@ -1404,6 +1413,12 @@ In Settings: Escape goes back to the list.</value>
   <data name="Settings_Loading" xml:space="preserve">
     <value>Loading…</value>
   </data>
+  <data name="Settings_LoadTranslationButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.HelpText" xml:space="preserve">
+    <value>To try out a language from the translation portal in the app.</value>
+  </data>
+  <data name="Settings_LoadTranslationButton.Content" xml:space="preserve">
+    <value>Load a translation</value>
+  </data>
   <data name="Settings_MicaToggle.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Mica translucent background</value>
   </data>
@@ -1439,6 +1454,9 @@ In Settings: Escape goes back to the list.</value>
   </data>
   <data name="Settings_ProfileExpander.Header" xml:space="preserve">
     <value>Profile</value>
+  </data>
+  <data name="Settings_RemoveTranslationButton.Content" xml:space="preserve">
+    <value>Remove the loaded translation</value>
   </data>
   <data name="Settings_SaveButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Save all settings</value>
@@ -1526,6 +1544,30 @@ In Settings: Escape goes back to the list.</value>
   </data>
   <data name="Settings_ThemeSystem.Content" xml:space="preserve">
     <value>Windows default</value>
+  </data>
+  <data name="Settings_TranslationInfo" xml:space="preserve">
+    <value>{0} translation loaded on {1:d}. Texts: {2}.</value>
+  </data>
+  <data name="Settings_TranslationLoaded" xml:space="preserve">
+    <value>{0} translation loaded. Texts: {1}.</value>
+  </data>
+  <data name="Settings_TranslationLoadedDiscarded" xml:space="preserve">
+    <value>{0} translation loaded. Texts: {1}. Left out as they do not match this version: {2}.</value>
+  </data>
+  <data name="Settings_TranslationNotOurs" xml:space="preserve">
+    <value>This file is not a LinkManager translation.</value>
+  </data>
+  <data name="Settings_TranslationNoUsableText" xml:space="preserve">
+    <value>The file has no text that can be used.</value>
+  </data>
+  <data name="Settings_TranslationRemoved" xml:space="preserve">
+    <value>Loaded translation removed.</value>
+  </data>
+  <data name="Settings_TranslationTooLarge" xml:space="preserve">
+    <value>The file is too large.</value>
+  </data>
+  <data name="Settings_TranslationUnreadable" xml:space="preserve">
+    <value>The file could not be read.</value>
   </data>
   <data name="Settings_TrayToggle.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.HelpText" xml:space="preserve">
     <value>When on, closing the window only hides it. To exit, use Exit in the tray menu.</value>

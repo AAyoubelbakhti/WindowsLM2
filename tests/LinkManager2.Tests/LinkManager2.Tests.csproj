@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework>net11.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
@@ -10,9 +10,27 @@
   <ItemGroup>
     <Compile Include="..\..\src\LinkManager2\Data\LanguageNames.cs" Link="LanguageNames.cs" />
     <Compile Include="..\..\src\LinkManager2\Data\LeakedPasswords.cs" Link="LeakedPasswords.cs" />
+    <Compile Include="..\..\src\LinkManager2\Data\LoadedTranslation.cs" Link="LoadedTranslation.cs" />
+    <Compile Include="..\..\src\LinkManager2\Data\LocalPreferences.cs" Link="LocalPreferences.cs" />
+    <Compile Include="..\..\src\LinkManager2\Data\TranslationFile.cs" Link="TranslationFile.cs" />
+    <Compile Include="..\..\src\LinkManager2\Data\UidKeys.cs" Link="UidKeys.cs" />
+    <Compile Include="..\..\src\LinkManager2\Strings.cs" Link="Strings.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="xunit.v3" Version="4.0.2" />
+    <EmbeddedResource Include="..\..\src\LinkManager2\Strings\en-US\Resources.resw" LogicalName="Base.resw" />
+    <EmbeddedResource Include="..\..\src\LinkManager2\Strings\**\Resources.resw" Exclude="..\..\src\LinkManager2\Strings\en-US\Resources.resw" LogicalName="Strings/%(RecursiveDir)Resources.resw" />
+    <None Include="..\..\src\LinkManager2\**\*.xaml" Exclude="..\..\src\LinkManager2\bin\**;..\..\src\LinkManager2\obj\**" Link="Xaml\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Reflection.MetadataLoadContext" Version="11.0.0" />
+    <PackageReference Include="xunit.v3" Version="4.0.3" />
+  </ItemGroup>
+
+  <!-- The WinUI types, read only as metadata, so a test can check that each text of the XAML has a property to go to. -->
+  <ItemGroup>
+    <PackageDownload Include="Microsoft.WindowsAppSDK.WinUI" Version="[$(WinAppSdkVersion)]" />
+    <None Include="$(NuGetPackageRoot)microsoft.windowsappsdk.winui\$(WinAppSdkVersion)\lib\*\Microsoft.WinUI.dll" Link="WinUI\Microsoft.WinUI.dll" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

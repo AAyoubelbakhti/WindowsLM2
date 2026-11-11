@@ -12,7 +12,7 @@ public partial class App : Application
     public const int Build = 28;
 
     /// <summary>Semantic app version reported to the backend (devices.app_version); keep in sync with Build and Velopack packVersion.</summary>
-    public const string Version = "1.9.4";
+    public const string Version = "1.10.0";
 
     public static AppState State { get; private set; } = null!;
 

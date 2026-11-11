@@ -9,8 +9,9 @@ using Microsoft.UI.Xaml;
 namespace LinkManager2;
 
 /// <summary>
-/// The UI language: the one saved in the local preferences or, with none, Windows'. It is set once, before any
-/// text loads, because x:Uid texts resolve as each page loads; a new choice takes effect on the next start.
+/// The UI language: that of a loaded translation, else the one saved in the local preferences or, with none,
+/// Windows'. It is set once, before any text loads, because each page takes its texts as it loads; a new choice
+/// takes effect on the next start.
 /// </summary>
 internal static class AppLanguage
 {
@@ -27,19 +28,25 @@ internal static class AppLanguage
     /// <summary>The preference applied when this process started: "" follows Windows.</summary>
     public static string AtStart { get; private set; } = "";
 
+    /// <summary>The loaded translation applied when this process started, or null.</summary>
+    public static Translation? TranslationAtStart { get; private set; }
+
     /// <summary>The languages this build carries, as the project listed them from Strings/&lt;tag&gt;/Resources.resw.</summary>
     public static IReadOnlyList<(string Tag, string Name)> Offered =>
         LanguageNames.Autonyms(Supported);
 
-    /// <summary>The direction of the language the texts came out in, chosen or following Windows. A bad tag in a
-    /// text file gives left to right, so it cannot keep the window from opening.</summary>
+    /// <summary>The direction of the language the texts came out in: that of the loaded translation, else the one
+    /// chosen or following Windows. A bad tag in a text file gives left to right, so it cannot keep the window from
+    /// opening.</summary>
     public static FlowDirection Direction
     {
         get
         {
             try
             {
-                return CultureInfo.GetCultureInfo(Strings.Get("App_LanguageTag")).TextInfo.IsRightToLeft
+                return CultureInfo
+                    .GetCultureInfo(TranslationAtStart?.Language ?? Strings.Get("App_LanguageTag"))
+                    .TextInfo.IsRightToLeft
                     ? FlowDirection.RightToLeft
                     : FlowDirection.LeftToRight;
             }
@@ -55,18 +62,30 @@ internal static class AppLanguage
     public static string Normalize(string? language) =>
         language is not null && Array.IndexOf(Supported, language) >= 0 ? language : "";
 
-    /// <summary>Applies the saved UI language to resource lookups and to the texts WinUI brings for its controls,
-    /// which come from .mui folders named with a region; call it before the first window.</summary>
+    /// <summary>Applies the saved UI language to resource lookups, to the language names .NET gives and to the
+    /// texts WinUI brings for its controls, which come from .mui folders named with a region. A loaded translation
+    /// takes those names and texts, plus numbers and dates, while what it lacks comes from the resources in the
+    /// saved language. Call it before the first window.</summary>
     public static void Apply()
     {
         AtStart = Normalize(LocalPreferences.Load().Language);
-        if (AtStart.Length == 0)
+        LoadedTranslation.ReadSaved(App.Version);
+        TranslationAtStart = LoadedTranslation.Current;
+        if (TranslationAtStart is not null)
+            Strings.Load(TranslationAtStart.Texts);
+        var language = TranslationAtStart?.Language ?? AtStart;
+        if (language.Length == 0)
             return;
         try
         {
-            Microsoft.Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = AtStart;
-            var region = CultureInfo.CreateSpecificCulture(AtStart).Name;
-            if (!SetProcessPreferredUILanguages(MuiLanguageName, region + '\0', out _))
+            if (AtStart.Length > 0)
+                Microsoft.Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride =
+                    AtStart;
+            var culture = CultureInfo.CreateSpecificCulture(language);
+            CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.CurrentUICulture = culture;
+            if (TranslationAtStart is not null)
+                CultureInfo.DefaultThreadCurrentCulture = CultureInfo.CurrentCulture = culture;
+            if (!SetProcessPreferredUILanguages(MuiLanguageName, culture.Name + '\0', out _))
                 throw new Win32Exception();
         }
         catch (Exception ex)

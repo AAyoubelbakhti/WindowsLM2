@@ -3,6 +3,7 @@
     x:Class="LinkManager2.SettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:LinkManager2"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
@@ -17,99 +18,115 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <TextBlock x:Name="HeadingText" x:Uid="Settings_HeadingText" FontSize="24" FontWeight="SemiBold"
+                <TextBlock x:Name="HeadingText" local:Text.Uid="Settings_HeadingText" FontSize="24" FontWeight="SemiBold"
                            IsTabStop="True"
                            AutomationProperties.HeadingLevel="Level1" />
-                <Button x:Uid="Settings_BackButton" Grid.Column="1" Click="OnBack" />
+                <Button local:Text.Uid="Settings_BackButton" Grid.Column="1" Click="OnBack" />
             </Grid>
 
-            <TextBlock x:Uid="Settings_AccountHeading" FontSize="18" FontWeight="SemiBold"
+            <TextBlock local:Text.Uid="Settings_AccountHeading" FontSize="18" FontWeight="SemiBold"
                        AutomationProperties.HeadingLevel="Level2" />
-            <Expander x:Uid="Settings_ProfileExpander" IsExpanded="True" HorizontalAlignment="Stretch">
+            <Expander local:Text.Uid="Settings_ProfileExpander" IsExpanded="True" HorizontalAlignment="Stretch">
                 <StackPanel Spacing="10" Padding="0,8">
                     <TextBox x:Name="DisplayNameBox"
-                             x:Uid="Settings_DisplayNameBox"
+                             local:Text.Uid="Settings_DisplayNameBox"
                              MaxLength="60" />
-                    <HyperlinkButton x:Uid="Settings_AccountLink"
+                    <HyperlinkButton local:Text.Uid="Settings_AccountLink"
                                      NavigateUri="https://aelbak.dev/cuenta" />
                 </StackPanel>
             </Expander>
 
-            <TextBlock x:Uid="Settings_AppearanceHeading" FontSize="18" FontWeight="SemiBold"
+            <TextBlock local:Text.Uid="Settings_AppearanceHeading" FontSize="18" FontWeight="SemiBold"
                        AutomationProperties.HeadingLevel="Level2" />
-            <Expander x:Uid="Settings_ThemeExpander" IsExpanded="True" HorizontalAlignment="Stretch">
+            <Expander local:Text.Uid="Settings_ThemeExpander" IsExpanded="True" HorizontalAlignment="Stretch">
                 <RadioButtons x:Name="ThemeRadios"
-                              x:Uid="Settings_ThemeRadios"
+                              local:Text.Uid="Settings_ThemeRadios"
                               SelectionChanged="OnThemeChanged">
-                    <RadioButton x:Uid="Settings_ThemeSystem" Tag="system" />
-                    <RadioButton x:Uid="Settings_ThemeLight" Tag="light" />
-                    <RadioButton x:Uid="Settings_ThemeDark" Tag="dark" />
+                    <RadioButton local:Text.Uid="Settings_ThemeSystem" Tag="system" />
+                    <RadioButton local:Text.Uid="Settings_ThemeLight" Tag="light" />
+                    <RadioButton local:Text.Uid="Settings_ThemeDark" Tag="dark" />
                 </RadioButtons>
             </Expander>
-            <Expander x:Uid="Settings_LanguageExpander" IsExpanded="True" HorizontalAlignment="Stretch">
+            <Expander local:Text.Uid="Settings_LanguageExpander" IsExpanded="True" HorizontalAlignment="Stretch">
                 <StackPanel Spacing="8">
                     <RadioButtons x:Name="LanguageRadios"
-                                  x:Uid="Settings_LanguageRadios"
+                                  local:Text.Uid="Settings_LanguageRadios"
                                   SelectionChanged="OnLanguageChanged">
-                        <RadioButton x:Uid="Settings_LanguageSystem" Tag="" />
+                        <RadioButton local:Text.Uid="Settings_LanguageSystem" Tag="" />
                     </RadioButtons>
+                    <TextBlock x:Name="TranslationText" IsTabStop="True"
+                               TextWrapping="Wrap" Visibility="Collapsed" />
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Button x:Name="LoadTranslationButton"
+                                local:Text.Uid="Settings_LoadTranslationButton"
+                                Click="OnLoadTranslation" />
+                        <Button x:Name="RemoveTranslationButton"
+                                local:Text.Uid="Settings_RemoveTranslationButton"
+                                Visibility="Collapsed"
+                                Click="OnRemoveTranslation" />
+                    </StackPanel>
+                    <TextBlock x:Name="TranslationStatusText" IsTabStop="True"
+                               TextWrapping="Wrap" Visibility="Collapsed"
+                               AutomationProperties.LiveSetting="Polite" />
                     <InfoBar x:Name="LanguageRestartBar"
-                             x:Uid="Settings_LanguageRestartBar"
+                             local:Text.Uid="Settings_LanguageRestartBar"
                              Severity="Informational"
-                             IsClosable="False">
+                             IsClosable="False"
+                             IsOpen="True"
+                             Visibility="Collapsed">
                         <InfoBar.ActionButton>
-                            <Button x:Uid="Settings_LanguageRestartButton" Click="OnRestartForLanguage" />
+                            <Button local:Text.Uid="Settings_LanguageRestartButton" Click="OnRestartForLanguage" />
                         </InfoBar.ActionButton>
                     </InfoBar>
                 </StackPanel>
             </Expander>
 
-            <TextBlock x:Uid="Settings_LinksHeading" FontSize="18" FontWeight="SemiBold"
+            <TextBlock local:Text.Uid="Settings_LinksHeading" FontSize="18" FontWeight="SemiBold"
                        AutomationProperties.HeadingLevel="Level2" />
-            <Expander x:Uid="Settings_ActionsExpander" IsExpanded="True" HorizontalAlignment="Stretch">
+            <Expander local:Text.Uid="Settings_ActionsExpander" IsExpanded="True" HorizontalAlignment="Stretch">
                 <StackPanel x:Name="ActionsPanel" Spacing="6" Padding="0,8" />
             </Expander>
-            <Expander x:Uid="Settings_HistoryExpander" IsExpanded="False" HorizontalAlignment="Stretch">
+            <Expander local:Text.Uid="Settings_HistoryExpander" IsExpanded="False" HorizontalAlignment="Stretch">
                 <ToggleSwitch x:Name="HistoryToggle"
-                              x:Uid="Settings_HistoryToggle" />
+                              local:Text.Uid="Settings_HistoryToggle" />
             </Expander>
-            <Expander x:Uid="Settings_SharingExpander" IsExpanded="False" HorizontalAlignment="Stretch">
+            <Expander local:Text.Uid="Settings_SharingExpander" IsExpanded="False" HorizontalAlignment="Stretch">
                 <StackPanel Spacing="10" Padding="0,8">
-                    <TextBlock x:Uid="Settings_SharingNote"
+                    <TextBlock local:Text.Uid="Settings_SharingNote"
                                TextWrapping="Wrap" Opacity="0.7" />
                     <ToggleSwitch x:Name="ShareCategoriesToggle"
-                                  x:Uid="Settings_ShareCategoriesToggle" />
+                                  local:Text.Uid="Settings_ShareCategoriesToggle" />
                     <ToggleSwitch x:Name="ShareTagsToggle"
-                                  x:Uid="Settings_ShareTagsToggle" />
+                                  local:Text.Uid="Settings_ShareTagsToggle" />
                 </StackPanel>
             </Expander>
 
-            <TextBlock x:Uid="Settings_DeviceHeading" FontSize="18" FontWeight="SemiBold"
+            <TextBlock local:Text.Uid="Settings_DeviceHeading" FontSize="18" FontWeight="SemiBold"
                        AutomationProperties.HeadingLevel="Level2" />
-            <Expander x:Uid="Settings_SystemExpander" IsExpanded="True" HorizontalAlignment="Stretch">
+            <Expander local:Text.Uid="Settings_SystemExpander" IsExpanded="True" HorizontalAlignment="Stretch">
                 <StackPanel Spacing="10" Padding="0,8">
                     <ToggleSwitch x:Name="MicaToggle"
-                                  x:Uid="Settings_MicaToggle" />
+                                  local:Text.Uid="Settings_MicaToggle" />
                     <ToggleSwitch x:Name="TrayToggle"
-                                  x:Uid="Settings_TrayToggle" />
+                                  local:Text.Uid="Settings_TrayToggle" />
                     <ToggleSwitch x:Name="HotkeyToggle"
-                                  x:Uid="Settings_HotkeyToggle" />
+                                  local:Text.Uid="Settings_HotkeyToggle" />
                     <ToggleButton x:Name="HotkeyCaptureButton"
-                                  x:Uid="Settings_HotkeyCaptureButton"
+                                  local:Text.Uid="Settings_HotkeyCaptureButton"
                                   Click="OnHotkeyCaptureClick"
                                   KeyDown="OnHotkeyCaptureKeyDown"
                                   HorizontalAlignment="Left" />
                     <ToggleSwitch x:Name="StartupToggle"
-                                  x:Uid="Settings_StartupToggle" />
+                                  local:Text.Uid="Settings_StartupToggle" />
                     <ToggleSwitch x:Name="NotificationsToggle"
-                                  x:Uid="Settings_NotificationsToggle" />
+                                  local:Text.Uid="Settings_NotificationsToggle" />
                 </StackPanel>
             </Expander>
-            <Expander x:Uid="Settings_UpdatesExpander" IsExpanded="False" HorizontalAlignment="Stretch">
+            <Expander local:Text.Uid="Settings_UpdatesExpander" IsExpanded="False" HorizontalAlignment="Stretch">
                 <StackPanel Spacing="10" Padding="0,8">
-                    <TextBlock x:Uid="Settings_UpdatesNote"
+                    <TextBlock local:Text.Uid="Settings_UpdatesNote"
                                TextWrapping="Wrap" Opacity="0.8" />
-                    <Button x:Name="CheckUpdatesButton" x:Uid="Settings_CheckUpdatesButton"
+                    <Button x:Name="CheckUpdatesButton" local:Text.Uid="Settings_CheckUpdatesButton"
                             Click="OnCheckUpdates" />
                     <InfoBar x:Name="UpdateBar" IsOpen="False" IsClosable="False" />
                 </StackPanel>
@@ -124,30 +141,32 @@
                          x:Name="StatusBar"
                          IsOpen="False"
                          IsClosable="False" />
-                <Button x:Uid="Settings_SaveButton" Grid.Column="1"
+                <Button local:Text.Uid="Settings_SaveButton" Grid.Column="1"
                         Style="{StaticResource AccentButtonStyle}"
                         Click="OnSave" />
             </Grid>
 
-            <TextBlock x:Uid="Settings_AdvancedHeading" FontSize="18" FontWeight="SemiBold"
+            <TextBlock local:Text.Uid="Settings_AdvancedHeading" FontSize="18" FontWeight="SemiBold"
                        AutomationProperties.HeadingLevel="Level2" />
-            <HyperlinkButton x:Uid="Settings_PrivacyLink"
+            <HyperlinkButton local:Text.Uid="Settings_PrivacyLink"
                              NavigateUri="https://lm.aelbak.dev/privacidad" />
-            <Expander x:Uid="Settings_DangerExpander" IsExpanded="False" HorizontalAlignment="Stretch">
+            <Expander local:Text.Uid="Settings_DangerExpander" IsExpanded="False" HorizontalAlignment="Stretch">
                 <StackPanel Spacing="10" Padding="0,8">
-                    <TextBlock x:Uid="Settings_DangerNote"
+                    <TextBlock local:Text.Uid="Settings_DangerNote"
                                TextWrapping="Wrap" Opacity="0.8" />
                     <Button x:Name="DeleteAccountButton"
-                            x:Uid="Settings_DeleteAccountButton"
+                            local:Text.Uid="Settings_DeleteAccountButton"
                             Click="OnDeleteAccount" />
                 </StackPanel>
             </Expander>
 
-            <TextBlock x:Uid="Settings_AboutHeading" FontSize="18" FontWeight="SemiBold"
+            <TextBlock local:Text.Uid="Settings_AboutHeading" FontSize="18" FontWeight="SemiBold"
                        AutomationProperties.HeadingLevel="Level2" />
             <TextBlock x:Name="AboutVersionText" IsTabStop="True" />
             <TextBlock x:Name="AboutTranslationText" IsTabStop="True"
                        TextWrapping="Wrap" Visibility="Collapsed" />
+            <HyperlinkButton local:Text.Uid="Settings_AboutTranslate"
+                             NavigateUri="https://translators.aelbak.dev/?proyecto=linkmanager" />
         </StackPanel>
     </ScrollViewer>
 </Page>

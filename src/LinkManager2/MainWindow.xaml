@@ -17,7 +17,7 @@
         </Grid.RowDefinitions>
 
         <TitleBar x:Name="AppTitleBar"
-                  x:Uid="Window_AppTitleBar"
+                  local:Text.Uid="Window_AppTitleBar"
                   Grid.Row="0"
                   IsBackButtonVisible="False">
             <TitleBar.IconSource>
@@ -43,12 +43,12 @@
                         Visibility="Collapsed">
             <tb:TaskbarIcon.ContextFlyout>
                 <MenuFlyout>
-                    <MenuFlyoutItem x:Uid="Tray_Show" Command="{x:Bind ShowFromTrayCommand}" />
-                    <MenuFlyoutItem x:Uid="Tray_AddLink" Command="{x:Bind AddLinkCommand}" />
-                    <MenuFlyoutItem x:Uid="Tray_SaveClipboard" Command="{x:Bind SaveClipboardCommand}" />
-                    <MenuFlyoutItem x:Uid="Tray_Search" Command="{x:Bind SearchCommand}" />
+                    <MenuFlyoutItem local:Text.Uid="Tray_Show" Command="{x:Bind ShowFromTrayCommand}" />
+                    <MenuFlyoutItem local:Text.Uid="Tray_AddLink" Command="{x:Bind AddLinkCommand}" />
+                    <MenuFlyoutItem local:Text.Uid="Tray_SaveClipboard" Command="{x:Bind SaveClipboardCommand}" />
+                    <MenuFlyoutItem local:Text.Uid="Tray_Search" Command="{x:Bind SearchCommand}" />
                     <MenuFlyoutSeparator />
-                    <MenuFlyoutItem x:Uid="Tray_Exit" Command="{x:Bind ExitCommand}" />
+                    <MenuFlyoutItem local:Text.Uid="Tray_Exit" Command="{x:Bind ExitCommand}" />
                 </MenuFlyout>
             </tb:TaskbarIcon.ContextFlyout>
         </tb:TaskbarIcon>

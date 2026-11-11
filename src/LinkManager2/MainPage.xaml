@@ -29,56 +29,56 @@
                     HorizontalAlignment="Stretch"
                     IsOpen="False"
                     OverflowButtonVisibility="Visible">
-            <AppBarButton x:Name="AddButton" x:Uid="Main_AddButton" Icon="Add"
+            <AppBarButton x:Name="AddButton" local:Text.Uid="Main_AddButton" Icon="Add"
                           Click="OnAddClick">
                 <AppBarButton.KeyboardAccelerators>
                     <KeyboardAccelerator Key="N" Modifiers="Control" />
                 </AppBarButton.KeyboardAccelerators>
             </AppBarButton>
-            <AppBarButton x:Name="SettingsButton" x:Uid="Main_SettingsButton" Icon="Setting"
+            <AppBarButton x:Name="SettingsButton" local:Text.Uid="Main_SettingsButton" Icon="Setting"
                           Click="OnSettingsClick" />
 
             <CommandBar.SecondaryCommands>
-                <AppBarButton x:Uid="Main_ManageCategories" Click="OnManageCategoriesClick">
+                <AppBarButton local:Text.Uid="Main_ManageCategories" Click="OnManageCategoriesClick">
                     <AppBarButton.Icon><FontIcon Glyph="&#xE8FD;" /></AppBarButton.Icon>
                 </AppBarButton>
-                <AppBarButton x:Uid="Main_ManageTags" Click="OnManageTagsClick">
+                <AppBarButton local:Text.Uid="Main_ManageTags" Click="OnManageTagsClick">
                     <AppBarButton.Icon><FontIcon Glyph="&#xE8EC;" /></AppBarButton.Icon>
                 </AppBarButton>
                 <AppBarSeparator />
-                <AppBarButton x:Uid="Main_Import" Click="OnImportClick">
+                <AppBarButton local:Text.Uid="Main_Import" Click="OnImportClick">
                     <AppBarButton.Icon><FontIcon Glyph="&#xE8B5;" /></AppBarButton.Icon>
                 </AppBarButton>
-                <AppBarButton x:Uid="Main_Export" Click="OnExportClick">
+                <AppBarButton local:Text.Uid="Main_Export" Click="OnExportClick">
                     <AppBarButton.Icon><FontIcon Glyph="&#xE74E;" /></AppBarButton.Icon>
                 </AppBarButton>
-                <AppBarButton x:Uid="Main_ShareCollection" Click="OnShareCollectionClick">
+                <AppBarButton local:Text.Uid="Main_ShareCollection" Click="OnShareCollectionClick">
                     <AppBarButton.Icon><FontIcon Glyph="&#xE71D;" /></AppBarButton.Icon>
                 </AppBarButton>
-                <AppBarButton x:Uid="Main_ManageShared" Click="OnManageSharedClick">
+                <AppBarButton local:Text.Uid="Main_ManageShared" Click="OnManageSharedClick">
                     <AppBarButton.Icon><FontIcon Glyph="&#xE72D;" /></AppBarButton.Icon>
                 </AppBarButton>
-                <AppBarButton x:Uid="Main_Archived" Click="OnArchivedClick">
+                <AppBarButton local:Text.Uid="Main_Archived" Click="OnArchivedClick">
                     <AppBarButton.Icon><FontIcon Glyph="&#xE7B8;" /></AppBarButton.Icon>
                 </AppBarButton>
-                <AppBarButton x:Uid="Main_CheckLinks" Click="OnCheckLinksClick">
+                <AppBarButton local:Text.Uid="Main_CheckLinks" Click="OnCheckLinksClick">
                     <AppBarButton.Icon><FontIcon Glyph="&#xE945;" /></AppBarButton.Icon>
                 </AppBarButton>
-                <AppBarButton x:Uid="Main_Reload" Click="OnReloadClick">
+                <AppBarButton local:Text.Uid="Main_Reload" Click="OnReloadClick">
                     <AppBarButton.Icon><SymbolIcon Symbol="Refresh" /></AppBarButton.Icon>
                     <AppBarButton.KeyboardAccelerators>
                         <KeyboardAccelerator Key="F5" />
                     </AppBarButton.KeyboardAccelerators>
                 </AppBarButton>
                 <AppBarSeparator />
-                <AppBarButton x:Uid="Main_OpenWeb" Click="OnOpenWebClick">
+                <AppBarButton local:Text.Uid="Main_OpenWeb" Click="OnOpenWebClick">
                     <AppBarButton.Icon><FontIcon Glyph="&#xE774;" /></AppBarButton.Icon>
                 </AppBarButton>
-                <AppBarButton x:Uid="Main_Shortcuts" Click="OnHelpClick">
+                <AppBarButton local:Text.Uid="Main_Shortcuts" Click="OnHelpClick">
                     <AppBarButton.Icon><FontIcon Glyph="&#xE897;" /></AppBarButton.Icon>
                 </AppBarButton>
                 <AppBarSeparator />
-                <AppBarButton x:Uid="Main_SignOut" Click="OnSignOutClick">
+                <AppBarButton local:Text.Uid="Main_SignOut" Click="OnSignOutClick">
                     <AppBarButton.Icon><FontIcon Glyph="&#xF3B1;" /></AppBarButton.Icon>
                 </AppBarButton>
             </CommandBar.SecondaryCommands>
@@ -90,13 +90,13 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <AutoSuggestBox x:Name="SearchBox"
-                            x:Uid="Main_SearchBox"
+                            local:Text.Uid="Main_SearchBox"
                             Grid.Column="0"
                             QueryIcon="Find"
                             TextChanged="OnSearchChanged"
                             SuggestionChosen="OnSuggestionChosen" />
             <Button x:Name="FiltersButton"
-                    x:Uid="Main_FiltersButton"
+                    local:Text.Uid="Main_FiltersButton"
                     Grid.Column="1"
                     Click="OnFiltersClick">
                 <Button.KeyboardAccelerators>
@@ -119,7 +119,7 @@
                 CornerRadius="8">
             <Grid>
             <ListView x:Name="ItemsList"
-                      x:Uid="Main_ItemsList"
+                      local:Text.Uid="Main_ItemsList"
                       SelectionMode="Extended"
                       ItemsSource="{x:Bind Visible}"
                       DoubleTapped="OnItemDoubleTapped"
@@ -147,34 +147,34 @@
                 </ListView.ItemTemplate>
                 <ListView.ContextFlyout>
                     <MenuFlyout x:Name="ItemContextMenu" Opening="OnContextMenuOpening">
-                        <MenuFlyoutItem x:Uid="Main_MenuOpen" Click="OnOpenClick">
+                        <MenuFlyoutItem local:Text.Uid="Main_MenuOpen" Click="OnOpenClick">
                             <MenuFlyoutItem.Icon><SymbolIcon Symbol="OpenFile" /></MenuFlyoutItem.Icon>
                             <MenuFlyoutItem.KeyboardAccelerators>
                                 <KeyboardAccelerator Key="Enter" />
                             </MenuFlyoutItem.KeyboardAccelerators>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem x:Uid="Main_MenuCopy" Tag="copy" Click="OnCopyClick">
+                        <MenuFlyoutItem local:Text.Uid="Main_MenuCopy" Tag="copy" Click="OnCopyClick">
                             <MenuFlyoutItem.Icon><SymbolIcon Symbol="Copy" /></MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem x:Uid="Main_MenuShare" Tag="share" Click="OnShareClick" />
-                        <MenuFlyoutItem x:Uid="Main_MenuEmail" Tag="email" Click="OnEmailClick" />
+                        <MenuFlyoutItem local:Text.Uid="Main_MenuShare" Tag="share" Click="OnShareClick" />
+                        <MenuFlyoutItem local:Text.Uid="Main_MenuEmail" Tag="email" Click="OnEmailClick" />
                         <MenuFlyoutSeparator />
-                        <MenuFlyoutItem x:Uid="Main_MenuEdit" Tag="edit" Click="OnEditClick">
+                        <MenuFlyoutItem local:Text.Uid="Main_MenuEdit" Tag="edit" Click="OnEditClick">
                             <MenuFlyoutItem.KeyboardAccelerators>
                                 <KeyboardAccelerator Key="E" Modifiers="Control" />
                             </MenuFlyoutItem.KeyboardAccelerators>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem x:Uid="Main_MenuTags" Tag="tags" Click="OnEditTagsClick" />
-                        <MenuFlyoutItem x:Uid="Main_MenuHistory" Tag="history" Click="OnHistoryClick" />
-                        <MenuFlyoutItem x:Uid="Main_MenuPublicLink" Tag="publink" Click="OnShareLinkClick" />
-                        <MenuFlyoutItem x:Uid="Main_MenuCheck" Tag="check" Click="OnCheckLinkClick" />
+                        <MenuFlyoutItem local:Text.Uid="Main_MenuTags" Tag="tags" Click="OnEditTagsClick" />
+                        <MenuFlyoutItem local:Text.Uid="Main_MenuHistory" Tag="history" Click="OnHistoryClick" />
+                        <MenuFlyoutItem local:Text.Uid="Main_MenuPublicLink" Tag="publink" Click="OnShareLinkClick" />
+                        <MenuFlyoutItem local:Text.Uid="Main_MenuCheck" Tag="check" Click="OnCheckLinkClick" />
                         <MenuFlyoutSeparator />
-                        <MenuFlyoutItem x:Name="FavoriteMenuItem" x:Uid="Main_FavoriteMenuItem" Click="OnFavoriteClick" />
+                        <MenuFlyoutItem x:Name="FavoriteMenuItem" local:Text.Uid="Main_FavoriteMenuItem" Click="OnFavoriteClick" />
                         <MenuFlyoutSeparator />
-                        <MenuFlyoutItem x:Uid="Main_MenuArchive" Tag="archive" Click="OnArchiveClick">
+                        <MenuFlyoutItem local:Text.Uid="Main_MenuArchive" Tag="archive" Click="OnArchiveClick">
                             <MenuFlyoutItem.Icon><SymbolIcon Symbol="MoveToFolder" /></MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem x:Uid="Main_MenuDelete" Click="OnDeleteClick">
+                        <MenuFlyoutItem local:Text.Uid="Main_MenuDelete" Click="OnDeleteClick">
                             <MenuFlyoutItem.KeyboardAccelerators>
                                 <KeyboardAccelerator Key="Delete" />
                             </MenuFlyoutItem.KeyboardAccelerators>
@@ -207,22 +207,22 @@
             <TextBlock x:Name="BulkCountText"
                        VerticalAlignment="Center"
                        FontSize="12" />
-            <Button x:Uid="Main_BulkOpen" Click="OnBulkOpenClick" />
-            <Button x:Uid="Main_BulkCopy" Click="OnBulkCopyClick" />
-            <Button x:Uid="Main_BulkCollection" Click="OnBulkCollectionClick" />
-            <Button x:Uid="Main_BulkDelete" Click="OnBulkDeleteClick" />
+            <Button local:Text.Uid="Main_BulkOpen" Click="OnBulkOpenClick" />
+            <Button local:Text.Uid="Main_BulkCopy" Click="OnBulkCopyClick" />
+            <Button local:Text.Uid="Main_BulkCollection" Click="OnBulkCollectionClick" />
+            <Button local:Text.Uid="Main_BulkDelete" Click="OnBulkDeleteClick" />
         </StackPanel>
 
         <TextBlock Grid.Row="5"
                    x:Name="DetailsText"
-                   x:Uid="Main_DetailsText"
+                   local:Text.Uid="Main_DetailsText"
                    Opacity="0.85"
                    FontSize="12"
                    TextWrapping="Wrap" />
 
         <TextBlock Grid.Row="6"
                    x:Name="StatusText"
-                   x:Uid="Main_StatusText"
+                   local:Text.Uid="Main_StatusText"
                    Opacity="0.9"
                    FontSize="12"
                    AutomationProperties.LiveSetting="Polite" />

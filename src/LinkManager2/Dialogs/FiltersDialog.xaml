@@ -3,21 +3,22 @@
     x:Class="LinkManager2.Dialogs.FiltersDialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:LinkManager2"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    x:Uid="Filters_Dialog"
+    local:Text.Uid="Filters_Dialog"
     DefaultButton="Primary"
     PrimaryButtonClick="OnApply"
     SecondaryButtonClick="OnClear">
     <StackPanel Spacing="12" Width="400">
-        <ComboBox x:Name="TypeCombo" x:Uid="Filters_TypeCombo" HorizontalAlignment="Stretch" />
-        <ComboBox x:Name="CategoryCombo" x:Uid="Filters_CategoryCombo" HorizontalAlignment="Stretch" />
-        <ComboBox x:Name="TagCombo" x:Uid="Filters_TagCombo" HorizontalAlignment="Stretch" />
+        <ComboBox x:Name="TypeCombo" local:Text.Uid="Filters_TypeCombo" HorizontalAlignment="Stretch" />
+        <ComboBox x:Name="CategoryCombo" local:Text.Uid="Filters_CategoryCombo" HorizontalAlignment="Stretch" />
+        <ComboBox x:Name="TagCombo" local:Text.Uid="Filters_TagCombo" HorizontalAlignment="Stretch" />
         <ToggleSwitch x:Name="FavoritesOnly"
-                      x:Uid="Filters_FavoritesOnly" />
+                      local:Text.Uid="Filters_FavoritesOnly" />
         <ToggleSwitch x:Name="BrokenOnly"
-                      x:Uid="Filters_BrokenOnly" />
-        <ComboBox x:Name="SortCombo" x:Uid="Filters_SortCombo" HorizontalAlignment="Stretch" />
+                      local:Text.Uid="Filters_BrokenOnly" />
+        <ComboBox x:Name="SortCombo" local:Text.Uid="Filters_SortCombo" HorizontalAlignment="Stretch" />
     </StackPanel>
 </ContentDialog>

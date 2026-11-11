@@ -1104,6 +1104,9 @@ En Ajustes: Escape vuelve a la lista.</value>
   <data name="Main_StatusText.Text" xml:space="preserve">
     <value>Listo.</value>
   </data>
+  <data name="Main_TranslationRemovedOnUpdate" xml:space="preserve">
+    <value>La traducción cargada se ha quitado al actualizar la app. Hay que volver a cargarla.</value>
+  </data>
   <data name="Main_UndoDeleteMany" xml:space="preserve">
     <value>borrar {0} elementos</value>
   </data>
@@ -1214,6 +1217,12 @@ En Ajustes: Escape vuelve a la lista.</value>
   </data>
   <data name="Settings_AboutHeading.Text" xml:space="preserve">
     <value>Acerca de</value>
+  </data>
+  <data name="Settings_AboutTranslate.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Ayudar a traducir LinkManager</value>
+  </data>
+  <data name="Settings_AboutTranslate.Content" xml:space="preserve">
+    <value>Ayudar a traducir</value>
   </data>
   <data name="Settings_AboutTranslation" xml:space="preserve">
     <value>Traducción: {0}</value>
@@ -1404,6 +1413,12 @@ En Ajustes: Escape vuelve a la lista.</value>
   <data name="Settings_Loading" xml:space="preserve">
     <value>Cargando…</value>
   </data>
+  <data name="Settings_LoadTranslationButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.HelpText" xml:space="preserve">
+    <value>Para probar en la app un idioma del portal de traducción.</value>
+  </data>
+  <data name="Settings_LoadTranslationButton.Content" xml:space="preserve">
+    <value>Cargar una traducción</value>
+  </data>
   <data name="Settings_MicaToggle.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Fondo translúcido Mica</value>
   </data>
@@ -1439,6 +1454,9 @@ En Ajustes: Escape vuelve a la lista.</value>
   </data>
   <data name="Settings_ProfileExpander.Header" xml:space="preserve">
     <value>Perfil</value>
+  </data>
+  <data name="Settings_RemoveTranslationButton.Content" xml:space="preserve">
+    <value>Quitar la traducción cargada</value>
   </data>
   <data name="Settings_SaveButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Guardar todos los ajustes</value>
@@ -1526,6 +1544,30 @@ En Ajustes: Escape vuelve a la lista.</value>
   </data>
   <data name="Settings_ThemeSystem.Content" xml:space="preserve">
     <value>Seguir el tema de Windows</value>
+  </data>
+  <data name="Settings_TranslationInfo" xml:space="preserve">
+    <value>Traducción al {0} cargada el {1:d}. Textos: {2}.</value>
+  </data>
+  <data name="Settings_TranslationLoaded" xml:space="preserve">
+    <value>Traducción al {0} cargada. Textos: {1}.</value>
+  </data>
+  <data name="Settings_TranslationLoadedDiscarded" xml:space="preserve">
+    <value>Traducción al {0} cargada. Textos: {1}. Descartados por no coincidir con esta versión: {2}.</value>
+  </data>
+  <data name="Settings_TranslationNotOurs" xml:space="preserve">
+    <value>Este archivo no es una traducción de LinkManager.</value>
+  </data>
+  <data name="Settings_TranslationNoUsableText" xml:space="preserve">
+    <value>El archivo no tiene ningún texto que se pueda usar.</value>
+  </data>
+  <data name="Settings_TranslationRemoved" xml:space="preserve">
+    <value>Se ha quitado la traducción cargada.</value>
+  </data>
+  <data name="Settings_TranslationTooLarge" xml:space="preserve">
+    <value>El archivo es demasiado grande.</value>
+  </data>
+  <data name="Settings_TranslationUnreadable" xml:space="preserve">
+    <value>No se ha podido leer el archivo.</value>
   </data>
   <data name="Settings_TrayToggle.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.HelpText" xml:space="preserve">
     <value>Si está activado, cerrar la ventana solo la oculta. Para salir, hay que usar Salir en el menú de la bandeja.</value>

@@ -1,10 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Threading.Tasks;
 using LinkManager2.Data;
 using LinkManager2.Dialogs;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Automation.Peers;
 using Microsoft.UI.Xaml.Controls;
+using Windows.Storage;
+using Windows.Storage.Pickers;
+using WinRT.Interop;
 
 namespace LinkManager2;
 
@@ -33,8 +39,17 @@ public sealed partial class SettingsPage : Page
     {
         InitializeComponent();
         foreach (var (tag, name) in AppLanguage.Offered)
-            LanguageRadios.Items.Add(new RadioButton { Content = name, Tag = tag, Language = tag });
+            LanguageRadios.Items.Add(
+                new RadioButton
+                {
+                    Content = name,
+                    Tag = tag,
+                    Language = tag,
+                }
+            );
         ShowLanguage(AppLanguage.Normalize(LocalPreferences.Load().Language));
+        ShowTranslation();
+        ShowRestartBar();
         ShowAbout();
         foreach (var (key, labelKey) in ActionKeys)
         {
@@ -188,7 +203,7 @@ public sealed partial class SettingsPage : Page
         ((App)Application.Current).Window?.ApplyTheme();
     }
 
-    /// <summary>Selects the radio of the saved UI language and says whether a restart is pending to apply it.</summary>
+    /// <summary>Selects the radio of the saved UI language.</summary>
     private void ShowLanguage(string language)
     {
         foreach (var item in LanguageRadios.Items)
@@ -196,8 +211,165 @@ public sealed partial class SettingsPage : Page
                 LanguageRadios.SelectedItem = rb;
         if (LanguageRadios.SelectedItem is null)
             LanguageRadios.SelectedIndex = 0;
-        LanguageRestartBar.IsOpen = language != AppLanguage.AtStart;
         _languageShown = true;
+    }
+
+    /// <summary>Whether the saved language or the loaded translation changed since this process started, which
+    /// only a restart applies.</summary>
+    private static bool RestartPending =>
+        AppLanguage.Normalize(LocalPreferences.Load().Language) != AppLanguage.AtStart
+        || !ReferenceEquals(LoadedTranslation.Current, AppLanguage.TranslationAtStart);
+
+    /// <summary>Shows the restart bar while a restart is pending. It goes by its visibility, with IsOpen always set,
+    /// because an InfoBar says itself each time IsOpen changes, which would be one more announcement beside the one of
+    /// the change. Returns the bar's message when the bar has just come up, for the change to say it, else
+    /// null.</summary>
+    private string? ShowRestartBar()
+    {
+        var wasShown = LanguageRestartBar.Visibility == Visibility.Visible;
+        var pending = RestartPending;
+        LanguageRestartBar.Visibility = pending ? Visibility.Visible : Visibility.Collapsed;
+        return pending && !wasShown ? LanguageRestartBar.Message : null;
+    }
+
+    /// <summary>Says which translation is loaded, if any: its language, when and how many texts.</summary>
+    private void ShowTranslation()
+    {
+        var translation = LoadedTranslation.Current;
+        TranslationText.Visibility = RemoveTranslationButton.Visibility = translation is null
+            ? Visibility.Collapsed
+            : Visibility.Visible;
+        if (translation is not null)
+            TranslationText.Text = Strings.Format(
+                "Settings_TranslationInfo",
+                LanguageName(translation.Language),
+                translation.Loaded.LocalDateTime,
+                translation.Texts.Count
+            );
+    }
+
+    /// <summary>Loads a translation file from the portal and says how many of its texts the app took. Whatever goes
+    /// wrong is said instead, as an exception out of this handler would close the app.</summary>
+    private async void OnLoadTranslation(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            if (await PickTranslationAsync() is not { } file)
+                return;
+            var (translation, discarded) = await ReadTranslationAsync(file);
+            LoadedTranslation.Save(translation, App.Version);
+            ShowTranslation();
+            Announce(WithRestartHint(LoadedMessage(translation, discarded), ShowRestartBar()));
+        }
+        catch (TranslationFileException ex)
+        {
+            if (ex.InnerException is { } cause)
+                Diagnostics.Log("read translation", cause);
+            Announce(Strings.Get(ProblemKey(ex.Problem)));
+        }
+        catch (Exception ex)
+        {
+            Diagnostics.Log("load translation", ex);
+            Announce(Strings.Format("Common_Error", ex.Message));
+        }
+    }
+
+    private static async Task<StorageFile?> PickTranslationAsync()
+    {
+        var picker = new FileOpenPicker();
+        InitializeWithWindow.Initialize(
+            picker,
+            WindowNative.GetWindowHandle(((App)Application.Current).Window!)
+        );
+        picker.FileTypeFilter.Add(".resw");
+        picker.FileTypeFilter.Add(".xml");
+        return await picker.PickSingleFileAsync();
+    }
+
+    /// <summary>Reads <paramref name="file"/> as a translation off the UI thread; a file that cannot be read at all
+    /// counts as unreadable.</summary>
+    /// <exception cref="TranslationFileException">The file is not a translation the app can take.</exception>
+    private static async Task<(Translation Translation, int Discarded)> ReadTranslationAsync(
+        StorageFile file
+    )
+    {
+        try
+        {
+            await using var stream = await file.OpenStreamForReadAsync();
+            return await Task.Run(() => TranslationFile.Read(stream, Strings.Base));
+        }
+        catch (Exception ex) when (ex is not TranslationFileException)
+        {
+            throw new TranslationFileException(TranslationProblem.Unreadable, ex);
+        }
+    }
+
+    private static string LoadedMessage(Translation translation, int discarded) =>
+        discarded == 0
+            ? Strings.Format(
+                "Settings_TranslationLoaded",
+                LanguageName(translation.Language),
+                translation.Texts.Count
+            )
+            : Strings.Format(
+                "Settings_TranslationLoadedDiscarded",
+                LanguageName(translation.Language),
+                translation.Texts.Count,
+                discarded
+            );
+
+    private static string ProblemKey(TranslationProblem problem) =>
+        problem switch
+        {
+            TranslationProblem.TooLarge => "Settings_TranslationTooLarge",
+            TranslationProblem.Unreadable => "Settings_TranslationUnreadable",
+            TranslationProblem.NoUsableText => "Settings_TranslationNoUsableText",
+            _ => "Settings_TranslationNotOurs",
+        };
+
+    /// <summary>Removes the loaded translation. Its button goes away, so the focus moves first to the message, which
+    /// the screen reader says as the one announcement of the change.</summary>
+    private void OnRemoveTranslation(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            LoadedTranslation.Remove();
+        }
+        catch (Exception ex)
+        {
+            Diagnostics.Log("remove translation", ex);
+            Announce(Strings.Format("Common_Error", ex.Message));
+            return;
+        }
+        Announce(
+            WithRestartHint(Strings.Get("Settings_TranslationRemoved"), ShowRestartBar()),
+            atFocus: true
+        );
+        ShowTranslation();
+    }
+
+    /// <summary>The name of a language in the UI language, as "ucraniano" in Spanish.</summary>
+    private static string LanguageName(string language) =>
+        CultureInfo.GetCultureInfo(language).DisplayName;
+
+    /// <summary><paramref name="message"/> followed by the message of the restart bar when the change has just
+    /// brought it up, so a single announcement tells both.</summary>
+    private static string WithRestartHint(string message, string? restartHint) =>
+        restartHint is null ? message : $"{message} {restartHint}";
+
+    /// <summary>Shows <paramref name="text"/> under the translation buttons and has the screen reader say it once:
+    /// by moving the focus there when <paramref name="atFocus"/>, for when the focused button goes away, else as a
+    /// live region.</summary>
+    private void Announce(string text, bool atFocus = false)
+    {
+        TranslationStatusText.Text = text;
+        TranslationStatusText.Visibility = Visibility.Visible;
+        if (atFocus)
+            TranslationStatusText.Focus(FocusState.Programmatic);
+        else
+            FrameworkElementAutomationPeer
+                .CreatePeerForElement(TranslationStatusText)
+                ?.RaiseAutomationEvent(AutomationEvents.LiveRegionChanged);
     }
 
     /// <summary>Fills the about section: the version and, when this language credits anyone, its translators.</summary>
@@ -211,7 +383,9 @@ public sealed partial class SettingsPage : Page
         AboutTranslationText.Visibility = Visibility.Visible;
     }
 
-    /// <summary>Saves the chosen UI language at once, as the theme does; it takes effect on the next start.</summary>
+    /// <summary>Saves the chosen UI language at once, as the theme does; it takes effect on the next start. When the
+    /// restart bar comes up with it, the screen reader says the bar's message beside the chosen language, as the bar
+    /// does not say itself.</summary>
     private void OnLanguageChanged(object sender, SelectionChangedEventArgs e)
     {
         if (
@@ -224,7 +398,15 @@ public sealed partial class SettingsPage : Page
         var prefs = LocalPreferences.Load();
         prefs.Language = language;
         prefs.Save();
-        LanguageRestartBar.IsOpen = language != AppLanguage.AtStart;
+        if (ShowRestartBar() is { } restartHint)
+            FrameworkElementAutomationPeer
+                .CreatePeerForElement(LanguageRadios)
+                ?.RaiseNotificationEvent(
+                    AutomationNotificationKind.Other,
+                    AutomationNotificationProcessing.CurrentThenMostRecent,
+                    restartHint,
+                    nameof(LanguageRestartBar)
+                );
     }
 
     /// <summary>Saves the page first, when it could load, so a restart for the new language loses no change.</summary>

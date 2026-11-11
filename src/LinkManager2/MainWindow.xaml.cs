@@ -6,6 +6,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.UI.Xaml.Navigation;
 using WinRT.Interop;
 
 namespace LinkManager2;
@@ -30,6 +31,7 @@ public sealed partial class MainWindow : Window
     private bool _restartRequested;
     private bool _tornDown;
     private bool _hooksInstalled;
+    private bool _active;
     private LocalPreferences _prefs;
     private Windows.Graphics.RectInt32? _lastNormalBounds;
 
@@ -58,6 +60,8 @@ public sealed partial class MainWindow : Window
         ApplyTheme();
         RestoreWindowBounds();
 
+        Activated += OnActivated;
+        RootFrameControl.Navigated += OnNavigated;
         Closed += OnClosed;
         AppWindow.Closing += OnAppWindowClosing;
         AppWindow.Changed += OnAppWindowChanged;
@@ -287,6 +291,38 @@ public sealed partial class MainWindow : Window
         UninstallHotkey();
     }
 
+    /// <summary>Keeps whether this is the active window, the only one a screen reader speaks for.</summary>
+    private void OnActivated(object sender, WindowActivatedEventArgs args)
+    {
+        _active = args.WindowActivationState != WindowActivationState.Deactivated;
+        TellRemovedTranslation();
+    }
+
+    private void OnNavigated(object sender, NavigationEventArgs args)
+    {
+        if (args.Content is MainPage page)
+            page.Loaded += OnMainPageLoaded;
+    }
+
+    private void OnMainPageLoaded(object sender, RoutedEventArgs args)
+    {
+        ((MainPage)sender).Loaded -= OnMainPageLoaded;
+        TellRemovedTranslation();
+    }
+
+    /// <summary>Once the main page is loaded and the window active, says that an update removed the loaded
+    /// translation, if it did, which forgets it only then. It goes in the window's own status line, as the startup
+    /// messages of the main page would overwrite it in theirs before it is heard.</summary>
+    private void TellRemovedTranslation()
+    {
+        if (!_active || RootFrameControl.Content is not MainPage { IsLoaded: true })
+            return;
+        Activated -= OnActivated;
+        RootFrameControl.Navigated -= OnNavigated;
+        if (LoadedTranslation.TakeRemovedNotice())
+            ShowWindowStatus(Strings.Get("Main_TranslationRemovedOnUpdate"));
+    }
+
     public void SetStatus(string text)
     {
         if (RootFrameControl.Content is MainPage mp)
@@ -294,7 +330,12 @@ public sealed partial class MainWindow : Window
             mp.SetExternalStatus(text);
             return;
         }
+        ShowWindowStatus(text);
+    }
 
+    /// <summary>Shows <paramref name="text"/> in the line under any page and has the screen reader say it.</summary>
+    private void ShowWindowStatus(string text)
+    {
         WindowStatusText.Text = text;
         WindowStatusText.Visibility = Visibility.Visible;
         Microsoft

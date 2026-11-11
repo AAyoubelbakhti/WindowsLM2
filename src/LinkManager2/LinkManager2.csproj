@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
+    <TargetFramework>net11.0-windows10.0.26100.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <RootNamespace>LinkManager2</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -28,6 +28,11 @@
     <AssemblyMetadata Include="AppLanguages" Value="$(AppLanguages)" />
   </ItemGroup>
 
+  <!-- The texts of the default language, which a translation loaded from a file is checked against. -->
+  <ItemGroup>
+    <EmbeddedResource Include="Strings\$(DefaultLanguage)\Resources.resw" LogicalName="Base.resw" />
+  </ItemGroup>
+
   <ItemGroup>
     <Content Include="Assets\**\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -52,27 +57,22 @@
     <FrameworkReference Include="Microsoft.WindowsDesktop.App.WPF" />
   </ItemGroup>
 
-  <PropertyGroup>
-    <WinAppSdkVersion>2.6.5</WinAppSdkVersion>
-  </PropertyGroup>
-
   <ItemGroup>
     <UnusedWinAppSdkComponent Include="AI;Search;Widgets" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.14" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="11.0.0" />
     <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.5" />
-    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="10.0.14" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2957" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="$(WinAppSdkVersion)" />
     <PackageReference Include="@(UnusedWinAppSdkComponent->'Microsoft.WindowsAppSDK.%(Identity)')" Version="$(WinAppSdkVersion)" Publish="false" />
-    <PackageReference Include="Microsoft.Windows.AI.MachineLearning" Version="2.4.89" Publish="false" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools.WinApp" Version="0.7.1">
+    <PackageReference Include="Microsoft.Windows.AI.MachineLearning" Version="2.5.96" Publish="false" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools.WinApp" Version="0.8.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Supabase" Version="8.7.0" />
+    <PackageReference Include="Supabase" Version="8.11.0" />
     <PackageReference Include="H.NotifyIcon.WinUI" Version="2.4.1" />
     <PackageReference Include="Velopack" Version="1.2.161" />
   </ItemGroup>

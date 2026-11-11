@@ -21,7 +21,8 @@ public sealed class LocalPreferences
     public int? WindowWidth { get; set; }
     public int? WindowHeight { get; set; }
 
-    private static string Path
+    /// <summary>This device's data folder, created if missing.</summary>
+    public static string Folder
     {
         get
         {
@@ -30,20 +31,17 @@ public sealed class LocalPreferences
                 "LinkManager"
             );
             Directory.CreateDirectory(dir);
-            return System.IO.Path.Combine(dir, "preferences.json");
+            return dir;
         }
     }
+
+    private static string Path => System.IO.Path.Combine(Folder, "preferences.json");
 
     /// <summary>Returns a stable per-device id, creating and persisting one on first use. Read/write
     /// failures are swallowed and fall back to an in-memory id so device registration never crashes.</summary>
     public static string GetOrCreateDeviceId()
     {
-        var dir = System.IO.Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "LinkManager"
-        );
-        Directory.CreateDirectory(dir);
-        var file = System.IO.Path.Combine(dir, "device_id");
+        var file = System.IO.Path.Combine(Folder, "device_id");
         try
         {
             if (File.Exists(file))

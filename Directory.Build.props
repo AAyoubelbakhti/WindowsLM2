@@ -1,0 +1,6 @@
+<Project>
+  <!-- The Windows App SDK of the app, which the tests also read to check the WinUI types the XAML texts go to. -->
+  <PropertyGroup>
+    <WinAppSdkVersion>2.6.5</WinAppSdkVersion>
+  </PropertyGroup>
+</Project>
