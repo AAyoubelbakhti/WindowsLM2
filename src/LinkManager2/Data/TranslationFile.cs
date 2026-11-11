@@ -41,6 +41,7 @@ internal static partial class TranslationFile
 
     private const string Project = "linkmanager";
     private const string Format = "1";
+    private const string LanguageTagKey = "App_LanguageTag";
 
     /// <summary>Reads <paramref name="file"/> as a translation of this app, keeping each text whose key
     /// <paramref name="baseTexts"/> has with the same placeholders; the rest count as discarded. The file is read up
@@ -71,9 +72,9 @@ internal static partial class TranslationFile
     public static Dictionary<string, string> ReadTexts(Stream resw) => Values(Parse(resw), "data");
 
     /// <summary>The texts of <paramref name="texts"/> that fit the app: <paramref name="baseTexts"/> has the key,
-    /// the placeholders are the same and a text is blank only where the base one is. The rest count as discarded, as
-    /// does a missing text, which a saved file can hold, and each repeat of a key, which keeps its first
-    /// text.</summary>
+    /// the placeholders are the same, a text is blank only where the base one is, and the language of the app is a
+    /// tag .NET can make a culture of, spelled as .NET names it. The rest count as discarded, as does a missing text,
+    /// which a saved file can hold, and each repeat of a key, which keeps its first text.</summary>
     public static (Dictionary<string, string> Texts, int Discarded) Accept(
         IEnumerable<KeyValuePair<string, string>> texts,
         IReadOnlyDictionary<string, string> baseTexts
@@ -84,13 +85,17 @@ internal static partial class TranslationFile
         var discarded = 0;
         foreach (var (key, text) in texts)
         {
+            var value =
+                key != LanguageTagKey ? text
+                : TryLanguage(text, out var tag) ? tag
+                : null;
             if (
                 seen.Add(key)
-                && text is not null
+                && value is not null
                 && baseTexts.TryGetValue(key, out var baseText)
-                && Fits(text, baseText)
+                && Fits(value, baseText)
             )
-                accepted.Add(key, text);
+                accepted.Add(key, value);
             else
                 discarded++;
         }

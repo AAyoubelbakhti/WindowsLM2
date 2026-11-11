@@ -11,6 +11,7 @@ public class TranslationFileTests
     private static readonly Dictionary<string, string> BaseTexts = new()
     {
         ["Main_Title"] = "Links",
+        ["App_LanguageTag"] = "en-US",
         ["Main_Count"] = "{0} of {1}",
         ["Main_Expires"] = "expires on {0:d}",
         ["Settings_SaveButton.Content"] = "Save",
@@ -127,6 +128,30 @@ public class TranslationFileTests
         var headers = Headers.Select(h => h.Name == "language" ? (h.Name, "pt-br") : h);
 
         Assert.Equal("pt-BR", Read(Resw(headers, ("Main_Title", "Links"))).Translation.Language);
+    }
+
+    [Theory]
+    [InlineData("Українська")]
+    [InlineData("uk\nX")]
+    [InlineData("")]
+    public void The_language_of_the_app_is_kept_only_as_a_language_tag(string tag)
+    {
+        var (translation, discarded) = Read(
+            Resw(("Main_Title", "Посилання"), ("App_LanguageTag", tag))
+        );
+
+        Assert.Equal(["Main_Title=Посилання"], Pairs(translation.Texts));
+        Assert.Equal(1, discarded);
+    }
+
+    [Fact]
+    public void The_language_of_the_app_is_spelled_as_dotnet_names_it()
+    {
+        var (translation, _) = Read(
+            Resw(("Main_Title", "Посилання"), ("App_LanguageTag", "pt-br"))
+        );
+
+        Assert.Equal("pt-BR", translation.Texts["App_LanguageTag"]);
     }
 
     [Fact]
